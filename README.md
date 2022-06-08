@@ -3,7 +3,9 @@
 
 
 
-### Założenia
+
+
+## Założenia
 
 #### Modele i ich przeznaczenie
 
@@ -67,4 +69,18 @@
 + Prowadzenie statystyk dla gier, kategorii i użytkowników.
 + Tworzenie rankingów dla kategorii.
 
+
+
+
+
+## Struktura
+
+#### Magazyn plików (`storage`)
+
+Zdjęcia i grafiki powinny być przechowywane jako pliki PNG lub JPEG.
+
+```
+/images/games/{}/icon.XYZ           // Ikony dla gier
+/images/categories/{}/icon.XYZ      // Ikony dla gier
+```
 
