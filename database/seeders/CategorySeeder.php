@@ -3,13 +3,15 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Seeder;
 
 use App\Models\Game;
+use App\Models\Category;
+use Exception;
 
-class GamesSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,17 +20,19 @@ class GamesSeeder extends Seeder
      */
     public function run()
     {
-        Game::truncate();
-        // if (Storage::exists('public/images/games')) {
-        //     Storage::deleteDirectory('public/images/games');
+        Category::truncate();
+        // if (Storage::exists('public/images/categories')) {
+        //     Storage::deleteDirectory('public/images/categories');
         // }
-        // Storage::makeDirectory('public/images/games');
+        // Storage::makeDirectory('public/images/categories');
 
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Mmo\Faker\PicsumProvider($faker));
 
-        $numberOfElements = $faker->numberBetween(10, 15);
-        $this->command->comment("About to seed $numberOfElements games using Faker...");
+        $gamesIds = Game::pluck('id')->toArray();
+
+        $numberOfElements = $faker->numberBetween(count($gamesIds), 3 * count($gamesIds));
+        $this->command->comment("About to seed $numberOfElements categories using Faker...");
 
         for ($i = 0; $i < $numberOfElements; $i++) {
             $width = $faker->randomElement([240, 300, 320, 360, 400, 420, 440, 450, 480, 500, 540, 600, 640, 720]);
@@ -38,19 +42,19 @@ class GamesSeeder extends Seeder
                 $tempImagePath = $faker->picsum(null, $width, $height, imageExtension: $iconType == 'jpeg' ? 'jpg' : $iconType);
             }
             $name = $faker->word();
-            $j = $faker->randomDigit() < 3 ? 0 : $faker->numberBetween(0, $faker->numberBetween(0, 7));
+            $j = $faker->numberBetween(1, $faker->numberBetween(0, 5));
             while ($j-- && strlen($name) < 48) $name .= ' ' . $faker->word();
             $name = ucfirst($name);
-            $this->command->comment("created game named '$name'");
-            $instance = Game::create([
+            $this->command->comment("created category named '$name'");
+            $instance = Category::create([
+                'game_id' => $faker->randomElement($gamesIds),
                 'name' => $name,
-                'description' => $faker->randomDigit() == 0 ? '' : $faker->paragraph(),
                 'rules' => $faker->randomDigit() == 0 ? '' : $faker->paragraph(),
                 'icon' => $iconType,
-                'publish_year' => $faker->numberBetween(1988, 2022),
+                'score_rule' => $faker->randomElement(['none', 'none', 'none', 'high', 'high', 'high', 'high', 'low']),
             ]);
             if (!is_null($iconType)) {
-                $directory = 'public/images/games/' . $instance->id;
+                $directory = 'public/images/categories/' . $instance->id;
                 if (Storage::exists($directory)) {
                     Storage::deleteDirectory($directory);
                 }
