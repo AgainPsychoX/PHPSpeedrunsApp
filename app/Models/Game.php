@@ -26,4 +26,10 @@ class Game extends Model
     {
         return $this->morphMany(ModeratorAssignment::class, 'target');
     }
+
+    public function iconUrl()
+    {
+        if ($this->icon == 'none') return asset("public/images/games/placeholder/icon.png");
+        return asset("public/images/games/$this->id/icon.$this->icon");
+    }
 }

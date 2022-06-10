@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('users', UserController::class);
+Route::apiResource('games', GameController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('run', RunController::class);

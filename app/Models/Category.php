@@ -37,4 +37,10 @@ class Category extends Model
     {
         return $this->morphMany(ModeratorAssignment::class, 'target');
     }
+
+    public function iconUrl()
+    {
+        if ($this->icon == 'none') return asset("public/images/category/placeholder/icon.png");
+        return asset("public/images/category/$this->id/icon.$this->icon");
+    }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Game::class)->constrained();
-            $table->string('name', 64)->unique();;
+            $table->string('name', 64)->unique();
             $table->text('rules');
             $table->enum('icon', ['png', 'jpeg', 'webp', 'tiff'])->nullable()->default(null);
             $table->enum('score_rule', ['none', 'high', 'low'])->default('none');
