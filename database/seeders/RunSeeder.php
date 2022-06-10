@@ -79,6 +79,7 @@ class RunSeeder extends Seeder
                     ),
                     'video_url' => $faker->randomElement(RunSeeder::videoUrls),
                     'notes' => $faker->paragraph($faker->numberBetween(1, 5)),
+                    'state' => $faker->randomElement(['pending', 'pending', 'verified', 'verified', 'verified', 'verified', 'verified', 'invalid']),
                 ]);
                 $this->command->comment("created run");
             }

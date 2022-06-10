@@ -9,7 +9,15 @@ class Run extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'category_id',
+        'user_id',
+        'duration',
+        'score',
+        'video_url',
+        'notes',
+        'state',
+    ];
 
     public function category()
     {

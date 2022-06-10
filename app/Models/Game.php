@@ -9,10 +9,21 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'description',
+        'rules',
+        'icon',
+        'publish_year',
+    ];
 
     public function categories()
     {
         return $this->hasMany(Category::class);
+    }
+
+    public function moderators()
+    {
+        return $this->morphMany(ModeratorAssignment::class, 'target');
     }
 }

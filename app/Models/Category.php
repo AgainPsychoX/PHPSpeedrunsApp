@@ -9,10 +9,18 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'game_id',
+        'name',
+        'rules',
+        'icon',
+        'score_rule',
+        'verification_requirement'
+    ];
 
     protected $attributes = [
         'score_rule' => 'none',
+        'verification_requirement' => 1,
     ];
 
     public function game()
@@ -23,5 +31,10 @@ class Category extends Model
     public function runs()
     {
         return $this->hasMany(Run::class);
+    }
+
+    public function moderators()
+    {
+        return $this->morphMany(ModeratorAssignment::class, 'target');
     }
 }
