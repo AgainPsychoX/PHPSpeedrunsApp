@@ -19,4 +19,9 @@ class Category extends Model
     {
         return $this->belongsTo(Game::class);
     }
+
+    public function runs()
+    {
+        return $this->hasMany(Run::class);
+    }
 }

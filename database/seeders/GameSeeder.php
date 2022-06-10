@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 
 use App\Models\Game;
 use App\Models\Category;
+use App\Models\Run;
 
 class GameSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class GameSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
+        Run::truncate();
         Category::truncate();
         Game::truncate();
         Schema::enableForeignKeyConstraints();
@@ -32,7 +34,7 @@ class GameSeeder extends Seeder
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Mmo\Faker\PicsumProvider($faker));
 
-        $numberOfElements = $faker->numberBetween(10, 15);
+        $numberOfElements = $faker->numberBetween(5, 10);
         $this->command->comment("About to seed $numberOfElements games using Faker...");
 
         for ($i = 0; $i < $numberOfElements; $i++) {
@@ -46,7 +48,6 @@ class GameSeeder extends Seeder
             $j = $faker->randomDigit() < 3 ? 0 : $faker->numberBetween(0, $faker->numberBetween(0, 7));
             while ($j-- && strlen($name) < 48) $name .= ' ' . $faker->word();
             $name = ucfirst($name);
-            $this->command->comment("created game named '$name'");
             $instance = Game::create([
                 'name' => $name,
                 'description' => $faker->randomDigit() == 0 ? '' : $faker->paragraph(),
@@ -54,6 +55,7 @@ class GameSeeder extends Seeder
                 'icon' => $iconType,
                 'publish_year' => $faker->numberBetween(1988, 2022),
             ]);
+            $this->command->comment("created game named '$name'");
             if (!is_null($iconType)) {
                 $directory = 'public/images/games/' . $instance->id;
                 if (Storage::exists($directory)) {

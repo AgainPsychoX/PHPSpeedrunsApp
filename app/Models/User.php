@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'country_id',
+        'youtube_url',
+        'twitch_url',
+        'twitter_url',
+        'discord',
+        'profile_description',
     ];
 
     /**

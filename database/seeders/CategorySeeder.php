@@ -3,13 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Seeder;
 
 use App\Models\Game;
 use App\Models\Category;
-use Exception;
+use App\Models\rUN;
 
 class CategorySeeder extends Seeder
 {
@@ -20,7 +21,11 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+        Run::truncate();
         Category::truncate();
+        Schema::enableForeignKeyConstraints();
+
         // if (Storage::exists('public/images/categories')) {
         //     Storage::deleteDirectory('public/images/categories');
         // }
@@ -31,7 +36,7 @@ class CategorySeeder extends Seeder
 
         $gamesIds = Game::pluck('id')->toArray();
 
-        $numberOfElements = $faker->numberBetween(count($gamesIds), 3 * count($gamesIds));
+        $numberOfElements = $faker->numberBetween(2 * count($gamesIds), 4 * count($gamesIds));
         $this->command->comment("About to seed $numberOfElements categories using Faker...");
 
         for ($i = 0; $i < $numberOfElements; $i++) {
@@ -45,7 +50,6 @@ class CategorySeeder extends Seeder
             $j = $faker->numberBetween(1, $faker->numberBetween(0, 5));
             while ($j-- && strlen($name) < 48) $name .= ' ' . $faker->word();
             $name = ucfirst($name);
-            $this->command->comment("created category named '$name'");
             $instance = Category::create([
                 'game_id' => $faker->randomElement($gamesIds),
                 'name' => $name,
@@ -53,6 +57,7 @@ class CategorySeeder extends Seeder
                 'icon' => $iconType,
                 'score_rule' => $faker->randomElement(['none', 'none', 'none', 'high', 'high', 'high', 'high', 'low']),
             ]);
+            $this->command->comment("created category named '$name'");
             if (!is_null($iconType)) {
                 $directory = 'public/images/categories/' . $instance->id;
                 if (Storage::exists($directory)) {
