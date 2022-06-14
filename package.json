@@ -12,6 +12,7 @@
     "devDependencies": {
         "@babel/preset-react": "^7.17.12",
         "@popperjs/core": "^2.10.2",
+        "@types/luxon": "^2.3.2",
         "@types/react": "^18.0.12",
         "@types/react-dom": "^18.0.5",
         "axios": "^0.25",
@@ -26,5 +27,10 @@
         "sass-loader": "^11.0.1",
         "ts-loader": "^9.3.0",
         "typescript": "^4.7.3"
+    },
+    "dependencies": {
+        "luxon": "^2.4.0",
+        "react-bootstrap": "^2.4.0",
+        "react-router-dom": "^6.3.0"
     }
 }

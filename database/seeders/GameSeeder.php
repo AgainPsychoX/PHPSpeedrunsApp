@@ -34,7 +34,7 @@ class GameSeeder extends Seeder
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Mmo\Faker\PicsumProvider($faker));
 
-        $numberOfElements = $faker->numberBetween(5, 10);
+        $numberOfElements = $faker->numberBetween(10, 20);
         $this->command->comment("About to seed $numberOfElements games using Faker...");
 
         for ($i = 0; $i < $numberOfElements; $i++) {

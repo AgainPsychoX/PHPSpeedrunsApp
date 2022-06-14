@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\RunController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);
 Route::apiResource('categories', CategoryController::class);
-Route::apiResource('run', RunController::class);
+Route::apiResource('runs', RunController::class);

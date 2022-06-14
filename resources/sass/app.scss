@@ -6,3 +6,52 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+
+
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+.page-link:hover {
+	text-decoration: none;
+}
+
+
+
+body {
+	min-height: 100vh;
+	position: relative;
+}
+
+/* Keeping footer at bottom of the page, even if content is shorter */
+main::after {
+	content: "";
+	padding-bottom: 5rem;
+	display: inline-block;
+}
+
+footer {
+	/* Keeping footer at bottom of the page, even if content is shorter */
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 8px 0;
+	height: fit-content;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+
+@include media-breakpoint-up(sm) {
+	.rounded-sm {
+		border-radius: 0.3em !important;
+	}
+}
+
+

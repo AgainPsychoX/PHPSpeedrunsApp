@@ -29,7 +29,7 @@ class Game extends Model
 
     public function iconUrl()
     {
-        if ($this->icon == 'none') return asset("public/images/games/placeholder/icon.png");
-        return asset("public/images/games/$this->id/icon.$this->icon");
+        if (is_null($this->icon)) return asset("storage/images/games/placeholder/icon.png");
+        return asset("storage/images/games/$this->id/icon.$this->icon");
     }
 }

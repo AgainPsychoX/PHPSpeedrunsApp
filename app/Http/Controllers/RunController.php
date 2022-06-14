@@ -19,7 +19,7 @@ class RunController extends Controller
      */
     public function index()
     {
-        return new RunCollection(Run::all());
+        return RunResource::collection(Run::all());
     }
 
     /**

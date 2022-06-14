@@ -7,40 +7,42 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $fillable = [
-        'game_id',
-        'name',
-        'rules',
-        'icon',
-        'score_rule',
-        'verification_requirement'
-    ];
+	protected $fillable = [
+		'game_id',
+		'name',
+		'rules',
+		'icon',
+		'score_rule',
+		'verification_requirement'
+	];
 
-    protected $attributes = [
-        'score_rule' => 'none',
-        'verification_requirement' => 1,
-    ];
+	protected $attributes = [
+		'score_rule' => 'none',
+		'verification_requirement' => 1,
+	];
 
-    public function game()
-    {
-        return $this->belongsTo(Game::class);
-    }
+	// protected $appends = [
+	// 	'runsCount'
+	// ];
 
-    public function runs()
-    {
-        return $this->hasMany(Run::class);
-    }
+	public function game()
+	{
+		return $this->belongsTo(Game::class);
+	}
 
-    public function moderators()
-    {
-        return $this->morphMany(ModeratorAssignment::class, 'target');
-    }
+	public function runs()
+	{
+		return $this->hasMany(Run::class);
+	}
 
-    public function iconUrl()
-    {
-        if ($this->icon == 'none') return asset("public/images/category/placeholder/icon.png");
-        return asset("public/images/category/$this->id/icon.$this->icon");
-    }
+	// public function getRunsCountAttribute() {
+	// 	return $this->runs()->count();
+	// }
+
+	public function moderators()
+	{
+		return $this->morphMany(ModeratorAssignment::class, 'target');
+	}
 }

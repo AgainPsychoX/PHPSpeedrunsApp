@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 use App\Models\User;
 use App\Models\Run;
@@ -26,7 +27,9 @@ class RunSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         Run::truncate();
+        Schema::enableForeignKeyConstraints();
 
         $faker = \Faker\Factory::create();
 
@@ -51,10 +54,10 @@ class RunSeeder extends Seeder
                 $scoreBase = $faker->randomNumber(round($faker->randomDigit() + 1) / 2);
             }
             if ($category->score_rule == 'high') {
-                $scoreRandomSpan = $faker->numberBetween(round($scoreBase / $faker->numberBetween(2, 50)), $scoreBase * $faker->numberBetween(1, 5));
+                $scoreRandomSpan = $faker->numberBetween(round($scoreBase / $faker->numberBetween(2, 50)), ($scoreBase + 1) * $faker->numberBetween(1, 5));
             }
             else if ($category->score_rule == 'low') {
-                $scoreRandomSpan = $faker->numberBetween(round($scoreBase / 100), $scoreBase * 4);
+                $scoreRandomSpan = $faker->numberBetween(round($scoreBase / 100), ($scoreBase + 1) * 4);
                 $scoreBase += $scoreRandomSpan;
             }
 
