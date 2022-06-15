@@ -2,10 +2,10 @@ import { createContext } from 'react';
 import { UserDetails } from '../models/User';
 
 type AppContextType = {
-	user: UserDetails | null;
+	user?: UserDetails;
 };
 const AppContext = createContext<AppContextType>({
-	user: null,
+	user: undefined,
 });
 
 export default AppContext;

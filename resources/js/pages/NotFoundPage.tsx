@@ -17,7 +17,7 @@ export const NotFoundPage = () => {
 						Jeśli myślisz, że to błąd, prosimy o <a href="#">kontakt</a>.
 						{/* TODO: add contact page or valid link (mailto?) */}
 					</Card.Text>
-					<div className="d-flex flex-wrap" style={{gap: '0.5em'}}>
+					<div className="d-flex flex-wrap gap-3">
 						<Button variant="outline-primary" onClick={() => navigate(-1)}>Wróć na poprzednią stronę</Button>
 						<Button variant="outline-secondary" onClick={() => navigate('/')}>Wróć na stronę główną</Button>
 					</div>

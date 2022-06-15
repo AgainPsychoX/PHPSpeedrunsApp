@@ -41,45 +41,43 @@ export const GamesPage = ({
 
 	useEffect(() => onPage(initialPage), [sorting]);
 
-	return (
-		<main>
-			<Container>
-				<div className="hstack flex-wrap">
-					<h2>Katalog gier</h2>
-					<div className="ms-auto">
-						<Form.Group className="m-auto" controlId="sortingSelection">
-							<Form.Select aria-label="Sortowanie" onChange={event => setSorting(event.target.value as Sorting)} value={sorting}>
-								{Object.entries(sortingToString).map(([key, text], i) =>
-									<option key={key} value={key}>{text}</option>
-								)}
-							</Form.Select>
-						</Form.Group>
-					</div>
+	return <main>
+		<Container>
+			<div className="hstack flex-wrap">
+				<h2>Katalog gier</h2>
+				<div className="ms-auto">
+					<Form.Group className="m-auto" controlId="sortingSelection">
+						<Form.Select aria-label="Sortowanie" onChange={event => setSorting(event.target.value as Sorting)} value={sorting}>
+							{Object.entries(sortingToString).map(([key, text], i) =>
+								<option key={key} value={key}>{text}</option>
+							)}
+						</Form.Select>
+					</Form.Group>
 				</div>
-				{games
-					?
-						<Row xs={1} md={2} lg={4} className="g-2 py-2">
-							{games.map(game => (
-								<Col key={game.id}>
-									<NavLink to={`/games/${game.id}`} className="text-decoration-none text-reset">
-										<Card>
-											<Card.Img variant="top" src={game.icon} />
-											<Card.Body>
-												<Card.Title>{game.name} <small className="text-muted">({game.publishYear})</small></Card.Title>
-												{game.latestRunAt && <Card.Subtitle>aktywność {game.latestRunAt.toRelative()}</Card.Subtitle>}
-												{game.runsCount && <Card.Subtitle>{game.runsCount} podejść</Card.Subtitle>}
-											</Card.Body>
-										</Card>
-									</NavLink>
-								</Col>
-							))}
-						</Row>
-					:
-						<GenericLoadingSection description="Ładowanie gier..." />
-				}
-				{paginationMeta && buildPagination(paginationMeta, onPage)}
-			</Container>
-		</main>
-	)
+			</div>
+			{games
+				?
+					<Row xs={1} md={2} lg={4} className="g-2 py-2">
+						{games.map(game => (
+							<Col key={game.id}>
+								<NavLink to={`/games/${game.id}`} className="text-decoration-none text-reset">
+									<Card>
+										<Card.Img variant="top" src={game.icon} />
+										<Card.Body>
+											<Card.Title>{game.name} <small className="text-muted">({game.publishYear})</small></Card.Title>
+											{game.latestRunAt && <Card.Subtitle>aktywność {game.latestRunAt.toRelative()}</Card.Subtitle>}
+											{game.runsCount && <Card.Subtitle>{game.runsCount} podejść</Card.Subtitle>}
+										</Card.Body>
+									</Card>
+								</NavLink>
+							</Col>
+						))}
+					</Row>
+				:
+					<GenericLoadingSection description="Ładowanie gier..." />
+			}
+			{paginationMeta && buildPagination(paginationMeta, onPage)}
+		</Container>
+	</main>
 };
 export default GamesPage;

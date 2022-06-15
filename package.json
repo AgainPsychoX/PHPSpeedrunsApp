@@ -12,6 +12,7 @@
     "devDependencies": {
         "@babel/preset-react": "^7.17.12",
         "@popperjs/core": "^2.10.2",
+        "@types/js-cookie": "^3.0.2",
         "@types/luxon": "^2.3.2",
         "@types/react": "^18.0.12",
         "@types/react-dom": "^18.0.5",
@@ -29,6 +30,7 @@
         "typescript": "^4.7.3"
     },
     "dependencies": {
+        "js-cookie": "^3.0.1",
         "luxon": "^2.4.0",
         "react-bootstrap": "^2.4.0",
         "react-router-dom": "^6.3.0"
