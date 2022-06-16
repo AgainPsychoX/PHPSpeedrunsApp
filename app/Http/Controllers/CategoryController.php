@@ -19,7 +19,10 @@ class CategoryController extends Controller
 	 */
 	public function index()
 	{
-		return CategoryResource::collection(Category::all());
+		// TODO: maybe it should be implemented? like for querying empty categories or something...
+		return response()->json([
+			"message" => "Not implemented (as not required). Query for game to get related categories.",
+		], 501);
 	}
 
 	/**

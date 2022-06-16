@@ -19,7 +19,10 @@ class RunController extends Controller
      */
     public function index()
     {
-        return RunResource::collection(Run::all());
+		// TODO: implement (`?player=1`)
+		return response()->json([
+			"message" => "Not implemented yet",
+		], 501);
     }
 
     /**

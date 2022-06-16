@@ -21,13 +21,13 @@ class GameController extends Controller
 	public function index(Request $request)
 	{
 		$queryParams = $request->query();
-		$orderBy = $queryParams['orderBy'];
+		$orderBy = $queryParams['orderBy'] ?? 'popular';
 		$direction = null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
 
 		// Popularity (default)
-		if (is_null($orderBy) || str_starts_with($orderBy, 'popular')) {
+		if (str_starts_with($orderBy, 'popular')) {
 			$runCountsQuery = Game::query()
 				->leftJoin('categories', 'games.id', '=', 'categories.game_id')
 				->leftJoin('runs', 'categories.id', '=', 'runs.category_id')
