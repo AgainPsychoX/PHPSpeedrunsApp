@@ -25,8 +25,8 @@ class UpdateGameRequest extends FormRequest
     {
         return [
             'name'          => 'sometimes|required|string|between:3,64|unique:games,name',
-            'description'   => 'sometimes|required|string|between:20,4000',
-            'rules'         => 'sometimes|required|string|between:20,4000',
+            'description'   => 'sometimes|required|string|max:20,4000',
+            'rules'         => 'sometimes|required|string|max:20,4000',
             'icon'          => 'sometimes|file|dimensions:min_width=100,min_height=100,max_width=800,max_height=800|mimes:jpeg,png,webp',
             'publish_year'  => 'sometimes|required|integer|between:1970,2200',
         ];

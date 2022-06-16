@@ -1,6 +1,6 @@
 
-export const parseBoolean = (value: string | boolean | undefined, defaultValue: boolean) => {
-	if (typeof value === 'undefined') {
+export const parseBoolean = (value: string | boolean | null | undefined, defaultValue: boolean = false) => {
+	if (typeof value === 'undefined' || value === null) {
 		return defaultValue;
 	}
 	if (typeof value === 'boolean') {
@@ -11,4 +11,8 @@ export const parseBoolean = (value: string | boolean | undefined, defaultValue: 
 		case "false": case "no": case "off": case "0": return false;
 		default: return defaultValue;
 	}
+}
+
+export const parseForm = (form: HTMLFormElement) => {
+	return Object.fromEntries([...new FormData(form)].filter(e => e[1] !== '')) as Record<string, string>;
 }

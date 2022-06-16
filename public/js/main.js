@@ -6888,7 +6888,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.fetchCategoryDetails = exports.fetchGameDetails = exports.fetchGamesDirectory = exports.fetchCurrentUser = exports.logout = exports.login = exports.initialize = exports.customFetch = void 0;
+exports.fetchCategoryDetails = exports.fetchGameDetails = exports.fetchGamesDirectory = exports.registerUser = exports.fetchCurrentUser = exports.logout = exports.login = exports.initialize = exports.customFetch = void 0;
 
 var js_cookie_1 = __importDefault(__webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/dist/js.cookie.js"));
 
@@ -6973,7 +6973,7 @@ var initialize = function initialize() {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return (0, exports.customFetch)("".concat(location.origin, "/sanctum/csrf-cookie"));
+            return (0, exports.customFetch)("".concat(settings_1["default"].authRoot, "/sanctum/csrf-cookie"));
 
           case 2:
           case "end":
@@ -6994,7 +6994,7 @@ var login = function login(_login, password) {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.next = 2;
-            return (0, exports.customFetch)("".concat(location.origin, "/login"), {
+            return (0, exports.customFetch)("".concat(settings_1["default"].authRoot, "/login"), {
               method: 'POST',
               body: JSON.stringify({
                 name: _login,
@@ -7027,7 +7027,7 @@ var logout = function logout() {
         switch (_context5.prev = _context5.next) {
           case 0:
             localStorage.setItem('expectLoggedIn', '0');
-            return _context5.abrupt("return", (0, exports.customFetch)("".concat(location.origin, "/logout"), {
+            return _context5.abrupt("return", (0, exports.customFetch)("".concat(settings_1["default"].authRoot, "/logout"), {
               method: 'POST'
             }).then(function (r) {
               return r.ok;
@@ -7063,6 +7063,32 @@ var fetchCurrentUser = function fetchCurrentUser() {
 
 exports.fetchCurrentUser = fetchCurrentUser;
 
+var registerUser = function registerUser(data) {
+  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return (0, exports.customFetch)("".concat(settings_1["default"].authRoot, "/register"), {
+              method: 'POST',
+              body: JSON.stringify(data)
+            }).then(throwIfNotOk);
+
+          case 2:
+            return _context7.abrupt("return", true);
+
+          case 3:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+};
+
+exports.registerUser = registerUser;
+
 var convertDates = function convertDates(o) {
   var fields = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['createdAt', 'updateAt'];
 
@@ -7089,23 +7115,23 @@ var convertDates = function convertDates(o) {
 var fetchGamesDirectory = function fetchGamesDirectory(page) {
   var orderBy = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'popularity';
   var direction = arguments.length > 2 ? arguments[2] : undefined;
-  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
     var response, json, _iterator2, _step2, o;
 
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) {
-        switch (_context7.prev = _context7.next) {
+        switch (_context8.prev = _context8.next) {
           case 0:
-            _context7.next = 2;
+            _context8.next = 2;
             return (0, exports.customFetch)("".concat(settings_1["default"].apiRoot, "/games?orderBy=").concat(orderBy).concat(direction ? '&' + direction : '', "&page=").concat(page));
 
           case 2:
-            response = _context7.sent;
-            _context7.next = 5;
+            response = _context8.sent;
+            _context8.next = 5;
             return response.json();
 
           case 5:
-            json = _context7.sent;
+            json = _context8.sent;
             _iterator2 = _createForOfIteratorHelper(json.data);
 
             try {
@@ -7119,38 +7145,38 @@ var fetchGamesDirectory = function fetchGamesDirectory(page) {
               _iterator2.f();
             }
 
-            return _context7.abrupt("return", json);
+            return _context8.abrupt("return", json);
 
           case 9:
           case "end":
-            return _context7.stop();
+            return _context8.stop();
         }
       }
-    }, _callee7);
+    }, _callee8);
   }));
 };
 
 exports.fetchGamesDirectory = fetchGamesDirectory;
 
 var fetchGameDetails = function fetchGameDetails(entryOrId) {
-  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
     var id, response, json, _iterator3, _step3, o;
 
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-            _context8.next = 3;
+            _context9.next = 3;
             return (0, exports.customFetch)("".concat(settings_1["default"].apiRoot, "/games/").concat(id));
 
           case 3:
-            response = _context8.sent;
-            _context8.next = 6;
+            response = _context9.sent;
+            _context9.next = 6;
             return response.json();
 
           case 6:
-            json = _context8.sent;
+            json = _context9.sent;
             _iterator3 = _createForOfIteratorHelper(json.data.categories);
 
             try {
@@ -7164,38 +7190,38 @@ var fetchGameDetails = function fetchGameDetails(entryOrId) {
               _iterator3.f();
             }
 
-            return _context8.abrupt("return", convertDates(json.data));
+            return _context9.abrupt("return", convertDates(json.data));
 
           case 10:
           case "end":
-            return _context8.stop();
+            return _context9.stop();
         }
       }
-    }, _callee8);
+    }, _callee9);
   }));
 };
 
 exports.fetchGameDetails = fetchGameDetails;
 
 var fetchCategoryDetails = function fetchCategoryDetails(entryOrId) {
-  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+  return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
     var id, response, json, _iterator4, _step4, o;
 
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context9.prev = _context9.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
             id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-            _context9.next = 3;
+            _context10.next = 3;
             return (0, exports.customFetch)("".concat(settings_1["default"].apiRoot, "/categories/").concat(id));
 
           case 3:
-            response = _context9.sent;
-            _context9.next = 6;
+            response = _context10.sent;
+            _context10.next = 6;
             return response.json();
 
           case 6:
-            json = _context9.sent;
+            json = _context10.sent;
             _iterator4 = _createForOfIteratorHelper(json.data.runs);
 
             try {
@@ -7209,14 +7235,14 @@ var fetchCategoryDetails = function fetchCategoryDetails(entryOrId) {
               _iterator4.f();
             }
 
-            return _context9.abrupt("return", convertDates(json.data));
+            return _context10.abrupt("return", convertDates(json.data));
 
           case 10:
           case "end":
-            return _context9.stop();
+            return _context10.stop();
         }
       }
-    }, _callee9);
+    }, _callee10);
   }));
 };
 
@@ -7227,6 +7253,7 @@ exports["default"] = {
   login: exports.login,
   logout: exports.logout,
   fetchCurrentUser: exports.fetchCurrentUser,
+  registerUser: exports.registerUser,
   fetchGamesDirectory: exports.fetchGamesDirectory,
   fetchGameDetails: exports.fetchGameDetails,
   fetchCategoryDetails: exports.fetchCategoryDetails
@@ -7331,9 +7358,13 @@ var LogoutPage_1 = __importDefault(__webpack_require__(/*! ./pages/LogoutPage */
 
 var NotFoundPage_1 = __importDefault(__webpack_require__(/*! ./pages/NotFoundPage */ "./resources/js/pages/NotFoundPage.tsx"));
 
+var RegisterPage_1 = __importDefault(__webpack_require__(/*! ./pages/RegisterPage */ "./resources/js/pages/RegisterPage.tsx"));
+
 var AppContext_1 = __importDefault(__webpack_require__(/*! ./utils/AppContext */ "./resources/js/utils/AppContext.ts"));
 
 var GameProvider_1 = __importDefault(__webpack_require__(/*! ./utils/GameProvider */ "./resources/js/utils/GameProvider.tsx"));
+
+var ParseUtils_1 = __webpack_require__(/*! ./utils/ParseUtils */ "./resources/js/utils/ParseUtils.ts");
 
 var App = function App() {
   var _ref = (0, react_1.useState)(false),
@@ -7348,12 +7379,20 @@ var App = function App() {
 
   (0, react_1.useEffect)(function () {
     API_1["default"].initialize().then(function () {
-      API_1["default"].fetchCurrentUser().then(function (details) {
-        localStorage.setItem('expectLoggedIn', '1');
-        setUser(details);
-      })["catch"](function () {
-        localStorage.setItem('expectLoggedIn', '0');
-      })["finally"](function () {
+      var ready = Promise.resolve();
+
+      if ((0, ParseUtils_1.parseBoolean)(localStorage.getItem('expectLoggedIn'))) {
+        ready = ready.then(function () {
+          API_1["default"].fetchCurrentUser().then(function (details) {
+            localStorage.setItem('expectLoggedIn', '1');
+            setUser(details);
+          })["catch"](function () {
+            localStorage.setItem('expectLoggedIn', '0');
+          });
+        });
+      }
+
+      ready["finally"](function () {
         return setReady(true);
       });
     });
@@ -7395,6 +7434,13 @@ var App = function App() {
     element: react_1["default"].createElement(LogoutPage_1["default"], {
       onLogout: function onLogout() {
         return setUser(undefined);
+      }
+    })
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "register",
+    element: react_1["default"].createElement(RegisterPage_1["default"], {
+      onLogin: function onLogin(user) {
+        return setUser(user);
       }
     })
   })), react_1["default"].createElement(react_router_dom_1.Route, {
@@ -8331,8 +8377,6 @@ var API_1 = __importDefault(__webpack_require__(/*! ../API */ "./resources/js/AP
 
 var AppContext_1 = __importDefault(__webpack_require__(/*! ../utils/AppContext */ "./resources/js/utils/AppContext.ts"));
 
-var FormUtils_1 = __webpack_require__(/*! ../utils/FormUtils */ "./resources/js/utils/FormUtils.ts");
-
 var ParseUtils_1 = __webpack_require__(/*! ../utils/ParseUtils */ "./resources/js/utils/ParseUtils.ts");
 
 var SoftRedirect_1 = __importDefault(__webpack_require__(/*! ./common/SoftRedirect */ "./resources/js/pages/common/SoftRedirect.tsx"));
@@ -8364,7 +8408,7 @@ var LoginPage = function LoginPage(_ref) {
       event.stopPropagation();
       setValidated(true);
     } else {
-      var _ref7 = (0, FormUtils_1.formToValues)(form),
+      var _ref7 = (0, ParseUtils_1.parseForm)(form),
           login = _ref7.login,
           password = _ref7.password,
           remember = _ref7.remember;
@@ -8435,7 +8479,8 @@ var LoginPage = function LoginPage(_ref) {
     name: "login",
     placeholder: "Podaj login lub e-mail",
     required: true,
-    pattern: "[\\w.@+-]{3,}"
+    pattern: "[\\w.@+-]{3,}",
+    autoComplete: "username email"
   }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Login lub e-mail"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
     type: "invalid"
   }, "Prosz\u0119 poda\u0107 prawid\u0142owy login lub e-mail.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
@@ -8446,7 +8491,8 @@ var LoginPage = function LoginPage(_ref) {
     name: "password",
     placeholder: "Podaj has\u0142o",
     required: true,
-    pattern: ".{8,}"
+    pattern: ".{8,}",
+    autoComplete: "current-password"
   }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Has\u0142o"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
     type: "invalid"
   }, "Nieprawid\u0142owe has\u0142o.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
@@ -8616,6 +8662,369 @@ exports["default"] = exports.NotFoundPage;
 
 /***/ }),
 
+/***/ "./resources/js/pages/RegisterPage.tsx":
+/*!*********************************************!*\
+  !*** ./resources/js/pages/RegisterPage.tsx ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var API_1 = __importDefault(__webpack_require__(/*! ../API */ "./resources/js/API.ts"));
+
+var AppContext_1 = __importDefault(__webpack_require__(/*! ../utils/AppContext */ "./resources/js/utils/AppContext.ts"));
+
+var ParseUtils_1 = __webpack_require__(/*! ../utils/ParseUtils */ "./resources/js/utils/ParseUtils.ts");
+
+var SoftRedirect_1 = __importDefault(__webpack_require__(/*! ./common/SoftRedirect */ "./resources/js/pages/common/SoftRedirect.tsx"));
+
+var negateDefined = function negateDefined(value) {
+  if (value === undefined) return undefined;
+  return !value;
+};
+
+var RegisterPage = function RegisterPage(_ref) {
+  var onLogin = _ref.onLogin;
+
+  var _ref2 = (0, react_1.useContext)(AppContext_1["default"]),
+      user = _ref2.user;
+
+  var navigate = (0, react_router_dom_1.useNavigate)();
+
+  var _ref3 = (0, react_1.useState)(false),
+      _ref4 = _slicedToArray(_ref3, 2),
+      validated = _ref4[0],
+      setValidated = _ref4[1];
+
+  var _ref5 = (0, react_1.useState)({}),
+      _ref6 = _slicedToArray(_ref5, 2),
+      errors = _ref6[0],
+      setErrors = _ref6[1];
+
+  var _ref7 = (0, react_1.useState)(),
+      _ref8 = _slicedToArray(_ref7, 2),
+      alert = _ref8[0],
+      setAlert = _ref8[1];
+
+  var _ref9 = (0, react_1.useState)(),
+      _ref10 = _slicedToArray(_ref9, 2),
+      repeatSuccess = _ref10[0],
+      setRepeatSuccess = _ref10[1];
+
+  var validateRepeat = function validateRepeat(event) {
+    var form = event.target.closest('form');
+
+    if (form.repeatPassword.value) {
+      setRepeatSuccess(form.repeatPassword.value == form.password.value);
+    } else {
+      setRepeatSuccess(undefined);
+    }
+  };
+
+  var handleSubmit = function handleSubmit(event) {
+    var form = event.currentTarget;
+    setValidated(false);
+    event.preventDefault();
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(true);
+    } else {
+      var values = (0, ParseUtils_1.parseForm)(form);
+      if (values.password != values.repeatPassword || !values.agreement) return;
+      API_1["default"].registerUser(values).then(function () {
+        return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+          var user;
+          return _regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _context.next = 2;
+                  return API_1["default"].fetchCurrentUser();
+
+                case 2:
+                  user = _context.sent;
+                  onLogin(user);
+                  navigate('/');
+
+                case 5:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
+      })["catch"](function (error) {
+        setAlert({
+          variant: 'danger',
+          heading: 'Wystąpił problem',
+          text: error.message
+        });
+      });
+    }
+  };
+
+  if (user) {
+    return react_1["default"].createElement(SoftRedirect_1["default"], {
+      to: "/profile",
+      variant: "warning",
+      text: "Jeste\u015B ju\u017C zalogowany! "
+    });
+  }
+
+  return react_1["default"].createElement("main", null, react_1["default"].createElement(react_bootstrap_1.Container, null, react_1["default"].createElement(react_bootstrap_1.Row, {
+    className: "justify-content-center my-4"
+  }, react_1["default"].createElement(react_bootstrap_1.Col, {
+    xs: 12,
+    sm: 8,
+    md: 6,
+    xl: 5,
+    xxl: 4
+  }, react_1["default"].createElement("h2", {
+    className: "text-center"
+  }, "Rejestracja"), alert && react_1["default"].createElement(react_bootstrap_1.Alert, {
+    variant: alert.variant
+  }, alert.heading && react_1["default"].createElement(react_bootstrap_1.Alert.Heading, null, alert.heading), react_1["default"].createElement("p", {
+    className: "mb-0"
+  }, alert.text)), react_1["default"].createElement(react_bootstrap_1.Form, {
+    noValidate: true,
+    validated: validated,
+    onSubmit: handleSubmit
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "name"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "text",
+    name: "name",
+    required: true,
+    placeholder: "Podaj login",
+    pattern: "[\\w.+]{3,}",
+    autoComplete: "nickname username"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Nazwa u\u017Cytkownika"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Login musi sk\u0142ada\u0107 si\u0119 tylko z znak\xF3w alfanumerycznych i by\u0107 co najmniej 3 znaki d\u0142ugi.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "email"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "email",
+    name: "email",
+    required: true,
+    placeholder: "Podaj e-mail",
+    autoComplete: "email"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "E-mail"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Podaj prawid\u0142owy adres e-mail.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "password"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "password",
+    name: "password",
+    required: true,
+    placeholder: "Podaj has\u0142o",
+    pattern: ".{8,}",
+    autoComplete: "new-password",
+    onChange: validateRepeat
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Has\u0142o"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Nieprawid\u0142owe has\u0142o.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "repeatPassword"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "password",
+    name: "repeatPassword",
+    required: true,
+    placeholder: "Powt\xF3rz has\u0142o",
+    pattern: ".{8,}",
+    autoComplete: "repeat-password",
+    isInvalid: negateDefined(repeatSuccess),
+    onChange: validateRepeat
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Powt\xF3rz has\u0142o"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Has\u0142a nie zgadzaj\u0105 si\u0119.")), react_1["default"].createElement(react_bootstrap_1.Accordion, {
+    defaultActiveKey: ['0'],
+    alwaysOpen: true,
+    className: "accordion-natural mb-3"
+  }, react_1["default"].createElement(react_bootstrap_1.Accordion.Item, {
+    eventKey: "0"
+  }, react_1["default"].createElement(react_bootstrap_1.Accordion.Header, null, "Dodatkowe informacje"), react_1["default"].createElement(react_bootstrap_1.Accordion.Body, null, react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "youtubeUrl"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "text",
+    name: "youtubeUrl",
+    placeholder: "Wklej adres URL twojego kana\u0142u",
+    pattern: "https?:\\/\\/(www\\.)?youtube\\.com\\/(channel\\/UC[\\w-]{21}[AQgw]|(c\\/|user\\/)?[\\w-]+)",
+    autoComplete: "youtube-channel-url"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Kana\u0142 YouTube"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Nieprawid\u0142owy URL kana\u0142u YouTube.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "twitchUrl"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "text",
+    name: "twitchUrl",
+    placeholder: "Wklej adres URL twojego kana\u0142u",
+    pattern: "https?:\\/\\/(www\\.)?twitch\\.tv\\/[\\w-]+)",
+    autoComplete: "twitch-channel-url"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Kana\u0142 Twitch"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Nieprawid\u0142owy URL kana\u0142u Twitch.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "twitterUrl"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "text",
+    name: "twitterUrl",
+    placeholder: "Wklej adres URL twojego profilu",
+    pattern: "https:\\/\\/twitter.com\\/([a-zA-Z0-9_]+)\\/?",
+    autoComplete: "twitter-profile-url"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Profil Twitter"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Nieprawid\u0142owy URL profilu Twitter.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "discord"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    type: "text",
+    name: "discord",
+    placeholder: "Podaj sw\xF3j tag Discord ",
+    pattern: ".{3,32}#[0-9]{4}",
+    autoComplete: "discord-tag"
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Tag Discord"), react_1["default"].createElement(react_bootstrap_1.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Nieprawid\u0142owy tag Discord.")), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3",
+    controlId: "profileDescription"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Control, {
+    as: "textarea",
+    name: "profileDescription",
+    placeholder: "Podaj opis profilu",
+    autoComplete: "none",
+    style: {
+      height: '8em'
+    }
+  }), react_1["default"].createElement(react_bootstrap_1.Form.Label, null, "Opis profilu"))))), react_1["default"].createElement(react_bootstrap_1.Form.Group, {
+    className: "form-floating mb-3 hstack justify-content-center justify-content-lg-between flex-wrap gap-2",
+    controlId: "agreement"
+  }, react_1["default"].createElement(react_bootstrap_1.Form.Check, {
+    type: "checkbox",
+    name: "agreement",
+    required: true,
+    label: "Zgoda na przetwarzanie danych i regulamin"
+  }), react_1["default"].createElement(react_bootstrap_1.Button, {
+    variant: "primary",
+    type: "submit",
+    className: "px-4 ms-auto"
+  }, "Zarejestruj")))))));
+};
+
+exports["default"] = RegisterPage;
+
+/***/ }),
+
 /***/ "./resources/js/pages/common/SoftRedirect.tsx":
 /*!****************************************************!*\
   !*** ./resources/js/pages/common/SoftRedirect.tsx ***!
@@ -8728,6 +9137,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 var settings = {
+  authRoot: location.origin,
   apiRoot: "".concat(location.origin, "/api")
 };
 exports["default"] = settings;
@@ -8753,53 +9163,6 @@ var AppContext = (0, react_1.createContext)({
   user: undefined
 });
 exports["default"] = AppContext;
-
-/***/ }),
-
-/***/ "./resources/js/utils/FormUtils.ts":
-/*!*****************************************!*\
-  !*** ./resources/js/utils/FormUtils.ts ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.formToValues = void 0;
-
-var formToValues = function formToValues(form) {
-  var values = {};
-
-  var _iterator = _createForOfIteratorHelper(form.elements),
-      _step;
-
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var element = _step.value;
-
-      if (element.name) {
-        values[element.name] = element.value;
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-
-  return values;
-};
-
-exports.formToValues = formToValues;
 
 /***/ }),
 
@@ -9057,13 +9420,27 @@ exports.buildPagination = buildPagination;
 "use strict";
 
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.parseBoolean = void 0;
+exports.parseForm = exports.parseBoolean = void 0;
 
-var parseBoolean = function parseBoolean(value, defaultValue) {
-  if (typeof value === 'undefined') {
+var parseBoolean = function parseBoolean(value) {
+  var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  if (typeof value === 'undefined' || value === null) {
     return defaultValue;
   }
 
@@ -9090,6 +9467,14 @@ var parseBoolean = function parseBoolean(value, defaultValue) {
 };
 
 exports.parseBoolean = parseBoolean;
+
+var parseForm = function parseForm(form) {
+  return Object.fromEntries(_toConsumableArray(new FormData(form)).filter(function (e) {
+    return e[1] !== '';
+  }));
+};
+
+exports.parseForm = parseForm;
 
 /***/ }),
 

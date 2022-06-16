@@ -39,11 +39,11 @@ export const customFetch = (input: RequestInfo, init?: RequestInit) => {
 // State
 
 export const initialize = async () => {
-	await customFetch(`${location.origin}/sanctum/csrf-cookie`);
+	await customFetch(`${settings.authRoot}/sanctum/csrf-cookie`);
 }
 
 export const login = async (login: string, password: string, remember  = false) => {
-	await customFetch(`${location.origin}/login`, {
+	await customFetch(`${settings.authRoot}/login`, {
 		method: 'POST',
 		body: JSON.stringify({ name: login, password, remember })
 	}).then(r => {
@@ -55,11 +55,31 @@ export const login = async (login: string, password: string, remember  = false) 
 
 export const logout = async () => {
 	localStorage.setItem('expectLoggedIn', '0');
-	return customFetch(`${location.origin}/logout`, { method: 'POST' }).then(r => r.ok);
+	return customFetch(`${settings.authRoot}/logout`, { method: 'POST' }).then(r => r.ok);
 }
 
 export const fetchCurrentUser = async () => {
 	return customFetch(`${settings.apiRoot}/user`).then(jsonOrThrowIfNotOk) as Promise<UserDetails>;
+}
+
+export interface RegisterUserData {
+	name: string;
+	email: string;
+	password: string;
+	countryId?: string;
+	youtubeUrl?: string;
+	twitchUrl?: string
+	twitterUrl?: string;
+	discord?: string;
+	profileDescription?: string;
+}
+
+export const registerUser = async (data: RegisterUserData) => {
+	await customFetch(`${settings.authRoot}/register`, {
+		method: 'POST',
+		body: JSON.stringify(data),
+	}).then(throwIfNotOk);
+	return true;
 }
 
 
@@ -122,6 +142,7 @@ export default {
 	login,
 	logout,
 	fetchCurrentUser,
+	registerUser,
 
 	fetchGamesDirectory,
 	fetchGameDetails,

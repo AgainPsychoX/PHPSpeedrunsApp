@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../API";
 import { UserDetails } from "../models/User";
 import AppContext from "../utils/AppContext";
-import { formToValues } from "../utils/FormUtils";
-import { parseBoolean } from "../utils/ParseUtils";
+import { parseBoolean, parseForm } from "../utils/ParseUtils";
 import SoftRedirect from "./common/SoftRedirect";
 
 interface AlertData {
@@ -34,7 +33,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 			setValidated(true);
 		}
 		else {
-			const { login, password, remember } = formToValues(form);
+			const { login, password, remember } = parseForm(form);
 			API.login(login, password, parseBoolean(remember, false))
 				.then(async () => {
 					const user = await API.fetchCurrentUser();
@@ -67,12 +66,12 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 					</Alert>}
 					<Form noValidate validated={validated} onSubmit={handleSubmit}>
 						<Form.Group className="form-floating mb-3" controlId="login">
-							<Form.Control type="text" name="login" placeholder="Podaj login lub e-mail" required pattern="[\w.@+-]{3,}" />
+							<Form.Control type="text" name="login" placeholder="Podaj login lub e-mail" required pattern="[\w.@+-]{3,}" autoComplete="username email" />
 							<Form.Label>Login lub e-mail</Form.Label>
 							<Form.Control.Feedback type="invalid">Proszę podać prawidłowy login lub e-mail.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="form-floating mb-3" controlId="password">
-							<Form.Control type="password" name="password" placeholder="Podaj hasło" required pattern=".{8,}" />
+							<Form.Control type="password" name="password" placeholder="Podaj hasło" required pattern=".{8,}" autoComplete="current-password" />
 							<Form.Label>Hasło</Form.Label>
 							<Form.Control.Feedback type="invalid">Nieprawidłowe hasło.</Form.Control.Feedback>
 						</Form.Group>

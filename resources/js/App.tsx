@@ -13,8 +13,10 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import RegisterPage from "./pages/RegisterPage";
 import AppContext from "./utils/AppContext";
 import GameProvider from "./utils/GameProvider";
+import { parseBoolean } from "./utils/ParseUtils";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -22,16 +24,21 @@ const App = () => {
 
 	useEffect(() => {
 		API.initialize().then(() => {
-			API.fetchCurrentUser()
-				.then(details => {
-					localStorage.setItem('expectLoggedIn', '1');
-					setUser(details);
-				})
-				.catch(() => {
-					localStorage.setItem('expectLoggedIn', '0')
-				})
-				.finally(() => setReady(true))
-			;
+			let ready = Promise.resolve();
+			if (parseBoolean(localStorage.getItem('expectLoggedIn'))) {
+				ready = ready.then(() => {
+					API.fetchCurrentUser()
+						.then(details => {
+							localStorage.setItem('expectLoggedIn', '1');
+							setUser(details);
+						})
+						.catch(() => {
+							localStorage.setItem('expectLoggedIn', '0')
+						})
+					})
+				;
+			}
+			ready.finally(() => setReady(true))
 		});
 	}, [])
 
@@ -60,6 +67,7 @@ const App = () => {
 						<Route path="about" element={<AboutPage/>} />
 						<Route path="login" element={<LoginPage onLogin={(user) => setUser(user)}/>} />
 						<Route path="logout" element={<LogoutPage onLogout={() => setUser(undefined)}/>} />
+						<Route path="register" element={<RegisterPage onLogin={(user) => setUser(user)}/>} />
 					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>

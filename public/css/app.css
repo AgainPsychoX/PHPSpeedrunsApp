@@ -10314,3 +10314,7 @@ footer {
     border-radius: 0.3em !important;
   }
 }
+.accordion-natural .accordion-button:not(.collapse) {
+  color: inherit;
+  background-color: #e2e3e5;
+}
