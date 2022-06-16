@@ -32,7 +32,7 @@ export const GamePage = () => {
 					</Row>
 					<Row>
 						<Col xs={12}>
-							<h4>Kategorie</h4>
+							<h4 className="px-2">Kategorie</h4>
 							{game.categories && <CategoriesTabs categories={game.categories} />}
 						</Col>
 					</Row>

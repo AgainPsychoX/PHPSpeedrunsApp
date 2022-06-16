@@ -26,12 +26,12 @@ const CategoriesTabs = ({
 
 	return (
 		<Tabs
-			className="mb-3"
+			className="mb-3 px-2"
 			activeKey={activeKey}
 			onSelect={(key) => setKey(key || defaultKey)}
 		>
 			{categories.map(category =>
-				<Tab key={category.id} eventKey={category.id} title={category.name}>
+				<Tab key={category.id} eventKey={category.id} title={category.name} className="px-2">
 					{(details && details.id == category.id)
 						? <CategoryTabContent category={details} />
 						: <GenericLoadingSection/>
