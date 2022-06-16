@@ -4,8 +4,8 @@ import { Variant } from "react-bootstrap/esm/types";
 import { useNavigate } from "react-router-dom";
 import API, { RegisterUserData } from "../API";
 import { UserDetails } from "../models/User";
-import AppContext from "../utils/AppContext";
-import { parseForm } from "../utils/ParseUtils";
+import AppContext from "../utils/contexts/AppContext";
+import { parseForm } from "../utils/SomeUtils";
 import SoftRedirect from "./common/SoftRedirect";
 
 const negateDefined = (value: any) => {

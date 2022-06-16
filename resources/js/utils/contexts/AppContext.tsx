@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { UserDetails } from '../models/User';
+import { UserDetails } from '../../models/User';
 
 type AppContextType = {
 	user?: UserDetails;

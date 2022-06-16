@@ -2,9 +2,11 @@ import { EventKey } from "@restart/ui/esm/types";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { Tab, Table, Tabs } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { fetchCategoryDetails } from "../API";
-import GenericLoadingSection from "../components/GenericLoadingSection";
+import { GenericLoadingSection } from "../components/GenericLoading";
 import { CategoryDetails, CategoryEntry } from "../models/Category";
+import { RunEntry } from "../models/Run";
 import { formatDurationHTML } from "../utils/FormattingUtils";
 
 interface CategoriesTabsProps {
@@ -62,25 +64,7 @@ const CategoryTabContent = ({category}: { category: CategoryDetails }) => {
 						</tr>
 					</thead>
 					<tbody>
-						{category.scoreRule == 'none'
-							? category.runs.map((run, i) =>
-								<tr key={run.id}>
-									<td>{i + 1}</td>
-									<td>{run.userName}</td>
-									<td>{formatDurationHTML(run.duration)}</td>
-									<td>{run.createdAt.toRelative()}</td>
-								</tr>
-							)
-							: category.runs.map((run, i) =>
-								<tr key={run.id}>
-									<td>{i + 1}</td>
-									<td>{run.userName}</td>
-									<td>{run.score}</td>
-									<td>{formatDurationHTML(run.duration)}</td>
-									<td>{run.createdAt.toRelative()}</td>
-								</tr>
-							)
-						}
+						{category.runs.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
 					</tbody>
 				</Table>
 			</>
@@ -88,5 +72,20 @@ const CategoryTabContent = ({category}: { category: CategoryDetails }) => {
 		}
 	</>;
 };
+
+const RunRow = ({place, category, run}: { place: number, category: CategoryDetails, run: RunEntry }) => {
+	const navigate = useNavigate();
+	return <tr
+		key={run.id}
+		style={{cursor: 'pointer'}}
+		onClick={() => navigate(`/games/${category.gameId}/categories/${category.id}/runs/${run.id}`)}
+	>
+		<td>{place}</td>
+		<td>{run.userName}</td>
+		{category.scoreRule != 'none' && <td>{run.score}</td>}
+		<td>{formatDurationHTML(run.duration)}</td>
+		<td>{run.createdAt.toRelative()}</td>
+	</tr>
+}
 
 export default CategoriesTabs;

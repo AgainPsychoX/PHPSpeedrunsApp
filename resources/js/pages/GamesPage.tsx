@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { fetchGamesDirectory, GamesDirectoryOrderBy, PaginationMeta } from "../API";
-import GenericLoadingSection from "../components/GenericLoadingSection";
+import { GenericLoadingSection } from "../components/GenericLoading";
 import { GameEntryWithSortingInfo } from "../models/Game";
 import { buildPagination } from "../utils/Pagination";
 

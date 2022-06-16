@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry } from "./models/Game";
+import { RunDetails, RunEntry } from "./models/Run";
 import { UserDetails } from "./models/User";
 import settings from "./settings";
 
@@ -117,6 +118,7 @@ export const fetchGamesDirectory = async (
 	for (const o of json.data) convertDates(o, ['createdAt', 'updateAt', 'latestRunAt']);
 	return json;
 }
+
 export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	const response = await customFetch(`${settings.apiRoot}/games/${id}`);
@@ -133,6 +135,13 @@ export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) =>
 	return convertDates(json.data) as CategoryDetails;
 }
 
+export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const response = await customFetch(`${settings.apiRoot}/runs/${id}`);
+	const json = await response.json() as any as { data: RunDetails };
+	return convertDates(json.data) as RunDetails;
+}
+
 
 
 export default {
@@ -147,4 +156,5 @@ export default {
 	fetchGamesDirectory,
 	fetchGameDetails,
 	fetchCategoryDetails,
+	fetchRunDetails,
 }

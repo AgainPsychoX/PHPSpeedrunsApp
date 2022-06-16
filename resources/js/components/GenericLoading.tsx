@@ -1,12 +1,12 @@
 import React from "react";
-import { Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 
-export interface GenericLoadingSectionProps {
+export interface GenericLoadingProps {
 	description?: string;
 };
 export const GenericLoadingSection = ({
 	description
-}: GenericLoadingSectionProps) => {
+}: GenericLoadingProps) => {
 	return (
 		<div className="d-flex flex-column align-items-center m-4">
 			<Spinner animation="border" role="status">
@@ -17,4 +17,10 @@ export const GenericLoadingSection = ({
 	)
 }
 
-export default GenericLoadingSection;
+export const GenericLoadingPage = (props: GenericLoadingProps) => {
+	return <main>
+		<Container>
+			<GenericLoadingSection {...props} />
+		</Container>
+	</main>
+}

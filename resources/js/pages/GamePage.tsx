@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Container, Col, Row, Tab, Tabs } from "react-bootstrap";
-import GenericLoadingSection from "../components/GenericLoadingSection";
-import GameContext from "../utils/GameContext";
+import { GenericLoadingSection } from "../components/GenericLoading";
+import GameContext from "../utils/contexts/GameContext";
 import CategoriesTabs from "./CategoriesTabs";
 
 export const GamePage = () => {

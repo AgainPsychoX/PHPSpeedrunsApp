@@ -1,13 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import React, { useContext, useEffect } from "react";
 import { Variant } from "react-bootstrap/esm/types";
-import { useNavigate } from "react-router-dom";
 import API from "../API";
-import GenericLoadingSection from "../components/GenericLoadingSection";
-import { UserDetails } from "../models/User";
-import AppContext from "../utils/AppContext";
-import { formToValues } from "../utils/FormUtils";
-import { parseBoolean } from "../utils/ParseUtils";
+import { GenericLoadingPage } from "../components/GenericLoading";
+import AppContext from "../utils/contexts/AppContext";
 import SoftRedirect from "./common/SoftRedirect";
 
 interface AlertData {
@@ -28,11 +23,7 @@ const LogoutPage = ({onLogout}: LoginPageProps) => {
 	}, [user]);
 
 	if (user) {
-		return <main>
-			<Container>
-				<GenericLoadingSection/>
-			</Container>
-		</main>
+		return <GenericLoadingPage/>
 	}
 
 	return <SoftRedirect to="/" variant="success" text="Zostałeś wylogowany. Za chwilę nastąpi przekierowanie..." />

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { Container, Nav, Navbar } from "react-bootstrap"
 import { Link, NavLink } from "react-router-dom";
-import AppContext from "../utils/AppContext";
+import AppContext from "../utils/contexts/AppContext";
 
 const MyNavbar = () => {
 	const { user } = useContext(AppContext);

@@ -1,14 +1,16 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchGameDetails } from "../API";
-import GenericLoadingSection from "../components/GenericLoadingSection";
-import { GameDetails } from "../models/Game";
-import GameContext from "./GameContext";
+import React, { createContext, useEffect, useState } from "react";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { fetchGameDetails } from "../../API";
+import { GenericLoadingSection } from "../../components/GenericLoading";
+import { GameDetails } from "../../models/Game";
 
-const GameProvider: FunctionComponent<{ children: React.ReactNode }> = (props) => {
+const GameContext = createContext<GameDetails | undefined>(undefined);
+export default GameContext;
+
+export const GameContextRouterOutlet = () => {
+	const navigate = useNavigate();
 	const { gameIdPart } = useParams<{gameIdPart: string}>();
 	const [game, setGame] = useState<GameDetails>();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!gameIdPart) return;
@@ -30,8 +32,6 @@ const GameProvider: FunctionComponent<{ children: React.ReactNode }> = (props) =
 	}
 
 	return <GameContext.Provider value={game}>
-		{props.children}
+		<Outlet/>
 	</GameContext.Provider>
 }
-
-export default GameProvider;

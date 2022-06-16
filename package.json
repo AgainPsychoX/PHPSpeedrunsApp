@@ -33,6 +33,7 @@
         "js-cookie": "^3.0.1",
         "luxon": "^2.4.0",
         "react-bootstrap": "^2.4.0",
+        "react-player": "^2.10.1",
         "react-router-dom": "^6.3.0"
     }
 }

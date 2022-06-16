@@ -4,8 +4,8 @@ import { Variant } from "react-bootstrap/esm/types";
 import { useNavigate } from "react-router-dom";
 import API from "../API";
 import { UserDetails } from "../models/User";
-import AppContext from "../utils/AppContext";
-import { parseBoolean, parseForm } from "../utils/ParseUtils";
+import AppContext from "../utils/contexts/AppContext";
+import { parseBoolean, parseForm } from "../utils/SomeUtils";
 import SoftRedirect from "./common/SoftRedirect";
 
 interface AlertData {

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import API from "./API";
-import GenericLoadingSection from "./components/GenericLoadingSection";
+import { GenericLoadingPage } from "./components/GenericLoading";
 import MyFooter from "./components/MyFooter";
 import MyNavbar from "./components/MyNavbar";
 import { UserDetails } from "./models/User";
@@ -14,9 +13,12 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
-import AppContext from "./utils/AppContext";
-import GameProvider from "./utils/GameProvider";
-import { parseBoolean } from "./utils/ParseUtils";
+import RunPage from "./pages/RunPage";
+import AppContext from "./utils/contexts/AppContext";
+import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
+import { CategoryContextRouterOutlet } from "./utils/contexts/CategoryContext";
+import RunContext, { RunContextRouterOutlet } from "./utils/contexts/RunContext";
+import { parseBoolean } from "./utils/SomeUtils";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -43,9 +45,7 @@ const App = () => {
 	}, [])
 
 	if (!ready) {
-		return <div>
-			<GenericLoadingSection/>
-		</div>;
+		return <GenericLoadingPage/>
 	}
 
 	return (
@@ -58,11 +58,25 @@ const App = () => {
 					<Route path="/">
 						<Route index element={<HomePage/>} />
 						<Route path="games">
-							<Route path=":gameIdPart" element={<GameProvider>
-								<GamePage/>
-							</GameProvider>} />
 							{/* <Route path="new" element={<NewGamePage />} /> */}
 							<Route index element={<GamesPage />} />
+							<Route path=":gameIdPart" element={<GameContextRouterOutlet/>}>
+								<Route index element={<GamePage/>} />
+								<Route path="categories">
+									<Route index element={<Navigate to={`/games`}/>} />
+									<Route path=":categoryIdPart" element={<CategoryContextRouterOutlet/>}>
+										{/* TODO: index should redirect to GamePage with category selected */}
+										<Route index element={<Navigate to={`/games`}/>} />
+										<Route path="runs">
+											{/* TODO: index should redirect to GamePage with category selected and run highlighted */}
+											<Route index element={<Navigate to={`/games`}/>} />
+											<Route path=":runIdPart" element={<RunContextRouterOutlet/>}>
+												<Route index element={<RunPage/>} />
+											</Route>
+										</Route>
+									</Route>
+								</Route>
+							</Route>
 						</Route>
 						<Route path="about" element={<AboutPage/>} />
 						<Route path="login" element={<LoginPage onLogin={(user) => setUser(user)}/>} />

@@ -30,7 +30,7 @@ class StoreRunRequest extends FormRequest
             'duration'      => 'required|integer|min:100', // ms
             'score'         => 'required|integer',
             'video_url'     => 'required|url',
-            'notes'         => 'string|between:20,4000',
+            'notes'         => 'string|max:4000',
         ];
         // TODO: validate video, better regex or even full validation by curl request
     }
