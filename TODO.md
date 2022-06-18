@@ -29,6 +29,8 @@
 + Merging ghosts (from ghost profile).
 + Home page (incl. featured runs/games/players)
 + Docs/user guide.
++ More dynamic coded `HomePage` carousel.
++ Add small bar between navbar and content on pages, possibly related to the content.
 
 
 

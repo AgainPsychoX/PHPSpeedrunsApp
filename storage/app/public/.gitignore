@@ -1,2 +1,6 @@
 *
 !.gitignore
+!images/
+!images/home/
+!images/home/carousel/
+!images/home/carousel/**

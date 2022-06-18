@@ -8333,8 +8333,30 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 
+var images = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.png', '8.jpg', '9.jpg', '10.png', '11.jpg', '12.jpg', '13.jpg', '14.png', '15.webp', '16.jpeg', '17.jpg', '18.jpeg', '19.png', '20.jpg', '21.jpg', '22.jpg'].map(function (filename) {
+  return {
+    url: "/storage/images/home/carousel/".concat(filename)
+  };
+});
+
 var HomePage = function HomePage() {
-  return react_1["default"].createElement("main", null, react_1["default"].createElement(react_bootstrap_1.Container, null, react_1["default"].createElement("h2", null, "Strona g\u0142\xF3wna"), react_1["default"].createElement("p", null, "TODO: Doda\u0107 slider z screenami z gier, features games/features runs, linki do innych podstron itd.")));
+  return react_1["default"].createElement("main", null, react_1["default"].createElement(react_bootstrap_1.Carousel, {
+    indicators: false,
+    style: {
+      height: '32em'
+    },
+    className: "overflow-hidden mb-3"
+  }, images.map(function (image) {
+    return react_1["default"].createElement(react_bootstrap_1.Carousel.Item, {
+      key: image.url
+    }, react_1["default"].createElement("img", {
+      className: "d-block w-100 h-100",
+      style: {
+        objectFit: 'cover'
+      },
+      src: image.url
+    }));
+  })), react_1["default"].createElement(react_bootstrap_1.Container, null, react_1["default"].createElement("h2", null, "Strona g\u0142\xF3wna"), react_1["default"].createElement("p", null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")));
 };
 
 exports.HomePage = HomePage;
