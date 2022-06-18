@@ -9193,7 +9193,8 @@ var RunPage = function RunPage() {
 
   return react_1["default"].createElement("main", null, react_1["default"].createElement(react_bootstrap_1.Container, null, react_1["default"].createElement(react_router_dom_1.Link, {
     style: {
-      color: 'initial'
+      color: 'initial',
+      textDecoration: 'none'
     },
     to: "/games/".concat(game.id)
   }, react_1["default"].createElement("small", {
@@ -9202,7 +9203,8 @@ var RunPage = function RunPage() {
     className: "text-muted"
   }, "(", game.publishYear, ")"))), react_1["default"].createElement(react_router_dom_1.Link, {
     style: {
-      color: 'initial'
+      color: 'initial',
+      textDecoration: 'none'
     },
     to: "/games/".concat(game.id, "/categories/").concat(category.id)
   }, react_1["default"].createElement("small", {

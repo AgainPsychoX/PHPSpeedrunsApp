@@ -20,12 +20,12 @@ const RunPage = () => {
 
 	return <main>
 		<Container>
-			<Link style={{color: 'initial'}} to={`/games/${game.id}`}>
+			<Link style={{color: 'initial', textDecoration: 'none' }} to={`/games/${game.id}`}>
 				<small className="text-muted">Gra</small>
 				<h2>{game.name} <small className="text-muted">({game.publishYear})</small></h2>
 			</Link>
 
-			<Link style={{color: 'initial'}} to={`/games/${game.id}/categories/${category.id}`}>
+			<Link style={{color: 'initial', textDecoration: 'none' }} to={`/games/${game.id}/categories/${category.id}`}>
 				<small className="text-muted">Kategoria</small>
 				<h2>{category.name}</h2>
 			</Link>
