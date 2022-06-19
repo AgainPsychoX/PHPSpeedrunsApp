@@ -17,7 +17,7 @@ import GamesPage from "./pages/GamesPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import NotFoundPage from "./pages/common/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
 import RunPage from "./pages/RunPage";
 import UsersPage from "./pages/UsersPage";
@@ -28,22 +28,19 @@ const App = () => {
 	const [user, setUser] = useState<UserDetails>();
 
 	useEffect(() => {
-		API.initialize().then(() => {
-			let ready = Promise.resolve();
+		API.initialize().then(async () => {
 			if (parseBoolean(localStorage.getItem('expectLoggedIn'))) {
-				ready = ready.then(() => {
-					API.fetchCurrentUser()
-						.then(details => {
-							localStorage.setItem('expectLoggedIn', '1');
-							setUser(details);
-						})
-						.catch(() => {
-							localStorage.setItem('expectLoggedIn', '0')
-						})
+				await API.fetchCurrentUser()
+					.then(details => {
+						localStorage.setItem('expectLoggedIn', '1');
+						setUser(details);
+					})
+					.catch(() => {
+						localStorage.setItem('expectLoggedIn', '0')
 					})
 				;
 			}
-			ready.finally(() => setReady(true))
+			setReady(true);
 		});
 	}, [])
 

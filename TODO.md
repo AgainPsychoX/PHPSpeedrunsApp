@@ -17,6 +17,7 @@
 	+ List mods in games/categories, button to edit the list, search/form in modal.
 	+ Global administrators as separate admin panel.
 + Better checking permissions.
++ Change/forget password.
 
 
 

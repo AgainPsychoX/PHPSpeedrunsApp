@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row, Accordion } from "react-bootstrap";
 import { Variant } from "react-bootstrap/esm/types";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 		}
 	}
 
-	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
 		const form = event.currentTarget;
 		setValidated(false);
 		event.preventDefault();
@@ -67,7 +67,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 				})
 			;
 		}
-	}
+	}, [onLogin, navigate]);
 
 	if (currentUser) {
 		return <SoftRedirect to="/users/current" variant="warning" text="Jesteś już zalogowany! " />
@@ -76,7 +76,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 	return <main>
 		<Container>
 			<Row className="justify-content-center my-4">
-				<Col xs={12} sm={8} md={6} xl={5} xxl={4}>
+				<Col xs={12} sm={8} md={6} xl={5}>
 					<h2 className="text-center">Rejestracja</h2>
 					{alert && <Alert variant={alert.variant}>
 						{alert.heading && <Alert.Heading>{alert.heading}</Alert.Heading>}

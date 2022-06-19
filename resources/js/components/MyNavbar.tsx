@@ -24,7 +24,7 @@ const MyNavbar = () => {
 			<Navbar.Collapse className="justify-content-end">
 				{currentUser
 					? <>
-						<Navbar.Text className="mx-auto mx-lg-2">
+						<Navbar.Text className="mx-auto mx-lg-2 text-center d-block">
 							Zalogowany jako <span className="fw-semibold text-break">{currentUser.name}</span>
 						</Navbar.Text>
 						<div className="hstack gap-3 gap-lg-1 my-1 text-nowrap">

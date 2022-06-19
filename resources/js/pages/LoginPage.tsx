@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Variant } from "react-bootstrap/esm/types";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	const [validated, setValidated] = useState(false);
 	const [alert, setAlert] = useState<AlertData>();
 
-	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
 		const form = event.currentTarget;
 		setValidated(false);
 		event.preventDefault();
@@ -50,7 +50,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 				})
 			;
 		}
-	}
+	}, [onLogin, navigate]);
 
 	if (currentUser) {
 		return <SoftRedirect to="/users/current" variant="warning" text="Jesteś już zalogowany!" />
