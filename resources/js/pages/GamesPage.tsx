@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { fetchGamesDirectory, GamesDirectoryOrderBy, PaginationMeta } from "../API";
@@ -48,7 +48,7 @@ const GamesPage = ({
 				<div className="ms-auto">
 					<Form.Group className="m-auto" controlId="sortingSelection">
 						<Form.Select aria-label="Sortowanie" onChange={event => setSorting(event.target.value as Sorting)} value={sorting}>
-							{Object.entries(sortingToString).map(([key, text], i) =>
+							{Object.entries(sortingToString).map(([key, text]) =>
 								<option key={key} value={key}>{text}</option>
 							)}
 						</Form.Select>

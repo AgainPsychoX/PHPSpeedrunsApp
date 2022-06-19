@@ -5,6 +5,7 @@ import AppContext from "./utils/contexts/AppContext";
 import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
 import { CategoryContextRouterOutlet } from "./utils/contexts/CategoryContext";
 import { RunContextRouterOutlet } from "./utils/contexts/RunContext";
+import { UserContextRouterOutlet } from "./utils/contexts/UserContext";
 import { parseBoolean } from "./utils/SomeUtils";
 import { GenericLoadingPage } from "./components/GenericLoading";
 import MyFooter from "./components/MyFooter";
@@ -20,6 +21,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
 import RunPage from "./pages/RunPage";
 import UsersPage from "./pages/UsersPage";
+import UserPage from "./pages/UserPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -51,7 +53,7 @@ const App = () => {
 
 	return (
 		<AppContext.Provider value={{
-			user
+			currentUser: user
 		}}>
 			<BrowserRouter>
 				<MyNavbar/>
@@ -81,6 +83,9 @@ const App = () => {
 						</Route>
 						<Route path="users">
 							<Route index element={<UsersPage />} />
+							<Route path=":userIdPart" element={<UserContextRouterOutlet/>}>
+								<Route index element={<UserPage/>} />
+							</Route>
 						</Route>
 						<Route path="about" element={<AboutPage/>} />
 						<Route path="login" element={<LoginPage onLogin={(user) => setUser(user)}/>} />

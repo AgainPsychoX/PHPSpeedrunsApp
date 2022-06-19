@@ -1,28 +1,21 @@
 import React, { useContext, useEffect } from "react";
-import { Variant } from "react-bootstrap/esm/types";
 import API from "../API";
 import { GenericLoadingPage } from "../components/GenericLoading";
 import AppContext from "../utils/contexts/AppContext";
 import SoftRedirect from "./common/SoftRedirect";
 
-interface AlertData {
-	variant: Variant;
-	heading?: string;
-	text: string;
-}
-
 interface LoginPageProps {
 	onLogout: () => void;
 }
 const LogoutPage = ({onLogout}: LoginPageProps) => {
-	const { user } = useContext(AppContext);
+	const { currentUser } = useContext(AppContext);
 
 	useEffect(() => {
-		if (!user) return;
+		if (!currentUser) return;
 		API.logout().then(onLogout);
-	}, [user]);
+	}, [currentUser]);
 
-	if (user) {
+	if (currentUser) {
 		return <GenericLoadingPage/>
 	}
 

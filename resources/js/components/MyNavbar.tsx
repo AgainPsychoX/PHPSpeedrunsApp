@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import AppContext from "../utils/contexts/AppContext";
 
 const MyNavbar = () => {
-	const { user } = useContext(AppContext);
+	const { currentUser } = useContext(AppContext);
 	const [expanded, setExpanded] = useState(false);
 
 	const close = () => setTimeout(() => setExpanded(false), 150);
@@ -22,10 +22,10 @@ const MyNavbar = () => {
 				</Nav>
 			</Navbar.Collapse>
 			<Navbar.Collapse className="justify-content-end">
-				{user
+				{currentUser
 					? <>
 						<Navbar.Text className="mx-auto mx-lg-2">
-							Zalogowany jako <span className="fw-semibold">{user.name}</span>
+							Zalogowany jako <span className="fw-semibold">{currentUser.name}</span>
 						</Navbar.Text>
 						<div className="hstack gap-3 gap-lg-1 my-1">
 							<Link className="btn btn-sm btn-outline-primary flex-grow-1" role="button" onClick={close} to="/profile">Mój profil</Link>

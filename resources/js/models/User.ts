@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
-import { GameEntry } from "./Game";
-import { RunId } from "./Run";
+import { RunEntry, RunId } from "./Run";
 
 export interface UserEntry {
 	id: number;
@@ -39,6 +38,9 @@ export interface UserDetails extends UserSummary {
 	discord?: string;
 
 	profileDescription: string;
+
+	// Only on details page
+	latestRuns?: RunEntry[];
 }
 
 export const getUserPageLink = (e: UserEntry) => `/users/${e.id}`;

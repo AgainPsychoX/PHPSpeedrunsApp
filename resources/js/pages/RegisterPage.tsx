@@ -23,10 +23,9 @@ interface RegisterPageProps {
 	onLogin: (user: UserDetails) => void;
 }
 const RegisterPage = ({onLogin}: RegisterPageProps) => {
-	const { user } = useContext(AppContext);
+	const { currentUser } = useContext(AppContext);
 	const navigate = useNavigate();
 	const [validated, setValidated] = useState<boolean>(false);
-	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [alert, setAlert] = useState<AlertData>();
 
 	const [repeatSuccess, setRepeatSuccess] = useState<boolean | undefined>();
@@ -70,7 +69,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 		}
 	}
 
-	if (user) {
+	if (currentUser) {
 		return <SoftRedirect to="/profile" variant="warning" text="Jesteś już zalogowany! " />
 	}
 

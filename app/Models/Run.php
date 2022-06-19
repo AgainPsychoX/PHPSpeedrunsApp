@@ -28,6 +28,11 @@ class Run extends Model
 		return $this->belongsTo(Category::class);
 	}
 
+	public function game()
+	{
+		return $this->category->game();
+	}
+
 	public function user()
 	{
 		return $this->belongsTo(User::class);

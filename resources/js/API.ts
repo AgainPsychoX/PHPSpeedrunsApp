@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry, GameSummary } from "./models/Game";
 import { RunDetails, RunEntry } from "./models/Run";
-import { UserDetails, UserSummary } from "./models/User";
+import { UserDetails, UserEntry, UserSummary } from "./models/User";
 import settings from "./settings";
 
 
@@ -161,7 +161,26 @@ export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
 	return convertDates(json.data) as RunDetails;
 }
 
+export const fetchUserDetails = async (entryOrId: UserEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const response = await customFetch(`${settings.apiRoot}/users/${id}`);
+	const { data } = await response.json() as any as { data: UserDetails };
+	return convertDates(data, ['joinedAt']) as UserDetails;
+}
 
+export type UserRunsOrderBy = 'latest'
+export const fetchUserRuns = async (
+	entryOrId: UserEntry | number,
+	page: number,
+	orderBy: UserRunsOrderBy = 'latest',
+	direction?: 'asc' | 'desc'
+) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const response = await customFetch(`${settings.apiRoot}/runs?player=${id}&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
+	const json = await response.json() as any as { data: RunEntry[]; meta: PaginationMeta };
+	for (const run of json.data) convertDates(run);
+	return json;
+}
 
 export default {
 	customFetch,

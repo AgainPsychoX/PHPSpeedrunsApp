@@ -1,4 +1,4 @@
-import React, { ReactFragment } from "react";
+import React from "react";
 
 const millisInHour = 60 * 60 * 1000;
 const millisInMinute = 60 * 1000;

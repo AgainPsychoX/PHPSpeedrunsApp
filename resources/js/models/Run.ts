@@ -9,9 +9,11 @@ export interface RunId {
 export interface RunEntry extends RunId {
 	id: number;
 	gameId: number;
+	gameName?: string;
 	categoryId: number;
+	categoryName?: string;
 	userId: number;
-	userName: string;
+	userName?: string;
 	duration: number;
 	score: number;
 	videoUrl: string;

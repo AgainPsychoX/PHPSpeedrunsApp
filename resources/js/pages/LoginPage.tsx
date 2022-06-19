@@ -18,7 +18,7 @@ interface LoginPageProps {
 	onLogin: (user: UserDetails) => void;
 }
 const LoginPage = ({onLogin}: LoginPageProps) => {
-	const { user } = useContext(AppContext);
+	const { currentUser } = useContext(AppContext);
 	const navigate = useNavigate();
 	const [validated, setValidated] = useState(false);
 	const [alert, setAlert] = useState<AlertData>();
@@ -51,7 +51,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 		}
 	}
 
-	if (user) {
+	if (currentUser) {
 		return <SoftRedirect to="/profile" variant="warning" text="Jesteś już zalogowany! " />
 	}
 

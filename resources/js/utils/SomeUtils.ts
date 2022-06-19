@@ -1,5 +1,5 @@
 
-export const parseBoolean = (value: string | boolean | null | undefined, defaultValue: boolean = false) => {
+export const parseBoolean = (value: string | boolean | null | undefined, defaultValue = false) => {
 	if (typeof value === 'undefined' || value === null) {
 		return defaultValue;
 	}
@@ -20,7 +20,7 @@ export const parseForm = (form: HTMLFormElement) => {
 
 
 // Adapted from https://stackoverflow.com/a/37704433/4880243
-export const YouTubeRegex = new RegExp(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/);
+export const YouTubeRegex = new RegExp(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/);
 
 export const getYoutubeVideoId = (url: string) => {
 	const match = YouTubeRegex.exec(url);

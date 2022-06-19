@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, createRef, useCallback, useEffect, useState } from "react";
+import React, { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import { Container, Form, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { fetchPlayers, PlayersDirectoryOrderBy, PaginationMeta } from "../API";
@@ -30,11 +30,9 @@ const UsersPage = ({
 	const navigate = useNavigate();
 	const [players, setPlayers] = useState<UserSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
-	const [lockSorting, setLockSorting] = useState(false);
 	const [sorting, setSorting] = useState<Sorting>('latestRun,asc');
 	const [orderBy, direction] = sorting.split(',') as [PlayersDirectoryOrderBy, ('desc' | 'asc' | undefined)];
 	const withLatestRun = orderBy == 'latestRun';
-	const sortingSelectRef = createRef<HTMLSelectElement>();
 
 	const onPage = useCallback((page: number) => {
 		(async () => {
@@ -60,11 +58,10 @@ const UsersPage = ({
 					<Form.Group className="m-auto" controlId="sortingSelection">
 						<Form.Select
 							aria-label="Sortowanie"
-							disabled={lockSorting}
 							value={sorting}
 							onChange={onSortingChange}
 						>
-							{Object.entries(sortingToString).map(([key, text], i) =>
+							{Object.entries(sortingToString).map(([key, text]) =>
 								<option key={key} value={key}>{text}</option>
 							)}
 						</Form.Select>
@@ -83,7 +80,7 @@ const UsersPage = ({
 							</tr>
 						</thead>
 						<tbody>
-							{players.map((player, i) => (
+							{players.map(player => (
 								<tr
 									key={`${player.id}-${withLatestRun ? 'L' : 'x'}` /* Necessary to avoid duplicating when switching sorting mode fast I guess */}
 									style={{cursor: 'pointer'}}
@@ -91,13 +88,13 @@ const UsersPage = ({
 									onClick={() => navigate(getUserPageLink(player))}
 								>
 									<td>{player.name}</td>
-									<td>{player.joinedAt.toLocaleString()}</td>
+									<td>{player.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>
 									<td className="text-center">{player.runsCount === undefined ? '?' : player.runsCount}</td>
 									{withLatestRun && (
 										player.latestRun === undefined
 											? <td>-</td>
 											: <td
-											 	title="Kliknij, by przejść do szczegółów podejścia"
+												title="Kliknij, by przejść do szczegółów podejścia"
 												onClick={event => {
 													event.stopPropagation();
 													navigate(getRunPageLink(player.latestRun!));

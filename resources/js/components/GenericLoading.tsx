@@ -3,7 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 
 export interface GenericLoadingProps {
 	description?: string;
-};
+}
 export const GenericLoadingSection = ({
 	description
 }: GenericLoadingProps) => {

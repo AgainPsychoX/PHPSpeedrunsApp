@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Button, Card, Container } from "react-bootstrap";
+import { Button, Card, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export const NotFoundPage = () => {

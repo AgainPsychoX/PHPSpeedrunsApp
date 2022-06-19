@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use App\Http\Resources\GameResource;
 use App\Http\Resources\GameCollection;
 use App\Models\Game;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class GameController extends Controller
 {
