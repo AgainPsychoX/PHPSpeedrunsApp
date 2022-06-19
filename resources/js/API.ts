@@ -1,9 +1,9 @@
 import Cookies from "js-cookie";
 import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
-import { GameDetails, GameEntry } from "./models/Game";
+import { GameDetails, GameEntry, GameSummary } from "./models/Game";
 import { RunDetails, RunEntry } from "./models/Run";
-import { UserDetails } from "./models/User";
+import { UserDetails, UserSummary } from "./models/User";
 import settings from "./settings";
 
 
@@ -107,16 +107,32 @@ const convertDates = (o: any, fields: string[] = ['createdAt', 'updateAt']) => {
 }
 
 export type GamesDirectoryOrderBy = 'popularity' | 'alphanumeric' | 'activity' | 'year';
-
 export const fetchGamesDirectory = async (
 	page: number,
 	orderBy: GamesDirectoryOrderBy = 'popularity',
 	direction?: 'asc' | 'desc'
 ) => {
 	const response = await customFetch(`${settings.apiRoot}/games?orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
-	const json = await response.json() as any as { data: GameEntry[]; meta: PaginationMeta };
+	const json = await response.json() as any as { data: GameSummary[]; meta: PaginationMeta };
 	for (const o of json.data) convertDates(o, ['createdAt', 'updateAt', 'latestRunAt']);
 	return json;
+}
+
+export type PlayersDirectoryOrderBy = 'alphanumeric' | 'joined' | 'latestRun' | 'runsCount';
+export const fetchPlayers = async (
+	page: number,
+	orderBy: PlayersDirectoryOrderBy = 'latestRun',
+	direction?: 'asc' | 'desc',
+) => {
+	const response = await customFetch(`${settings.apiRoot}/users?players&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
+	const { data, meta } = await response.json() as any as { data: UserSummary[]; meta: PaginationMeta };
+	for (const user of data) {
+		convertDates(user, ['joinedAt']);
+		if (user.latestRun) {
+			convertDates(user.latestRun, ['at']);
+		}
+	}
+	return { data, meta };
 }
 
 export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
@@ -130,9 +146,12 @@ export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
 export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	const response = await customFetch(`${settings.apiRoot}/categories/${id}`);
-	const json = await response.json() as any as { data: CategoryDetails };
-	for (const o of json.data.runs) convertDates(o);
-	return convertDates(json.data) as CategoryDetails;
+	const { data } = await response.json() as any as { data: CategoryDetails };
+	for (const run of data.runs) {
+		run.gameId = data.gameId;
+		convertDates(run);
+	}
+	return convertDates(data) as CategoryDetails;
 }
 
 export const fetchRunDetails = async (entryOrId: RunEntry | number) => {

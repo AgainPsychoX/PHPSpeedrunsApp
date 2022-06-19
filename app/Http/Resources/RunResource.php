@@ -17,6 +17,7 @@ class RunResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'categoryId' => $this->category_id,
+			'gameId' => $this->whenLoaded('category', fn () => $this->category->game_id),
 			'userId' => $this->user_id,
 			'userName' => $this->whenLoaded('user', fn () => $this->user->name),
 			'duration' => $this->duration,

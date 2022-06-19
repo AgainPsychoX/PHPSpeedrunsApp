@@ -8,12 +8,13 @@ export interface GameEntry {
 	publishYear: string;
 }
 
-export interface GameEntryWithSortingInfo extends GameEntry {
+export interface GameSummary extends GameEntry {
+	// Optional statistics (might be for sorting)
 	runsCount?: number;
 	latestRunAt?: DateTime;
 }
 
-export interface GameDetails extends GameEntry {
+export interface GameDetails extends GameSummary {
 	description: string;
 	rules: string;
 	createdAt: DateTime;

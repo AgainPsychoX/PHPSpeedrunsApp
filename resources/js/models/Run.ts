@@ -1,7 +1,14 @@
 import { DateTime } from "luxon";
 
-export interface RunEntry {
+export interface RunId {
 	id: number;
+	gameId: number;
+	categoryId: number;
+}
+
+export interface RunEntry extends RunId {
+	id: number;
+	gameId: number;
 	categoryId: number;
 	userId: number;
 	userName: string;
@@ -16,3 +23,5 @@ export interface RunDetails extends RunEntry {
 	state: 'pending' | 'verified' | 'invalid';
 	updatedAt: DateTime;
 }
+
+export const getRunPageLink = (e: RunId) => `/games/${e.gameId}/categories/${e.categoryId}/runs/${e.id}`;

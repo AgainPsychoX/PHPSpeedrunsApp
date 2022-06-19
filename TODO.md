@@ -6,7 +6,6 @@
 ### Main
 
 + Simple profile page.
-+ Users list page.
 + Better profile page, country table and flags.
 + Profile editing.
 + Users picker (will come useful for adding runs and roles)
@@ -31,6 +30,7 @@
 + Docs/user guide.
 + More dynamic coded `HomePage` carousel.
 + Add small bar between navbar and content on pages, possibly related to the content.
++ Countries.
 
 
 
@@ -46,5 +46,8 @@
 + Bootstrap text-areas with floating labels are buggy sometimes.
 + Avoid relative path in imports.
 + Make errors logs (from 'npm run watch') point right TypeScript source files.
++ TypeScript source maps working with webpack, to improve debugging.
++ Use `AbortController` to cancel some requests if necessary (i.e. when switching sorting method fast).
++ Keep sorting mode and pagination in URL (querystring), allow faster coming back to the result
 
 

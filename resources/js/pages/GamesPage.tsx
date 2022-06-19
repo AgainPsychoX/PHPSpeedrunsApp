@@ -3,7 +3,7 @@ import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { fetchGamesDirectory, GamesDirectoryOrderBy, PaginationMeta } from "../API";
 import { GenericLoadingSection } from "../components/GenericLoading";
-import { GameEntryWithSortingInfo } from "../models/Game";
+import { GameSummary } from "../models/Game";
 import { buildPagination } from "../utils/Pagination";
 
 type Sorting = `${GamesDirectoryOrderBy},${'desc' | 'asc'}` | 'alphanumeric';
@@ -11,22 +11,22 @@ type Sorting = `${GamesDirectoryOrderBy},${'desc' | 'asc'}` | 'alphanumeric';
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>
 
 const sortingToString: PartialRecord<Sorting, string> = {
-	'popularity,asc': 'Najmniej popularne',
-	'popularity,desc': 'Najpopularniejsze',
 	'alphanumeric': 'Alfabetyczne',
-	'year,asc': 'Najstarsze (rok wydania)',
+	'popularity,desc': 'Najpopularniejsze',
+	'popularity,asc': 'Najmniej popularne',
 	'year,desc': 'Najnowsze (rok wydania)',
-	'activity,asc': 'Brak aktywności',
+	'year,asc': 'Najstarsze (rok wydania)',
 	'activity,desc': 'Ostatnia aktywność',
+	'activity,asc': 'Brak aktywności',
 };
 
 export interface GamesPageProps {
 	initialPage?: number;
 }
-export const GamesPage = ({
+const GamesPage = ({
 	initialPage = 1,
 }: GamesPageProps) => {
-	const [games, setGames] = useState<GameEntryWithSortingInfo[]>();
+	const [games, setGames] = useState<GameSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 	const [sorting, setSorting] = useState<Sorting>('popularity,desc');
 	const [orderBy, direction] = sorting.split(',') as [GamesDirectoryOrderBy, ('desc' | 'asc' | undefined)];

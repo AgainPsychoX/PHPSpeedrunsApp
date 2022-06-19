@@ -69,7 +69,7 @@ class GameController extends Controller
 		}
 
 		return response()->json([
-			"message" => "Invalid 'orderBy' parameter. Valid values are: (empty), popularity, alphanumeric, year, activity. Either 'desc' or 'asc' can be also specified.",
+			"message" => "Invalid 'orderBy' parameter. Valid values are: (empty), 'popularity', 'alphanumeric', 'year', 'activity'. Either 'desc' or 'asc' can be also specified as separate parameter.",
 		], 400);
 	}
 

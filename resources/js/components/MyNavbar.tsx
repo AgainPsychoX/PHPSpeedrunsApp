@@ -17,7 +17,7 @@ const MyNavbar = () => {
 				<Nav className="me-auto">
 					<Nav.Link as={NavLink} onClick={close} to="/">Strona główna</Nav.Link>
 					<Nav.Link as={NavLink} onClick={close} to="/games/">Katalog gier</Nav.Link>
-					<Nav.Link as={NavLink} onClick={close} to="/players/">Gracze</Nav.Link>
+					<Nav.Link as={NavLink} onClick={close} to="/users/">Gracze</Nav.Link>
 					<Nav.Link as={NavLink} onClick={close} to="/about/">O speedranowaniu</Nav.Link>
 				</Nav>
 			</Navbar.Collapse>

@@ -29,7 +29,7 @@ class GameResource extends JsonResource
 			'runsCount' => $this->whenNotNull($this->runs_count),
 			'latestRunAt' => is_null($this->latest_run_at)
 				? new MissingValue
-				: Carbon::parse($this->latest_run_at)->toISOString(),
+				: Carbon::parse($this->latest_run_at)->toIso8601ZuluString(),
 		];
 	}
 }

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchCategoryDetails } from "../API";
 import { GenericLoadingSection } from "../components/GenericLoading";
 import { CategoryDetails, CategoryEntry } from "../models/Category";
-import { RunEntry } from "../models/Run";
+import { getRunPageLink, RunEntry } from "../models/Run";
 import { formatDurationHTML } from "../utils/FormattingUtils";
 
 interface CategoriesTabsProps {
@@ -78,7 +78,7 @@ const RunRow = ({place, category, run}: { place: number, category: CategoryDetai
 	return <tr
 		key={run.id}
 		style={{cursor: 'pointer'}}
-		onClick={() => navigate(`/games/${category.gameId}/categories/${category.id}/runs/${run.id}`)}
+		onClick={() => navigate(getRunPageLink(run))}
 	>
 		<td>{place}</td>
 		<td>{run.userName}</td>

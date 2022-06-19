@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import API from "./API";
+import AppContext from "./utils/contexts/AppContext";
+import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
+import { CategoryContextRouterOutlet } from "./utils/contexts/CategoryContext";
+import { RunContextRouterOutlet } from "./utils/contexts/RunContext";
+import { parseBoolean } from "./utils/SomeUtils";
 import { GenericLoadingPage } from "./components/GenericLoading";
 import MyFooter from "./components/MyFooter";
 import MyNavbar from "./components/MyNavbar";
@@ -14,11 +19,7 @@ import LogoutPage from "./pages/LogoutPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
 import RunPage from "./pages/RunPage";
-import AppContext from "./utils/contexts/AppContext";
-import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
-import { CategoryContextRouterOutlet } from "./utils/contexts/CategoryContext";
-import RunContext, { RunContextRouterOutlet } from "./utils/contexts/RunContext";
-import { parseBoolean } from "./utils/SomeUtils";
+import UsersPage from "./pages/UsersPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -77,6 +78,9 @@ const App = () => {
 									</Route>
 								</Route>
 							</Route>
+						</Route>
+						<Route path="users">
+							<Route index element={<UsersPage />} />
 						</Route>
 						<Route path="about" element={<AboutPage/>} />
 						<Route path="login" element={<LoginPage onLogin={(user) => setUser(user)}/>} />

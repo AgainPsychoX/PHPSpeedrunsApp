@@ -27,6 +27,18 @@ class UserResource extends JsonResource
 			'twitter_url' => $this->twitter_url,
 			'discord' => $this->discord,
 			'profileDescription' => $this->profile_description,
+			'runsCount' => $this->whenNotNull($this->runs_count),
+			'latestRun' => $this->when(!is_null($this->latest_run_at), fn () => [
+				'at' => is_null($this->latest_run_at)
+					? new MissingValue
+					: Carbon::parse($this->latest_run_at)->toIso8601ZuluString(),
+				'id' => $this->latest_run_id,
+				'categoryId'   => $this->whenNotNull($this->latest_run_category_id),
+				'categoryName' => $this->whenNotNull($this->latest_run_category_name),
+				'gameId'       => $this->whenNotNull($this->latest_run_game_id),
+				'gameName'     => $this->whenNotNull($this->latest_run_game_name),
+			]),
+			'joinedAt' => $this->created_at,
 		];
 	}
 }
