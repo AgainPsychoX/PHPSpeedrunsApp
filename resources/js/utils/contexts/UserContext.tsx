@@ -17,11 +17,12 @@ export const UserContextRouterOutlet = () => {
 	useEffect(() => {
 		if (!userIdPart) return;
 		if (['current', 'me', 'my'].includes(userIdPart.toLowerCase())) {
+			if (user?.id == currentUser?.id) return;
 			setUser(currentUser);
 			return;
 		}
 		const userId = parseInt(userIdPart);
-		if (user && user.id == userId) return;
+		if (user?.id == userId) return;
 		fetchUserDetails(userId)
 			.then(setUser)
 			.catch(error => {
@@ -31,7 +32,7 @@ export const UserContextRouterOutlet = () => {
 				// TODO: generic error handling page
 			})
 		;
-	}, [userIdPart]);
+	}, [userIdPart, user, navigate, currentUser]);
 
 	if (!user) {
 		return <GenericLoadingSection/>

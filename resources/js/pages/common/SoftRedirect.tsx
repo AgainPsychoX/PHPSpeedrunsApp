@@ -6,37 +6,51 @@ import { useNavigate } from "react-router-dom";
 interface AlertData {
 	variant?: Variant;
 	heading?: string;
-	text: string;
+	text?: string;
 }
 
-interface Props extends AlertData {
+interface SoftRedirectProps extends AlertData {
 	to: string | (() => void);
 	timeout?: number;
+	note?: string;
+
+	/**
+	 * If children specified, overrides the default content (heading, text, note).
+	 */
+	children?: JSX.Element;
 }
 
-const SoftRedirect: FunctionComponent<Props> = ({
+const SoftRedirect: FunctionComponent<SoftRedirectProps> = ({
 	to,
 	timeout = 3333,
 	variant = 'secondary',
-	heading = undefined,
-	text = `Za chwilę nastąpi przekierowanie...`,
+	heading,
+	text,
+	note = `Za chwilę nastąpi przekierowanie...`,
+	children,
 }) => {
 	const navigate = useNavigate();
-	const callback = typeof to === 'string' ? () => navigate(to) : to;
 
 	useEffect(() => {
 		if (timeout < 0) return;
+		const callback = typeof to === 'string' ? () => navigate(to) : to;
 		const timer = setTimeout(callback, timeout);
 		return () => clearTimeout(timer);
-	}, []);
+	}, [timeout, to, navigate]);
 
 	return <main>
 		<Container>
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={8} md={6} xl={5} xxl={4}>
 					<Alert variant={variant}>
-						{heading && <Alert.Heading>{heading}</Alert.Heading>}
-						<p className="mb-0">{text}</p>
+						{React.Children.count(children) == 0
+							? <>
+								{heading && <Alert.Heading>{heading}</Alert.Heading>}
+								{text && <p>{text}</p>}
+								<p className="mb-0">{note}</p>
+							</>
+							: children
+						}
 					</Alert>
 				</Col>
 			</Row>

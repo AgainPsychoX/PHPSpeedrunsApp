@@ -28,7 +28,7 @@ const MyNavbar = () => {
 							Zalogowany jako <span className="fw-semibold text-break">{currentUser.name}</span>
 						</Navbar.Text>
 						<div className="hstack gap-3 gap-lg-1 my-1 text-nowrap">
-							<Link className="btn btn-sm btn-outline-primary flex-grow-1" role="button" onClick={close} to="/profile">Mój profil</Link>
+							<Link className="btn btn-sm btn-outline-primary flex-grow-1" role="button" onClick={close} to="/users/current">Mój profil</Link>
 							<Link className="btn btn-sm btn-outline-secondary flex-grow-1" role="button" onClick={close} to="/logout">Wyloguj</Link>
 						</div>
 					</>

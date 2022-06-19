@@ -15,7 +15,7 @@ export const RunContextRouterOutlet = () => {
 	useEffect(() => {
 		if (!runIdPart) return;
 		const runId = parseInt(runIdPart);
-		if (run && run.id == runId) return;
+		if (run?.id == runId) return;
 		fetchRunDetails(runId)
 			.then(setRun)
 			.catch(error => {
@@ -25,7 +25,7 @@ export const RunContextRouterOutlet = () => {
 				// TODO: generic error handling page
 			})
 		;
-	}, [runIdPart]);
+	}, [runIdPart, run, navigate]);
 
 	if (!run) {
 		return <GenericLoadingSection/>

@@ -37,9 +37,9 @@ const GamesPage = ({
 			setGames(data);
 			setPaginationMeta(meta);
 		})();
-	}, [sorting]);
+	}, [orderBy, direction]);
 
-	useEffect(() => onPage(initialPage), [sorting]);
+	useEffect(() => onPage(initialPage), [onPage, initialPage]);
 
 	return <main>
 		<Container>

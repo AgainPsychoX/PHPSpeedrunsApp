@@ -15,7 +15,7 @@ export const CategoryContextRouterOutlet = () => {
 	useEffect(() => {
 		if (!categoryIdPart) return;
 		const categoryId = parseInt(categoryIdPart);
-		if (category && category.id == categoryId) return;
+		if (category?.id == categoryId) return;
 		fetchCategoryDetails(categoryId)
 			.then(setCategory)
 			.catch(error => {
@@ -25,7 +25,7 @@ export const CategoryContextRouterOutlet = () => {
 				// TODO: generic error handling page
 			})
 		;
-	}, [categoryIdPart]);
+	}, [categoryIdPart, category, navigate]);
 
 	if (!category) {
 		return <GenericLoadingSection/>

@@ -53,7 +53,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	}
 
 	if (currentUser) {
-		return <SoftRedirect to="/profile" variant="warning" text="Jesteś już zalogowany! " />
+		return <SoftRedirect to="/users/current" variant="warning" text="Jesteś już zalogowany!" />
 	}
 
 	return <main>

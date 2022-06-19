@@ -61,7 +61,10 @@ export const logout = async () => {
 }
 
 export const fetchCurrentUser = async () => {
-	return customFetch(`${settings.apiRoot}/user`).then(jsonOrThrowIfNotOk) as Promise<UserDetails>;
+	return customFetch(`${settings.apiRoot}/user`)
+		.then(jsonOrThrowIfNotOk)
+		.then(({ data }: { data: UserDetails }) => convertDates(data, ['joinedAt']))
+	;
 }
 
 export interface RegisterUserData {

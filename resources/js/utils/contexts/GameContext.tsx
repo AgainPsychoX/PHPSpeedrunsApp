@@ -15,7 +15,7 @@ export const GameContextRouterOutlet = () => {
 	useEffect(() => {
 		if (!gameIdPart) return;
 		const gameId = parseInt(gameIdPart);
-		if (game && game.id == gameId) return;
+		if (game?.id == gameId) return;
 		fetchGameDetails(gameId)
 			.then(setGame)
 			.catch(error => {
@@ -25,7 +25,7 @@ export const GameContextRouterOutlet = () => {
 				// TODO: generic error handling page
 			})
 		;
-	}, [gameIdPart]);
+	}, [gameIdPart, game, navigate]);
 
 	if (!game) {
 		return <GenericLoadingSection/>

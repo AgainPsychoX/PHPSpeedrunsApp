@@ -75,7 +75,7 @@ const UserRunsSection = ({
 		})();
 	}, [user]);
 
-	useEffect(() => onPage(initialPage), []);
+	useEffect(() => onPage(initialPage), [onPage, initialPage]);
 
 	if (!user) {
 		return <Container>

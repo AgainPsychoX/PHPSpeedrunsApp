@@ -41,14 +41,14 @@ const UsersPage = ({
 			setPlayers(data);
 			setPaginationMeta(meta);
 		})();
-	}, [sorting]);
+	}, [orderBy, direction]);
 
 	const onSortingChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(event => {
 		if (!players) return;
 		setSorting(event.target.value as Sorting);
 	}, [players]);
 
-	useEffect(() => onPage(initialPage), [sorting]);
+	useEffect(() => onPage(initialPage), [onPage, initialPage]);
 
 	return <main>
 		<Container>
