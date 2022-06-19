@@ -25,6 +25,7 @@ export const customFetch = (input: RequestInfo, init?: RequestInit) => {
 	init.headers = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
+		//'X-Requested-With': 'XMLHttpRequest',
 		...init.headers
 	};
 	const token = Cookies.get('XSRF-TOKEN');

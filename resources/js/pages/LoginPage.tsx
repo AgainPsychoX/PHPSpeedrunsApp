@@ -40,7 +40,8 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 					onLogin(user);
 					navigate('/');
 				})
-				.catch((error) => {
+				.catch(error => {
+					console.error(error);
 					setAlert({
 						variant: 'danger',
 						heading: 'Wystąpił problem',
