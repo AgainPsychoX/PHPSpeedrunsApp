@@ -14,7 +14,7 @@ const MyNavbar = () => {
 			<Navbar.Brand as={NavLink} to="/">SpeedrunsApp</Navbar.Brand>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
 			<Navbar.Collapse id="basic-navbar-nav">
-				<Nav className="me-auto">
+				<Nav className="me-auto text-nowrap">
 					<Nav.Link as={NavLink} onClick={close} to="/">Strona główna</Nav.Link>
 					<Nav.Link as={NavLink} onClick={close} to="/games/">Katalog gier</Nav.Link>
 					<Nav.Link as={NavLink} onClick={close} to="/users/">Gracze</Nav.Link>
@@ -25,16 +25,16 @@ const MyNavbar = () => {
 				{currentUser
 					? <>
 						<Navbar.Text className="mx-auto mx-lg-2">
-							Zalogowany jako <span className="fw-semibold">{currentUser.name}</span>
+							Zalogowany jako <span className="fw-semibold text-break">{currentUser.name}</span>
 						</Navbar.Text>
-						<div className="hstack gap-3 gap-lg-1 my-1">
+						<div className="hstack gap-3 gap-lg-1 my-1 text-nowrap">
 							<Link className="btn btn-sm btn-outline-primary flex-grow-1" role="button" onClick={close} to="/profile">Mój profil</Link>
 							<Link className="btn btn-sm btn-outline-secondary flex-grow-1" role="button" onClick={close} to="/logout">Wyloguj</Link>
 						</div>
 					</>
 					:
 					<>
-						<div className="hstack gap-3 gap-lg-1 my-1">
+						<div className="hstack gap-3 gap-lg-1 my-1 text-nowrap">
 							<Link className="btn btn-sm btn-outline-primary flex-grow-1" role="button" onClick={close} to="/login">Zaloguj się</Link>
 							<Link className="btn btn-sm btn-outline-secondary flex-grow-1" role="button" onClick={close} to="/register">Zarejestruj się</Link>
 						</div>
