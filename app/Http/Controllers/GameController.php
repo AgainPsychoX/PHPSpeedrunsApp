@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
@@ -75,17 +76,6 @@ class GameController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \App\Http\Requests\StoreGameRequest  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(StoreGameRequest $request)
-	{
-		return new GameResource(Game::create($request->all()));
-	}
-
-	/**
 	 * Display the specified resource.
 	 *
 	 * @param  \App\Models\Game  $game
@@ -101,6 +91,35 @@ class GameController extends Controller
 	}
 
 	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \App\Http\Requests\StoreGameRequest  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(StoreGameRequest $request)
+	{
+		if ($request->hasFile('iconFile')) {
+			$ext = strtolower($request->iconFile->extension());
+			if ($ext == 'jpg') $ext = 'jpeg';
+		}
+		else {
+			$ext = 'none';
+		}
+		$request->merge([
+			'publish_year' => $request->publishYear,
+			'icon' => $ext,
+		]);
+
+		$game = Game::create($request->all());
+
+		if ($ext != 'none') {
+			Storage::putFileAs("public/images/games/$game->id", $request->iconFile, "icon.$ext", 'public');
+		}
+
+		return new GameResource($game);
+	}
+
+	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \App\Http\Requests\UpdateGameRequest  $request
@@ -109,9 +128,30 @@ class GameController extends Controller
 	 */
 	public function update(UpdateGameRequest $request, Game $game)
 	{
+		if ($request->hasFile('iconFile')) {
+			$ext = strtolower($request->iconFile->extension());
+			if ($ext == 'jpg') $ext = 'jpeg';
+		}
+		else {
+			if (boolval($request->removeIcon)) {
+				$oldExt = $game->icon;
+				$ext = 'none';
+				$request->merge([ 'icon '=> $ext ]);
+			}
+		}
+		$request->merge([ 'publish_year' => $request->publishYear ]);
+
 		$game->update($request->all());
 		$game = $game->refresh();
-		return new GameResource($game);
+
+		if ($ext == 'none') {
+			Storage::delete("public/images/games/$game->id/icon.$oldExt");
+		}
+		else {
+			Storage::putFileAs("public/images/games/$game->id", $request->iconFile, "icon.$ext", 'public');
+		}
+
+		return $this->show($game);
 	}
 
 	/**

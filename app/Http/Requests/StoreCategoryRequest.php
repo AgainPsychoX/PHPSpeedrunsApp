@@ -27,7 +27,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'game_id'       => 'required|exists:games,id',
             'name'          => 'required|string|between:3,64|unique_two:categories,name,game_id,' . $this->game_id,
-            'rules'         => 'required|string|max:4000',
+            'rules'         => 'nullable|string|max:4000',
             'icon'          => 'file|dimensions:min_width=100,min_height=100,max_width=800,max_height=800|mimes:jpeg,png,webp',
             'score_rule'    => [ 'required', Rule::in(['none', 'high', 'low']) ],
         ];

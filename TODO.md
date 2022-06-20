@@ -47,6 +47,9 @@
 + Make outside website links have special icon next to them (maybe on hover only?).
 + Disable green border (valid) on empty optional text inputs (see register page).
 + Bootstrap text-areas with floating labels are buggy sometimes.
++ Text-areas should inform how much characters used up.
++ File inputs should have clear button nearby, without it you need to click to select and press cancel.
++ Validate selected file (game icon) on client side somehow.
 + Avoid relative path in imports.
 + Make errors logs (from 'npm run watch') point right TypeScript source files.
 + TypeScript source maps working with webpack, to improve debugging.
@@ -56,6 +59,11 @@
 + Use `AbortController` to cancel some requests if necessary (i.e. when switching sorting method fast).
 + Keep sorting mode and pagination in URL (querystring), allow faster coming back to the result
 + Implement entry/summary/details model options on backend (save bandwidth).
++ After adding/editing/deleting which results in navigation, there could be toast/notification/alert with information about success.
 + When using relative dates/time, show actual date/timestamp on hover.
++ Consider allowing duplicate game names, unique key should be both game and publish year (i.e. NFS: Most Wanted).
++ Front-end API layer code should cache some data:
+	+ If time Only asking using `HEAD` method whenever it was changed, then actually request.
+	+ After creating/updating resource, its first `GET` request (which happens after redirect) should be omitted, as REST API returns updated resource immediately.
 
 

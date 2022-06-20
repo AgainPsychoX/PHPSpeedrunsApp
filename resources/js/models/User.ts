@@ -43,4 +43,5 @@ export interface UserDetails extends UserSummary {
 	latestRuns?: RunEntry[];
 }
 
+export const currentUserPageLink = '/users/current';
 export const getUserPageLink = (e: UserEntry) => `/users/${e.id}`;

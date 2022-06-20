@@ -20,6 +20,8 @@ const sortingToString: PartialRecord<Sorting, string> = {
 	'activity,asc': 'Brak aktywności',
 };
 
+const formatRunsCountString = (n: number) => `${n} ${n == 0 || n > 5 ? 'podejść' : n == 1 ? 'podejście' : 'podejścia'}`;
+
 export interface GamesPageProps {
 	initialPage?: number;
 }
@@ -66,7 +68,7 @@ const GamesPage = ({
 										<Card.Body>
 											<Card.Title>{game.name} <small className="text-muted">({game.publishYear})</small></Card.Title>
 											{game.latestRunAt && <Card.Subtitle>aktywność {game.latestRunAt.toRelative()}</Card.Subtitle>}
-											{game.runsCount && <Card.Subtitle>{game.runsCount} podejść</Card.Subtitle>}
+											{game.runsCount !== undefined && <Card.Subtitle>{formatRunsCountString(game.runsCount)}</Card.Subtitle>}
 										</Card.Body>
 									</Card>
 								</NavLink>

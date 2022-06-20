@@ -30,7 +30,7 @@ class UpdateRunRequest extends FormRequest
             'duration'      => 'sometimes|required|integer|min:100', // ms
             'score'         => 'sometimes|required|integer',
             'video_url'     => 'sometimes|required|url',
-            'notes'         => 'sometimes|string|max:4000',
+            'notes'         => 'sometimes|nullable|string|max:4000',
         ];
     }
 }

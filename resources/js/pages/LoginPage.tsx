@@ -1,18 +1,11 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Variant } from "react-bootstrap/esm/types";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import API from "../API";
-import { UserDetails } from "../models/User";
+import SimpleAlert, { SimpleAlertData } from "../components/SimpleAlert";
+import { currentUserPageLink, UserDetails } from "../models/User";
 import AppContext from "../utils/contexts/AppContext";
-import { parseBoolean, parseForm } from "../utils/SomeUtils";
 import SoftRedirect from "./common/SoftRedirect";
-
-interface AlertData {
-	variant: Variant;
-	heading?: string;
-	text: string;
-}
 
 interface LoginPageProps {
 	onLogin: (user: UserDetails) => void;
@@ -21,7 +14,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	const { currentUser } = useContext(AppContext);
 	const navigate = useNavigate();
 	const [validated, setValidated] = useState(false);
-	const [alert, setAlert] = useState<AlertData>();
+	const [alert, setAlert] = useState<SimpleAlertData>();
 
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
 		const form = event.currentTarget;
@@ -33,8 +26,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 			setValidated(true);
 		}
 		else {
-			const { login, password, remember } = parseForm(form);
-			API.login(login, password, parseBoolean(remember, false))
+			API.login(new FormData(form))
 				.then(async () => {
 					const user = await API.fetchCurrentUser();
 					onLogin(user);
@@ -45,7 +37,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 					setAlert({
 						variant: 'danger',
 						heading: 'Wystąpił problem',
-						text: error.message,
+						content: error.message,
 					});
 				})
 			;
@@ -53,7 +45,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	}, [onLogin, navigate]);
 
 	if (currentUser) {
-		return <SoftRedirect to="/users/current" variant="warning" text="Jesteś już zalogowany!" />
+		return <SoftRedirect to={currentUserPageLink} variant="warning" text="Jesteś już zalogowany!" />
 	}
 
 	return <main>
@@ -61,23 +53,20 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={8} md={6} xl={5} xxl={4}>
 					<h2 className="text-center">Logowanie</h2>
-					{alert && <Alert variant={alert.variant}>
-						{alert.heading && <Alert.Heading>{alert.heading}</Alert.Heading>}
-						<p className="mb-0">{alert.text}</p>
-					</Alert>}
+					{alert && <SimpleAlert {...alert} />}
 					<Form noValidate validated={validated} onSubmit={handleSubmit}>
-						<Form.Group className="form-floating mb-3" controlId="login">
-							<Form.Control type="text" name="login" placeholder="Podaj login lub e-mail" required pattern="[\w.@+-]{3,}" autoComplete="username email" />
+						<Form.Group className="form-floating mb-3" controlId="name">
+							<Form.Control type="text" name="name" placeholder="Podaj login lub e-mail" required pattern="[\w.@+-]{3,255}" autoComplete="username email" />
 							<Form.Label>Login lub e-mail</Form.Label>
 							<Form.Control.Feedback type="invalid">Proszę podać prawidłowy login lub e-mail.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="form-floating mb-3" controlId="password">
-							<Form.Control type="password" name="password" placeholder="Podaj hasło" required pattern=".{8,}" autoComplete="current-password" />
+							<Form.Control type="password" name="password" placeholder="Podaj hasło" required pattern=".{8,255}" autoComplete="current-password" />
 							<Form.Label>Hasło</Form.Label>
 							<Form.Control.Feedback type="invalid">Nieprawidłowe hasło.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="form-floating mb-3 hstack justify-content-between" controlId="rememberMe">
-							<Form.Check type="checkbox" name="rememberMe" label="Pamiętaj mnie" />
+							<Form.Check type="checkbox" name="remember" label="Pamiętaj mnie" />
 							<Button variant="primary" type="submit" className="px-4">Zaloguj</Button>
 						</Form.Group>
 					</Form>

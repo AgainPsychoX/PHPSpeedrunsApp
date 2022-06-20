@@ -16,3 +16,6 @@ yarn-error.log
 # Ignore compiled files
 public/js/main.js
 public/css/app.css
+
+# Private
+private/

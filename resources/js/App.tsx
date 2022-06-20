@@ -22,6 +22,7 @@ import RegisterPage from "./pages/RegisterPage";
 import RunPage from "./pages/RunPage";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
+import GameFormPage from "./pages/GameFormPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -58,10 +59,11 @@ const App = () => {
 					<Route path="/">
 						<Route index element={<HomePage/>} />
 						<Route path="games">
-							{/* <Route path="new" element={<NewGamePage />} /> */}
 							<Route index element={<GamesPage />} />
+							<Route path="new" element={<GameFormPage/>} />
 							<Route path=":gameIdPart" element={<GameContextRouterOutlet/>}>
 								<Route index element={<GamePage/>} />
+								<Route path="edit" element={<GameFormPage/>} />
 								<Route path="categories">
 									<Route index element={<Navigate to={`/games`}/>} />
 									<Route path=":categoryIdPart" element={<CategoryContextRouterOutlet/>}>

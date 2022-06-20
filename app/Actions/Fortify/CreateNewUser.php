@@ -11,6 +11,7 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 class CreateNewUser implements CreatesNewUsers
 {
 	use PasswordValidationRules;
+	use UsernameValidationRules;
 
 	/**
 	 * Validate and create a newly registered user.
@@ -21,16 +22,16 @@ class CreateNewUser implements CreatesNewUsers
 	public function create(array $input)
 	{
 		Validator::make($input, [
-			'name' => 'required|string|between:3,40|unique:games,name',
-			'email' => 'required|string|email|max:255|unique:games,email',
+			'name' => $this->usernameRules(),
+			'email' => 'required|string|email|max:255|unique:users,email',
 			'password' => $this->passwordRules(),
 			'repeatPassword' => 'required|same:password',
-			'countryId' => 'sometimes|required|string|size:3',
-			'youtubeUrl' => [ 'sometimes', 'required', 'string', 'regex:/^https?:\/\/(www\.)?youtube\.com\/(channel\/UC[\w-]{21}[AQgw]|(c\/|user\/)?[\w-]+)$/i' ],
-			'twitchUrl'  => [ 'sometimes', 'required', 'string', 'regex:/^https?:\/\/(www\.)?twitch\.tv\/[\w-]+)$/i '],
-			'twitterUrl' => [ 'sometimes', 'required', 'string', 'regex:/^https:\/\/twitter.com\/([a-zA-Z0-9_]+)\/?$/i' ],
-			'discord' => 'sometimes|required|string|regex:/^.{3,32}#[0-9]{4}$/',
-			'profileDescription' => 'sometimes|required|string|max:4000',
+			'countryId' => 'sometimes|nullable|string|size:3',
+			'youtubeUrl' => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?youtube\.com\/(channel\/UC[\w-]{21}[AQgw]|(c\/|user\/)?[\w-]+)$/i' ],
+			'twitchUrl'  => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?twitch\.tv\/[\w-]+)$/i '],
+			'twitterUrl' => [ 'sometimes', 'nullable', 'string', 'regex:/^https:\/\/twitter.com\/([a-zA-Z0-9_]+)\/?$/i' ],
+			'discord' => 'sometimes|nullable|string|regex:/^.{3,32}#[0-9]{4}$/',
+			'profileDescription' => 'sometimes|nullable|string|max:4000',
 			'agreement' => 'required',
 		])->validate();
 

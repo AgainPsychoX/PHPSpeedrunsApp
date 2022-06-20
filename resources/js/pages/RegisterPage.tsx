@@ -1,22 +1,16 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row, Accordion } from "react-bootstrap";
-import { Variant } from "react-bootstrap/esm/types";
+import { Button, Col, Container, Form, Row, Accordion } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import API, { RegisterUserData } from "../API";
-import { UserDetails } from "../models/User";
+import API from "../API";
+import SimpleAlert, { SimpleAlertData } from "../components/SimpleAlert";
+import { currentUserPageLink, UserDetails } from "../models/User";
 import AppContext from "../utils/contexts/AppContext";
-import { parseForm } from "../utils/SomeUtils";
+import { parseBoolean } from "../utils/SomeUtils";
 import SoftRedirect from "./common/SoftRedirect";
 
 const negateDefined = (value: any) => {
 	if (value === undefined) return undefined;
 	return !value;
-}
-
-interface AlertData {
-	variant: Variant;
-	heading?: string;
-	text: string;
 }
 
 interface RegisterPageProps {
@@ -26,7 +20,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 	const { currentUser } = useContext(AppContext);
 	const navigate = useNavigate();
 	const [validated, setValidated] = useState<boolean>(false);
-	const [alert, setAlert] = useState<AlertData>();
+	const [alert, setAlert] = useState<SimpleAlertData>();
 
 	const [repeatSuccess, setRepeatSuccess] = useState<boolean | undefined>();
 	const validateRepeat: React.ChangeEventHandler<HTMLInputElement>  = (event) => {
@@ -49,10 +43,10 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 			setValidated(true);
 		}
 		else {
-			const values = parseForm(form);
-			if (values.password != values.repeatPassword || !values.agreement) return;
+			const formData = new FormData(form);
+			if (formData.get('password') != formData.get('repeatPassword') || !parseBoolean(formData.get('agreement') as string)) return;
 
-			API.registerUser(values as any as RegisterUserData)
+			API.registerUser(formData)
 				.then(async () => {
 					const user = await API.fetchCurrentUser();
 					onLogin(user);
@@ -62,7 +56,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 					setAlert({
 						variant: 'danger',
 						heading: 'Wystąpił problem',
-						text: error.message,
+						content: error.message,
 					});
 				})
 			;
@@ -70,7 +64,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 	}, [onLogin, navigate]);
 
 	if (currentUser) {
-		return <SoftRedirect to="/users/current" variant="warning" text="Jesteś już zalogowany! " />
+		return <SoftRedirect to={currentUserPageLink} variant="warning" text="Jesteś już zalogowany! " />
 	}
 
 	return <main>
@@ -78,10 +72,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={8} md={6} xl={5}>
 					<h2 className="text-center">Rejestracja</h2>
-					{alert && <Alert variant={alert.variant}>
-						{alert.heading && <Alert.Heading>{alert.heading}</Alert.Heading>}
-						<p className="mb-0">{alert.text}</p>
-					</Alert>}
+					{alert && <SimpleAlert {...alert} />}
 					<Form noValidate validated={validated} onSubmit={handleSubmit}>
 						<Form.Group className="form-floating mb-3" controlId="name">
 							<Form.Control type="text" name="name" required placeholder="Podaj login" pattern="[\w.+]{3,}" autoComplete="nickname username" />
@@ -99,7 +90,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 							<Form.Control.Feedback type="invalid">Nieprawidłowe hasło.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="form-floating mb-3" controlId="repeatPassword">
-							<Form.Control type="password" name="repeatPassword" required placeholder="Powtórz hasło" pattern=".{8,}" autoComplete="repeat-password"
+							<Form.Control type="password" name="repeatPassword" required placeholder="Powtórz hasło" pattern=".{8,}" autoComplete="new-password"
 								isInvalid={negateDefined(repeatSuccess)} onChange={validateRepeat} />
 							<Form.Label>Powtórz hasło</Form.Label>
 							<Form.Control.Feedback type="invalid">Hasła nie zgadzają się.</Form.Control.Feedback>
@@ -130,7 +121,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 										<Form.Control.Feedback type="invalid">Nieprawidłowy tag Discord.</Form.Control.Feedback>
 									</Form.Group>
 									<Form.Group className="form-floating mb-3" controlId="profileDescription">
-										<Form.Control as="textarea" name="profileDescription" placeholder="Podaj opis profilu" autoComplete="none" style={{ height: '8em' }} />
+										<Form.Control as="textarea" name="profileDescription" placeholder="Podaj opis profilu" autoComplete="none" style={{ height: '8em' }} maxLength={4000} />
 										<Form.Label>Opis profilu</Form.Label>
 									</Form.Group>
 								</Accordion.Body>

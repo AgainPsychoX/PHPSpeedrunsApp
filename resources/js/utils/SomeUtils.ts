@@ -12,18 +12,3 @@ export const parseBoolean = (value: string | boolean | null | undefined, default
 		default: return defaultValue;
 	}
 }
-
-export const parseForm = (form: HTMLFormElement) => {
-	return Object.fromEntries([...new FormData(form)].filter(e => e[1] !== '')) as Record<string, string>;
-}
-
-
-
-// Adapted from https://stackoverflow.com/a/37704433/4880243
-export const YouTubeRegex = new RegExp(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/);
-
-export const getYoutubeVideoId = (url: string) => {
-	const match = YouTubeRegex.exec(url);
-	if (!match) return null;
-	return match[6];
-}

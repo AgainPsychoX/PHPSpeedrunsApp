@@ -27,3 +27,4 @@ export interface RunDetails extends RunEntry {
 }
 
 export const getRunPageLink = (e: RunId) => `/games/${e.gameId}/categories/${e.categoryId}/runs/${e.id}`;
+export const getEditRunPageLink = (e: RunId) => `/games/${e.gameId}/categories/${e.categoryId}/runs/${e.id}/edit`;

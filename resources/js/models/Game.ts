@@ -22,3 +22,14 @@ export interface GameDetails extends GameSummary {
 	categories: CategoryEntry[];
 }
 
+export const isGameIconPlaceholder = (entry: GameEntry) => entry.icon.includes('placeholder');
+
+export const getGamesDirectoryLink = () => '/games';
+export const getNewGamePageLink = () => `/games/new`;
+
+export const getGamePageLink = (e: GameEntry) => `/games/${e.id}`;
+export const getEditGamePageLink = (e: GameEntry) => `/games/${e.id}/edit`;
+
+export const getCategoriesPageLink = (e: GameEntry) => `/games/${e.id}/categories`;
+export const getNewCategoryPageLink = (e: GameEntry) => `/games/${e.id}/categories/new`;
+
