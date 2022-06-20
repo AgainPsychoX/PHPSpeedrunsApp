@@ -11,6 +11,7 @@ export interface CategoryEntry {
 export interface CategoryDetails extends CategoryEntry {
 	rules: string;
 	scoreRule: 'none' | 'high' | 'low';
+	verificationRequirement: number;
 	createdAt: DateTime;
 	updatedAt: DateTime;
 	runs: RunEntry[];

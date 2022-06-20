@@ -23,6 +23,7 @@ import RunPage from "./pages/RunPage";
 import UsersPage from "./pages/UsersPage";
 import UserPage from "./pages/UserPage";
 import GameFormPage from "./pages/GameFormPage";
+import CategoryFormPage from "./pages/CategoryFormPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -65,10 +66,14 @@ const App = () => {
 								<Route index element={<GamePage/>} />
 								<Route path="edit" element={<GameFormPage/>} />
 								<Route path="categories">
-									<Route index element={<Navigate to={`/games`}/>} />
+									<Route index element={<GamePage/>} />
+									{/* <Route index element={<Navigate to={`/games`}/>} /> */}
+									<Route path="new" element={<CategoryFormPage/>} />
 									<Route path=":categoryIdPart" element={<CategoryContextRouterOutlet/>}>
+										<Route index element={<GamePage/>} />
 										{/* TODO: index should redirect to GamePage with category selected */}
-										<Route index element={<Navigate to={`/games`}/>} />
+										{/* <Route index element={<Navigate to={`/games`}/>} /> */}
+										<Route path="edit" element={<CategoryFormPage/>} />
 										<Route path="runs">
 											{/* TODO: index should redirect to GamePage with category selected and run highlighted */}
 											<Route index element={<Navigate to={`/games`}/>} />

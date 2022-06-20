@@ -146,36 +146,43 @@ export const fetchGamesDirectory = async (
 	orderBy: GamesDirectoryOrderBy = 'popularity',
 	direction?: 'asc' | 'desc'
 ) => {
-	const response = await simplyFetchJSON(`${settings.apiRoot}/games?orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
-	const json = await response.json() as any as { data: GameSummary[]; meta: PaginationMeta };
-	for (const o of json.data) convertDates(o, ['createdAt', 'updateAt', 'latestRunAt']);
-	return json;
+	const response = await simplyFetchJSON(`${settings.apiRoot}/games?orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`).then(throwIfNotOk);
+	const { data: games, meta } = await response.json() as { data: GameSummary[]; meta: PaginationMeta };
+	for (const game of games) convertDates(game, ['createdAt', 'updateAt', 'latestRunAt']);
+	return { games, meta };
+}
+
+const receiveGameDetails = async (response: Response) => {
+	const { data: game } = await response.json();
+	if (!game.categories) game.categories = [];
+	for (const category of game.categories) {
+		convertDates(category);
+	}
+	return convertDates(game) as GameDetails;
 }
 
 export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/games/${id}`);
-	const json = await response.json() as { data: GameDetails };
-	for (const o of json.data.categories) convertDates(o);
-	return convertDates(json.data) as GameDetails;
+	const response = await simplyFetchJSON(`${settings.apiRoot}/games/${id}`).then(throwIfNotOk);
+	return receiveGameDetails(response);
 }
 
 export const createGame = async (formData: FormData) => {
-	const { data } = await fetch(`${settings.apiRoot}/games`, {
+	const response = await fetch(`${settings.apiRoot}/games`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(jsonOrThrowIfNotOk) as { data: GameDetails };
-	return convertDates(data);
+	}).then(throwIfNotOk);
+	return receiveGameDetails(response);
 }
 
 export const updateGame = async (formData: FormData) => {
-	const { data } = await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
+	const response = await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
 		method: 'PATCH',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(jsonOrThrowIfNotOk) as { data: GameDetails };
-	return convertDates(data);
+	}).then(throwIfNotOk);
+	return receiveGameDetails(response);
 }
 
 export const deleteGame = async (entryOrId: GameEntry | number) => {
@@ -189,15 +196,46 @@ export const deleteGame = async (entryOrId: GameEntry | number) => {
 ////////////////////////////////////////
 // Categories
 
-export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) => {
-	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/categories/${id}`);
-	const { data } = await response.json() as any as { data: CategoryDetails };
-	for (const run of data.runs) {
-		run.gameId = data.gameId;
+const receiveCategoryDetails = async (response: Response) => {
+	const { data: category } = await response.json();
+	if (!category.runs) category.runs = [];
+	for (const run of category.runs) {
+		run.gameId = category.gameId;
 		convertDates(run);
 	}
-	return convertDates(data) as CategoryDetails;
+	return convertDates(category) as CategoryDetails;
+}
+
+export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const response = await simplyFetchJSON(`${settings.apiRoot}/categories/${id}`).then(throwIfNotOk);
+	return receiveCategoryDetails(response);
+}
+
+export const createCategory = async (formData: FormData) => {
+	const response = await fetch(`${settings.apiRoot}/categories`, {
+		method: 'POST',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+	return receiveCategoryDetails(response);
+}
+
+export const updateCategory = async (formData: FormData) => {
+	const response = await fetch(`${settings.apiRoot}/categories/${formData.get('id')}`, {
+		method: 'PATCH',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+	return receiveCategoryDetails(response);
+}
+
+export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	return fetch(`${settings.apiRoot}/categories/${id}`, {
+		method: 'DELETE',
+		headers: baseHeadersAnd(),
+	}).then(throwIfNotOk);
 }
 
 ////////////////////////////////////////

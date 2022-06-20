@@ -13,7 +13,6 @@ class Category extends Model
 		'game_id',
 		'name',
 		'rules',
-		'icon',
 		'score_rule',
 		'verification_requirement'
 	];

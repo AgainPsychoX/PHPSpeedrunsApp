@@ -20,6 +20,7 @@ class CategoryResource extends JsonResource
 			'name' => $this->name,
 			'rules' => $this->rules,
 			'scoreRule' => $this->score_rule,
+			'verificationRequirement' => $this->verification_requirement,
 			'createdAt' => $this->created_at,
 			'updatedAt' => $this->updated_at,
 			'runs' => RunResource::collection($this->whenLoaded('runs')),

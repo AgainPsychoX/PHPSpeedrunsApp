@@ -1,14 +1,18 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Container, Spinner } from "react-bootstrap";
 
 export interface GenericLoadingProps {
 	description?: string;
+	className?: string;
+	divStyle?: CSSProperties
 }
 export const GenericLoadingSection = ({
-	description
+	description,
+	className = '',
+	divStyle,
 }: GenericLoadingProps) => {
 	return (
-		<div className="d-flex flex-column align-items-center m-4">
+		<div className={"d-flex flex-column align-items-center m-4 " + className} style={divStyle}>
 			<Spinner animation="border" role="status">
 				{description ? '' : <span className="visually-hidden">Ładowanie...</span>}
 			</Spinner>

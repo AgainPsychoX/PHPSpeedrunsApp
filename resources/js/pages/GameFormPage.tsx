@@ -33,19 +33,17 @@ const GameFormPage = () => {
 		}
 		else {
 			(() => {
+				const formData = new FormData(form);
 				if (game) {
-					const formData = new FormData(form);
-
 					// Pass only changing things and ID
 					for (const key in game)
 						if (formData.get(key) == game[key as keyof GameDetails])
 							formData.delete(key);
 					formData.set('id', game.id.toString());
-
 					return updateGame(formData);
 				}
 				else {
-					return createGame(new FormData(form));
+					return createGame(formData);
 				}
 			})()
 				.then(game => navigate(getGamePageLink(game)))
@@ -166,9 +164,10 @@ const GameFormPage = () => {
 								defaultValue={game?.rules}
 							/>
 						</Form.Group>
-						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2" controlId="agreement">
+						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							<Button variant="secondary" className="px-4" onClick={handleDelete}>Usuń</Button>
+							{isEditing && <Button variant="secondary" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>
 				</Col>
@@ -176,9 +175,4 @@ const GameFormPage = () => {
 		</Container>
 	</main>
 }
-
 export default GameFormPage;
-function MouseEventHandler<T>(arg0: any) {
-	throw new Error("Function not implemented.");
-}
-

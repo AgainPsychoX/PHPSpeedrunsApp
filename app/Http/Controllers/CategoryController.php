@@ -26,17 +26,6 @@ class CategoryController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \App\Http\Requests\StoreCategoryRequest  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(StoreCategoryRequest $request)
-	{
-		return new CategoryResource(Category::create($request->all()));
-	}
-
-	/**
 	 * Display the specified resource.
 	 *
 	 * @param  \App\Models\Category  $category
@@ -56,6 +45,23 @@ class CategoryController extends Controller
 	}
 
 	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \App\Http\Requests\StoreCategoryRequest  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(StoreCategoryRequest $request)
+	{
+		return new CategoryResource(Category::create([
+			'game_id' => $request->gameId,
+			'name' => $request->name,
+			'rules' => $request->rules ?? '',
+			'score_rule' => $request->gameId ?? 'none',
+			'verification_requirement' => $request->verificationRequirement ?? 1,
+		]));
+	}
+
+	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \App\Http\Requests\UpdateCategoryRequest  $request
@@ -64,7 +70,17 @@ class CategoryController extends Controller
 	 */
 	public function update(UpdateCategoryRequest $request, Category $category)
 	{
-		$category->update($request->all());
+		if ($category->verification_requirement != $request->verification_requirement) {
+			// TODO: update all related runs
+		}
+
+		$category->update([
+			'game_id' => $request->gameId,
+			'name' => $request->name,
+			'rules' => $request->rules,
+			'score_rule' => $request->gameId,
+			'verification_requirement' => $request->verificationRequirement,
+		]);
 		$category = $category->refresh();
 		return new CategoryResource($category);
 	}

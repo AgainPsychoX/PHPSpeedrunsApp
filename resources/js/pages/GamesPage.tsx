@@ -35,8 +35,8 @@ const GamesPage = ({
 
 	const onPage = useCallback((page: number) => {
 		(async () => {
-			const { data, meta } = await fetchGamesDirectory(page, orderBy, direction);
-			setGames(data);
+			const { games, meta } = await fetchGamesDirectory(page, orderBy, direction);
+			setGames(games);
 			setPaginationMeta(meta);
 		})();
 	}, [orderBy, direction]);
