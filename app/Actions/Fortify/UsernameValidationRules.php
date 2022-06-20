@@ -12,7 +12,6 @@ trait UsernameValidationRules
 	protected function usernameRules()
 	{
 		return [
-			'required',
 			'string',
 			'regex:/^[\w.]{3,40}$/',
 			'unique:users,name',

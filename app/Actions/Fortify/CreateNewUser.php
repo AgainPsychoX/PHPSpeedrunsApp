@@ -22,9 +22,9 @@ class CreateNewUser implements CreatesNewUsers
 	public function create(array $input)
 	{
 		Validator::make($input, [
-			'name' => $this->usernameRules(),
+			'name' => array_merge(['required'], $this->usernameRules()),
 			'email' => 'required|string|email|max:255|unique:users,email',
-			'password' => $this->passwordRules(),
+			'password' => array_merge(['required'], $this->passwordRules()),
 			'repeatPassword' => 'required|same:password',
 			'countryId' => 'sometimes|nullable|string|size:3',
 			'youtubeUrl' => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?youtube\.com\/(channel\/UC[\w-]{21}[AQgw]|(c\/|user\/)?[\w-]+)$/i' ],

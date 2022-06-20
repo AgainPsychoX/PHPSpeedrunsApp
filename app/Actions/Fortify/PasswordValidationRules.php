@@ -14,7 +14,6 @@ trait PasswordValidationRules
 	protected function passwordRules()
 	{
 		return [
-			'required',
 			'string',
 			new class extends Password {
 				protected $requireUppercase = true;

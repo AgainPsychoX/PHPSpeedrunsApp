@@ -99,13 +99,16 @@ export const registerUser = async (formData: FormData) => {
 ////////////////////////////////////////
 // Users
 
-export type PlayersDirectoryOrderBy = 'alphanumeric' | 'joined' | 'latestRun' | 'runsCount';
-export const fetchPlayers = async (
-	page: number,
-	orderBy: PlayersDirectoryOrderBy = 'latestRun',
-	direction?: 'asc' | 'desc',
-) => {
-	const response = await simplyFetchJSON(`${settings.apiRoot}/users?players&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
+export type UsersOrderBy = 'alphanumeric' | 'joined' | 'latestRun' | 'runsCount';
+export interface FetchUsersOptions {
+	page?: number;
+	orderBy?: UsersOrderBy;
+	direction?: 'asc' | 'desc' | undefined;
+	search?: string;
+}
+export const fetchUsers = async (options: FetchUsersOptions) => {
+	const params = new URLSearchParams(options as Record<string, string>);
+	const response = await simplyFetchJSON(`${settings.apiRoot}/users?${params.toString()}`);
 	const { data, meta } = await response.json() as any as { data: UserSummary[]; meta: PaginationMeta };
 	for (const user of data) {
 		convertDates(user, ['joinedAt']);
@@ -241,13 +244,42 @@ export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
 ////////////////////////////////////////
 // Runs
 
-export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
-	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/runs/${id}`);
-	const json = await response.json() as any as { data: RunDetails };
-	return convertDates(json.data) as RunDetails;
+const receiveRunDetails = async (response: Response) => {
+	const { data: run } = await response.json();
+	return convertDates(run) as RunDetails;
 }
 
+export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const response = await simplyFetchJSON(`${settings.apiRoot}/runs/${id}`).then(throwIfNotOk);
+	return receiveRunDetails(response);
+}
+
+export const createRun = async (formData: FormData) => {
+	const response = await fetch(`${settings.apiRoot}/runs`, {
+		method: 'POST',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+	return receiveRunDetails(response);
+}
+
+export const updateRun = async (formData: FormData) => {
+	const response = await fetch(`${settings.apiRoot}/runs/${formData.get('id')}`, {
+		method: 'PATCH',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+	return receiveRunDetails(response);
+}
+
+export const deleteRun = async (entryOrId: RunEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	return fetch(`${settings.apiRoot}/runs/${id}`, {
+		method: 'DELETE',
+		headers: baseHeadersAnd(),
+	}).then(throwIfNotOk);
+}
 
 
 
@@ -260,7 +292,7 @@ export default {
 	fetchCurrentUser,
 	registerUser,
 
-	fetchPlayers,
+	fetchPlayers: fetchUsers,
 	fetchUserDetails,
 	fetchUserRuns,
 
@@ -271,6 +303,12 @@ export default {
 	deleteGame,
 
 	fetchCategoryDetails,
+	createCategory,
+	updateCategory,
+	deleteCategory,
 
 	fetchRunDetails,
+	createRun,
+	updateRun,
+	deleteRun,
 }

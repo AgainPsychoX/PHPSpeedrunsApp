@@ -5,7 +5,6 @@
 
 ### Main
 
-+ Proper Add/edit/delete category.
 + Proper Add/edit/delete run (incl. ghosts)
 + Profile editing.
 + Users picker (will come useful for adding runs and roles)
@@ -20,6 +19,7 @@
 
 ### Secondary
 
++ Update contexts after modified.
 + Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).
 + Docs/user guide.
@@ -45,6 +45,7 @@
 + Disable green border (valid) on empty optional text inputs (see register page).
 + Bootstrap text-areas with floating labels are buggy sometimes.
 + Text-areas should inform how much characters used up.
++ Create separate duration input component, with working key UP/DOWN controls and spinner-like buttons.
 + File inputs should have clear button nearby, without it you need to click to select and press cancel.
 + Validate selected file (game icon) on client side somehow.
 + Avoid relative path in imports.

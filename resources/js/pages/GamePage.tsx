@@ -8,7 +8,7 @@ import { getEditGamePageLink, getNewCategoryPageLink, isGameIconPlaceholder } fr
 import { getRunPageLink, RunEntry } from "../models/Run";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
-import { formatDurationHTML } from "../utils/FormattingUtils";
+import { formatDurationHTML } from "../utils/DurationUtils";
 
 export const GamePage = () => {
 	const navigate = useNavigate();

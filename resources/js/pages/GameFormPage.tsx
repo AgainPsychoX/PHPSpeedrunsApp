@@ -155,6 +155,7 @@ const GameFormPage = () => {
 								placeholder="Podaj opis profilu" autoComplete="none"
 								defaultValue={game?.description}
 							/>
+							<Form.Control.Feedback type="invalid">Tekst jest zbyt długi lub zawiera nieprawidłowe znaki.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="mb-3" controlId="rules">
 							<Form.Label>Zasady gry</Form.Label>
@@ -163,6 +164,7 @@ const GameFormPage = () => {
 								placeholder="Podaj opis profilu" autoComplete="none"
 								defaultValue={game?.rules}
 							/>
+							<Form.Control.Feedback type="invalid">Tekst jest zbyt długi lub zawiera nieprawidłowe znaki.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>

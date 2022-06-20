@@ -5,7 +5,7 @@ import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink, RunEntry } from "../models/Run";
 import UserContext from "../utils/contexts/UserContext";
-import { formatDurationHTML } from "../utils/FormattingUtils";
+import { formatDurationHTML } from "../utils/DurationUtils";
 import { buildPagination } from "../utils/Pagination";
 
 const UserPage = () => {

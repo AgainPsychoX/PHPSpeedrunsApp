@@ -41,7 +41,7 @@ const CategoryFormPage = () => {
 						if (formData.get(key) == category[key as keyof CategoryDetails])
 							formData.delete(key);
 					formData.set('id', category.id.toString());
-					formData.set('gameId', category.gameId.toString());
+					formData.set('gameId', game.id.toString());
 					return updateCategory(formData);
 				}
 				else {
@@ -90,7 +90,7 @@ const CategoryFormPage = () => {
 	}
 
 	if (category && category.gameId != game.id) {
-		return <SoftRedirect to={getEditCategoryPageLink(category)} variant="error" text="Kategoria nie odpowiada do kontekstu gry." />
+		return <SoftRedirect to={getEditCategoryPageLink(category)} variant="danger" text="Kategoria nie odpowiada do kontekstu gry." />
 	}
 
 	return <main>
@@ -113,9 +113,10 @@ const CategoryFormPage = () => {
 							<Form.Label>Zasady gry</Form.Label>
 							<Form.Control
 								name="rules" as="textarea" maxLength={4000} style={{ height: '16em' }}
-								placeholder="Podaj opis profilu" autoComplete="none"
+								placeholder="Podaj zasady kategorii" autoComplete="none"
 								defaultValue={category?.rules}
 							/>
+							<Form.Control.Feedback type="invalid">Tekst jest zbyt długi lub zawiera nieprawidłowe znaki.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="mb-3" controlId="scoreRule">
 							<Form.Label>Zasada oceniania</Form.Label>
@@ -134,6 +135,7 @@ const CategoryFormPage = () => {
 								name="verificationRequirement" type="number" step={1} min={1} max={10} pattern="\d+" required
 								defaultValue={category?.verificationRequirement ?? 1}
 							/>
+							<Form.Control.Feedback type="invalid">Tekst jest zbyt długi lub zawiera nieprawidłowe znaki.</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>

@@ -61,17 +61,6 @@ class RunController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \App\Http\Requests\StoreRunRequest  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(StoreRunRequest $request)
-	{
-		return new RunResource(Run::create($request->all()));
-	}
-
-	/**
 	 * Display the specified resource.
 	 *
 	 * @param  \App\Models\Run  $run
@@ -80,6 +69,18 @@ class RunController extends Controller
 	public function show(Run $run)
 	{
 		return new RunResource($run->loadMissing('category.game'));
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \App\Http\Requests\StoreRunRequest  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(StoreRunRequest $request)
+	{
+		$run = Run::create($request->all())->loadMissing('category');
+		return new RunResource($run);
 	}
 
 	/**
@@ -92,7 +93,7 @@ class RunController extends Controller
 	public function update(UpdateRunRequest $request, Run $run)
 	{
 		$run->update($request->all());
-		$run = $run->refresh();
+		$run = $run->refresh()->loadMissing('category');
 		return new RunResource($run);
 	}
 
@@ -104,16 +105,7 @@ class RunController extends Controller
 	 */
 	public function destroy(Run $run)
 	{
-		$count = $run->runs()->count();
-		if ($count == 0) {
-			$run->delete();
-			return response()->noContent();
-		}
-		else {
-			return response()->json([
-				"message" => "There are runs associated with this Run. You need either delete or move those first.",
-				"count" => $count,
-			], 409);
-		}
+		$run->delete();
+		return response()->noContent();
 	}
 }

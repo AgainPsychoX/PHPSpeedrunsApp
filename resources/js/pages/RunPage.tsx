@@ -3,15 +3,18 @@ import { Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { GenericLoadingPage } from "../components/GenericLoading";
+import { getEditRunPageLink } from "../models/Run";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
 import RunContext from "../utils/contexts/RunContext";
-import { formatDurationHTML } from "../utils/FormattingUtils";
+import { formatDurationHTML } from "../utils/DurationUtils";
 
 const RunPage = () => {
 	const game = useContext(GameContext);
 	const category = useContext(CategoryContext);
 	const run = useContext(RunContext);
+
+	const isModerator = true;
 
 	if (!game || !category || !run) {
 		return <GenericLoadingPage/>
@@ -49,6 +52,13 @@ const RunPage = () => {
 			{run.notes.length > 0 && <>
 				<small className="text-muted">Notatka</small>
 				<p>{run.notes}</p>
+			</>}
+			{isModerator && <>
+				<div className="h5">Moderacja</div>
+				<div className="gap-2 hstack justify-content-center justify-content-lg-start">
+					<Link className="btn btn-outline-secondary" role="button" to={getEditRunPageLink(run)}>Edytuj lub usuń grę</Link>
+					{/* <Button variant="outline-secondary" onClick={}>Weryfikuj</Button> */}
+				</div>
 			</>}
 		</Container>
 	</main>

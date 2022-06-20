@@ -26,7 +26,8 @@ class UserController extends Controller
 		$direction = null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
-		$requiredRuns = array_key_exists('players', $queryParams) ? 1 : 0;
+		$requiredRuns = intval($queryParams['minimumRuns'] ?? 0);
+		$search = $queryParams['search'] ?? null;
 
 		// Latest run
 		if (str_starts_with($orderBy, 'l')) {
@@ -43,14 +44,14 @@ class UserController extends Controller
 				)
 				->groupBy('runs.user_id')
 			;
-			$usersQuery = User::query()
-				->joinSub($runsCountsQuery, 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
-				->joinSub($latestRunsQuery, 'b', fn ($join) => $join->on('users.id', '=', 'b.user_id'))
+			$query = User::query()
+				->leftJoinSub($runsCountsQuery, 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
+				->leftJoinSub($latestRunsQuery, 'b', fn ($join) => $join->on('users.id', '=', 'b.user_id'))
 				->leftJoin('categories', 'latest_run_category_id', '=', 'categories.id')
 				->leftJoin('games', 'categories.game_id', '=', 'games.id')
 				->select(
 					'users.*',
-					'runs_count',
+					DB::raw('(case when `runs_count` is null then 0 else `runs_count` end) as `runs_count`'),
 					'latest_run_at',
 					'latest_run_id',
 					'latest_run_category_id',
@@ -58,44 +59,56 @@ class UserController extends Controller
 					'games.id as latest_run_game_id',
 					'games.name as latest_run_game_name',
 				)
-				// ->distinct()
-				->orderBy('latest_run_at', $direction ?: 'desc')
 			;
-			return UserResource::collection($usersQuery->paginate(40));
+
+			if ($search) {
+				$query
+					->where('users.name', 'like', "%$search%")
+					->orWhere('users.email', 'like', "%$search%")
+				;
+			}
+
+			if ($requiredRuns > 0) {
+				$query->having('runs_count', '>=', $requiredRuns);
+			}
+
+			$query->orderBy('latest_run_at', $direction ?: 'desc');
+		}
+		// Other, less composite ordering
+		else {
+			$query = User::withCount('runs');
+			if ($requiredRuns > 0) {
+				$query->having('runs_count', '>=', $requiredRuns);
+			}
+
+			if ($search) {
+				$query
+					->where('users.name', 'like', "%$search%")
+					->orWhere('users.email', 'like', "%$search%")
+				;
+			}
+
+			// Alphanumeric
+			if (str_starts_with($orderBy, 'a')) {
+				$query->orderBy('name', $direction ?: 'asc');
+			}
+			// Runs count
+			else if (str_starts_with($orderBy, 'r')) {
+				$query->orderBy('runs_count', $direction ?: 'desc');
+			}
+			// Joined date
+			else if (str_starts_with($orderBy, 'j')) {
+				$query->orderBy('created_at', $direction ?: 'desc');
+			}
+			// Invalid
+			else {
+				return response()->json([
+					"message" => "Invalid 'orderBy' parameter. Valid values are: (empty), 'alphanumeric', 'joined', 'latestRun', 'runsCount'. Either 'desc' or 'asc' can be also specified as separate parameter.",
+				], 400);
+			}
 		}
 
-		// Alphanumeric
-		if (str_starts_with($orderBy, 'a')) {
-			return UserResource::collection(
-				User::withCount('runs')
-					->having('runs_count', '>=', $requiredRuns)
-					->orderBy('name', $direction ?: 'asc')
-					->paginate(40));
-		}
-
-		// Runs count
-		if (str_starts_with($orderBy, 'r')) {
-			return UserResource::collection(
-				User::withCount('runs')
-					->having('runs_count', '>=', $requiredRuns)
-					->orderBy('runs_count', $direction ?: 'desc')
-					->paginate(40)
-			);
-		}
-
-		// Joined date
-		if (str_starts_with($orderBy, 'j')) {
-			return UserResource::collection(
-				User::withCount('runs')
-					->having('runs_count', '>=', $requiredRuns)
-					->orderBy('created_at', $direction ?: 'desc')
-					->paginate(40)
-			);
-		}
-
-		return response()->json([
-			"message" => "Invalid 'orderBy' parameter. Valid values are: (empty), 'alphanumeric', 'joined', 'latestRun', 'runsCount'. Either 'desc' or 'asc' can be also specified as separate parameter.",
-		], 400);
+		return UserResource::collection($query->paginate(40));
 	}
 
 	/**
