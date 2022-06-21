@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\UserEntryResource;
+use App\Http\Resources\UserSummaryResource;
+use App\Http\Resources\UserDetailsResource;
 use App\Models\User;
 use App\Models\Run;
 
@@ -108,18 +110,7 @@ class UserController extends Controller
 			}
 		}
 
-		return UserResource::collection($query->paginate(40));
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \App\Http\Requests\StoreUserRequest  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(StoreUserRequest $request)
-	{
-		return new UserResource(User::create($request->all()));
+		return UserSummaryResource::collection($query->paginate(40));
 	}
 
 	/**
@@ -130,7 +121,19 @@ class UserController extends Controller
 	 */
 	public function show(User $user)
 	{
-		return new UserResource($user);
+		$user->showIsAdmin = true;
+		return new UserDetailsResource($user->loadCount('runs'));
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \App\Http\Requests\StoreUserRequest  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(StoreUserRequest $request)
+	{
+		return $this->show(User::create($request->all()));
 	}
 
 	/**
@@ -144,7 +147,7 @@ class UserController extends Controller
 	{
 		$user->update($request->all());
 		$user = $user->refresh();
-		return new UserResource($user);
+		return $this->show($user);
 	}
 
 	/**

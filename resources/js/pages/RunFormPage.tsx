@@ -1,5 +1,5 @@
 import React, { FormEventHandler, MouseEventHandler, useCallback, useContext, useEffect, useState } from "react";
-import { useDebounce, useDebouncedCallback } from 'use-debounce';
+import { useDebouncedCallback } from 'use-debounce';
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { useNavigate } from "react-router-dom";
@@ -25,11 +25,9 @@ const RunFormPage = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
 
-	const category = useContext(CategoryContext);
+	const { category } = useContext(CategoryContext);
 	const run = useContext(RunContext);
 	const isEditing = !!run;
-
-	const isCategoryModerator = true;
 
 	const [duration, setDuration] = useState<number>();
 	const [videoUrl, setVideoUrl] = useState<string>();

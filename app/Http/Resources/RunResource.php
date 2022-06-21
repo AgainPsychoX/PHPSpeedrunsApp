@@ -15,6 +15,7 @@ class RunResource extends JsonResource
 	public function toArray($request)
 	{
 		return [
+			// Entry
 			'id' => $this->id,
 
 			'categoryId' => $this->category_id,
@@ -29,12 +30,17 @@ class RunResource extends JsonResource
 			'userId' => $this->user_id,
 			'userName' => $this->whenLoaded('user', fn () => $this->user->name),
 
+			'createdAt' => $this->created_at,
+
+			// Summary
 			'duration' => $this->duration,
 			'score' => $this->score,
 			'videoUrl' => $this->video_url,
-			'notes' => $this->notes,
+
 			'state' => $this->state,
-			'createdAt' => $this->created_at,
+
+			// Run
+			'notes' => $this->notes,
 			'updatedAt' => $this->updated_at,
 		];
 	}

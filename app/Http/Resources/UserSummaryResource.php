@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Http\Resources;
-
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Carbon;
 
-class UserResource extends JsonResource
+class UserSummaryResource extends UserEntryResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -16,17 +14,12 @@ class UserResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		return [
-			'id' => $this->id,
-			'name' => $this->name,
-			'email' => $this->email,
+		return array_merge(parent::toArray($request), [
+			'isAdmin' => $this->when(boolval($this->showIsAdmin), fn () => $this->isGlobalModerator()),
 			'isGhost' => $this->isGhost(),
 			'countryId' => $this->country_id,
-			'youtubeUrl' => $this->youtube_url,
-			'twitchUrl' => $this->twitch_url,
-			'twitterUrl' => $this->twitter_url,
-			'discord' => $this->discord,
-			'profileDescription' => $this->profile_description,
+			'joinedAt' => $this->created_at,
+
 			'runsCount' => $this->whenNotNull($this->runs_count),
 			'latestRun' => $this->when(!is_null($this->latest_run_at), fn () => [
 				'at' => is_null($this->latest_run_at)
@@ -38,7 +31,6 @@ class UserResource extends JsonResource
 				'gameId'       => $this->whenNotNull($this->latest_run_game_id),
 				'gameName'     => $this->whenNotNull($this->latest_run_game_name),
 			]),
-			'joinedAt' => $this->created_at,
-		];
+		]);
 	}
 }

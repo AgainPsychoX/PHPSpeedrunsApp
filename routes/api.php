@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RunController;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\UserDetailsResource;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +20,9 @@ use App\Http\Resources\UserResource;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-	return UserResource::make($request->user());
+	$user = $request->user();
+	$user->showIsAdmin = true;
+	return new UserDetailsResource($user->loadCount('runs'));
 });
 
 Route::apiResource('users', UserController::class);

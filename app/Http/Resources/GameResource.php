@@ -17,19 +17,26 @@ class GameResource extends JsonResource
 	public function toArray($request)
 	{
 		return [
+			// Entry
 			'id' => $this->id,
 			'name' => $this->name,
-			'description' => $this->description,
-			'rules' => $this->rules,
-			'icon' => $this->iconUrl(),
 			'publishYear' => $this->publish_year,
-			'createdAt' => $this->created_at,
-			'updatedAt' => $this->updated_at,
-			'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+			'icon' => $this->iconUrl(),
+
+			// Summary
 			'runsCount' => $this->whenNotNull($this->runs_count),
 			'latestRunAt' => is_null($this->latest_run_at)
 				? new MissingValue
 				: Carbon::parse($this->latest_run_at)->toIso8601ZuluString(),
+
+			// Details
+			'rules' => $this->whenNotNull($this->rules),
+			'description' => $this->whenNotNull($this->description),
+			'createdAt' => $this->whenNotNull($this->created_at),
+			'updatedAt' => $this->whenNotNull($this->updated_at),
+
+			'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn () => UserSummaryResource::collection($this->directModerators()->get())),
 		];
 	}
 }

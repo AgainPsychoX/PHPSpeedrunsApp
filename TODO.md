@@ -5,15 +5,14 @@
 
 ### Main
 
-+ Proper Add/edit/delete run (incl. ghosts)
 + Profile editing.
-+ Users picker (will come useful for adding runs and roles)
++ Change/forget password.
 + Proper Add/edit/delete users (by admin; incl. ghosts)
++ Ghosts will have predefined email: `${username}@gho.st`.
 + Roles management: 
 	+ List mods in games/categories, button to edit the list, search/form in modal.
 	+ Global administrators as separate admin panel.
 + Better checking permissions.
-+ Change/forget password.
 
 
 
@@ -34,6 +33,7 @@
 
 ### Ideas
 
++ Position moderation buttons better.
 + Fortify is obstacle...
 	+ Rename `name` param of `POST /login` to `login`. 
 	+ Localize login error messages.

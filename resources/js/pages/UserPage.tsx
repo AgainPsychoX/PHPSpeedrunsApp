@@ -3,7 +3,7 @@ import { Alert, Container, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
-import { getRunPageLink, RunEntry } from "../models/Run";
+import { getRunPageLink, RunSummary } from "../models/Run";
 import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 import { buildPagination } from "../utils/Pagination";
@@ -29,6 +29,9 @@ const UserPage = () => {
 
 			<small className="text-muted">Dołączył</small>
 			<div className="h2">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</div>
+
+			<small className="text-muted">Liczba podejść</small>
+			<div className="h2">{user.runsCount}</div>
 
 			{(user.youtubeUrl || user.twitchUrl || user.twitterUrl) && <>
 				<small className="text-muted">Linki społecznościowe</small>
@@ -63,7 +66,7 @@ const UserRunsSection = ({
 }) => {
 	const navigate = useNavigate();
 	const user = useContext(UserContext);
-	const [runs, setRuns] = useState<RunEntry[]>();
+	const [runs, setRuns] = useState<RunSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 
 	const onPage = useCallback((page: number) => {

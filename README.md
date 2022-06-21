@@ -44,7 +44,6 @@
 	+ Posiada powiązane podejścia.
 	+ Może być zarządzane przez moderatorów kategorii (i gier).
 	+ Zawiera informacje i zbuforowane statystyki.
-	+ Może zawierać ikonę dla kategorii (w tym: przesłane przez moderatora).
 + Podejścia:
 	+ Powiązane z właścicielem (użytkownikiem lub duchem).
 	+ Zawiera informacje i statystyki o podejściu.
@@ -81,6 +80,5 @@ Zdjęcia i grafiki powinny być przechowywane jako pliki PNG lub JPEG.
 
 ```
 /images/games/{}/icon.XYZ           // Ikony dla gier
-/images/categories/{}/icon.XYZ      // Ikony dla gier
 ```
 

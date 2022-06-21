@@ -16,10 +16,10 @@ interface LatestRunInfo extends RunId {
 }
 
 export interface UserSummary extends UserEntry {
+	isAdmin?: boolean;
 	isGhost: boolean;
 
 	joinedAt: DateTime;
-
 	countryId?: string;
 
 	// Optional statistics (sorting or details)

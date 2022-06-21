@@ -38,20 +38,25 @@ class GameController extends Controller
 			;
 			$gamesQuery = Game::query()
 				->joinSub($runCountsQuery, 'i_hate_php', fn ($join) => $join->on('games.id', '=', 'i_hate_php.id'))
-				->with('categories')
 				->orderBy('runs_count', $direction ?: 'desc')
 			;
-			return GameResource::collection($gamesQuery->paginate(16));
+			return GameResource::collection($gamesQuery->paginate(16, ['games.id', 'name', 'publish_year', 'icon', 'runs_count']));
 		}
 
 		// Alphanumeric
 		if (str_starts_with($orderBy, 'al')) {
-			return GameResource::collection(Game::with('categories')->orderBy('name', $direction ?: 'asc')->paginate(16));
+			return GameResource::collection(
+				Game::orderBy('name', $direction ?: 'asc')
+					->paginate(16, ['id', 'name', 'publish_year', 'icon'])
+			);
 		}
 
 		// Publish year
 		if (str_starts_with($orderBy, 'y') || str_starts_with($orderBy, 'p')) {
-			return GameResource::collection(Game::with('categories')->orderBy('publish_year', $direction ?: 'desc')->paginate(16));
+			return GameResource::collection(
+				Game::orderBy('publish_year', $direction ?: 'desc')
+					->paginate(16, ['id', 'name', 'publish_year', 'icon'])
+			);
 		}
 
 		// Last activity
@@ -64,10 +69,9 @@ class GameController extends Controller
 			;
 			$gamesQuery = Game::query()
 				->joinSub($runActivityQuery, 'i_hate_php', fn ($join) => $join->on('games.id', '=', 'i_hate_php.id'))
-				->with('categories')
 				->orderBy('latest_run_at', $direction ?: 'desc')
 			;
-			return GameResource::collection($gamesQuery->paginate(16));
+			return GameResource::collection($gamesQuery->paginate(16, ['games.id', 'name', 'publish_year', 'icon', 'latest_run_at']));
 		}
 
 		return response()->json([
@@ -83,11 +87,13 @@ class GameController extends Controller
 	 */
 	public function show(Game $game)
 	{
-		return new GameResource($game->loadMissing([
+		$game = $game->loadMissing([
 			'categories' => function($query) {
 				$query->withCount('runs')->orderBy('runs_count', 'DESC');
 			}
-		]));
+		]);
+		$game->loadModerators = 'direct';
+		return new GameResource($game);
 	}
 
 	/**
@@ -98,6 +104,8 @@ class GameController extends Controller
 	 */
 	public function store(StoreGameRequest $request)
 	{
+		Gate::authorize('create');
+
 		if ($request->hasFile('iconFile')) {
 			$ext = strtolower($request->iconFile->extension());
 			if ($ext == 'jpg') $ext = 'jpeg';
@@ -116,7 +124,7 @@ class GameController extends Controller
 			Storage::putFileAs("public/images/games/$game->id", $request->iconFile, "icon.$ext", 'public');
 		}
 
-		return new GameResource($game);
+		return $this->show($game);
 	}
 
 	/**
@@ -128,6 +136,8 @@ class GameController extends Controller
 	 */
 	public function update(UpdateGameRequest $request, Game $game)
 	{
+		Gate::authorize('update', $game);
+
 		if ($request->hasFile('iconFile')) {
 			$ext = strtolower($request->iconFile->extension());
 			if ($ext == 'jpg') $ext = 'jpeg';
@@ -162,6 +172,8 @@ class GameController extends Controller
 	 */
 	public function destroy(Game $game)
 	{
+		Gate::authorize('delete', $game);
+
 		$count = $game->categories()->count();
 		if ($count == 0) {
 			$game->delete();

@@ -22,10 +22,6 @@ class Category extends Model
 		'verification_requirement' => 1,
 	];
 
-	// protected $appends = [
-	// 	'runsCount'
-	// ];
-
 	public function game()
 	{
 		return $this->belongsTo(Game::class);
@@ -36,12 +32,13 @@ class Category extends Model
 		return $this->hasMany(Run::class);
 	}
 
-	// public function getRunsCountAttribute() {
-	// 	return $this->runs()->count();
-	// }
-
 	public function moderators()
 	{
-		return $this->morphMany(ModeratorAssignment::class, 'target');
+		return ModeratorAssignment::categoryFor($this);
+	}
+
+	public function directModerators()
+	{
+		return ModeratorAssignment::directCategoryFor($this);
 	}
 }

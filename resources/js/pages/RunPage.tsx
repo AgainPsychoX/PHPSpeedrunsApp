@@ -4,17 +4,16 @@ import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { GenericLoadingPage } from "../components/GenericLoading";
 import { getEditRunPageLink } from "../models/Run";
+import AppContext from "../utils/contexts/AppContext";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
 import RunContext from "../utils/contexts/RunContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 
 const RunPage = () => {
-	const game = useContext(GameContext);
-	const category = useContext(CategoryContext);
+	const { game } = useContext(GameContext);
+	const { category, isModerator } = useContext(CategoryContext);
 	const run = useContext(RunContext);
-
-	const isModerator = true;
 
 	if (!game || !category || !run) {
 		return <GenericLoadingPage/>

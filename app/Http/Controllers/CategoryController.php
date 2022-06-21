@@ -34,14 +34,16 @@ class CategoryController extends Controller
 	public function show(Category $category)
 	{
 		$scoreRule = $category->score_rule;
-		return new CategoryResource($category->loadMissing([
+		$category = $category->loadMissing([
 			'runs' => function ($query) use($scoreRule) {
 				if ($scoreRule != 'none') {
 					$query = $query->orderBy('score', $scoreRule == 'low' ? 'ASC' : 'DESC');
 				}
 				$query = $query->orderBy('duration', 'DESC');
 			}
-		]));
+		]);
+		$category->loadModerators = 'direct';
+		return new CategoryResource($category);
 	}
 
 	/**
@@ -52,7 +54,9 @@ class CategoryController extends Controller
 	 */
 	public function store(StoreCategoryRequest $request)
 	{
-		return new CategoryResource(Category::create([
+		Gate::authorize('create');
+
+		return $this->show(Category::create([
 			'game_id' => $request->gameId,
 			'name' => $request->name,
 			'rules' => $request->rules ?? '',
@@ -70,6 +74,8 @@ class CategoryController extends Controller
 	 */
 	public function update(UpdateCategoryRequest $request, Category $category)
 	{
+		Gate::authorize('update', $category);
+
 		if ($category->verification_requirement != $request->verification_requirement) {
 			// TODO: update all related runs
 		}
@@ -82,7 +88,7 @@ class CategoryController extends Controller
 			'verification_requirement' => $request->verificationRequirement,
 		]);
 		$category = $category->refresh();
-		return new CategoryResource($category);
+		return $this->show($category);
 	}
 
 	/**
@@ -93,6 +99,8 @@ class CategoryController extends Controller
 	 */
 	public function destroy(Category $category)
 	{
+		Gate::authorize('delete', $category);
+
 		$count = $category->runs()->count();
 		if ($count == 0) {
 			$category->delete();

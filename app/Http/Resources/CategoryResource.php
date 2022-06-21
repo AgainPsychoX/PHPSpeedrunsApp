@@ -15,15 +15,20 @@ class CategoryResource extends JsonResource
 	public function toArray($request)
 	{
 		return [
+			// Entry
 			'id' => $this->id,
 			'gameId' => $this->game_id,
 			'name' => $this->name,
+
+			// Details
 			'rules' => $this->rules,
 			'scoreRule' => $this->score_rule,
 			'verificationRequirement' => $this->verification_requirement,
 			'createdAt' => $this->created_at,
 			'updatedAt' => $this->updated_at,
+
 			'runs' => RunResource::collection($this->whenLoaded('runs')),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn() => UserSummaryResource::collection($this->directModerators()->get())),
 		];
 	}
 }

@@ -15,8 +15,8 @@ const CategoryFormPage = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
 
-	const game = useContext(GameContext);
-	const category = useContext(CategoryContext);
+	const { game } = useContext(GameContext);
+	const { category } = useContext(CategoryContext);
 	const isEditing = !!category;
 
 	const [validated, setValidated] = useState<boolean>(false);

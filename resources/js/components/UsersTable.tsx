@@ -47,7 +47,7 @@ const UsersTable = ({
 	const [users, setUsers] = useState<UserSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 
-	const isModerator = true;
+	const showEmails = users && users[0] && !!users[0].email;
 
 	const [searchText, setSearchText] = useState<string>(initialSearch);
 	const [searchTextDebounced, { flush: searchNow }] = useDebounce(searchText, 1000);
@@ -112,7 +112,7 @@ const UsersTable = ({
 					<thead>
 						<tr>
 							<th>Nazwa użytkownika</th>
-							{isModerator && <th>E-mail</th>}
+							{showEmails && <th>E-mail</th>}
 							<th>Data dołączenia</th>
 							<th>Liczba podejść</th>
 							{withLatestRun && <th>Ostatnie podejście</th>}
@@ -127,7 +127,7 @@ const UsersTable = ({
 								onClick={() => onClick(user)}
 							>
 								<td>{user.name}</td>
-								{isModerator && <td>{user.email}</td>}
+								{showEmails && <td>{user.email}</td>}
 								<td>{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>
 								<td className="text-center">{user.runsCount === undefined ? '?' : user.runsCount}</td>
 								{withLatestRun && (

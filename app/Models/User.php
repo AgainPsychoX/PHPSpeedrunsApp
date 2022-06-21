@@ -62,4 +62,27 @@ class User extends Authenticatable
 	{
 		return empty($this->password);
 	}
+
+	public function isGlobalModerator() {
+		return ModeratorAssignment::global()->where('user_id', $this->id)->exists();
+	}
+
+	public function isGameModerator(Game|int $game)
+	{
+		return ModeratorAssignment::gameFor($game)->where('user_id', $this->id)->exists();
+	}
+
+	public function isCategoryModerator(Category|int $category)
+	{
+		return ModeratorAssignment::categoryFor($category)->where('user_id', $this->id)->exists();
+	}
+
+	public function isAnyModerator() {
+		return ModeratorAssignment::active()->where(function ($query) {
+			$query->where('target_type', 'global')
+				->orWhere('target_type', 'game')
+				->orWhere('target_type', 'category')
+			;
+		});
+	}
 }

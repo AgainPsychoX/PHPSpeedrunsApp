@@ -11,22 +11,23 @@ use App\Models\Run;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        Schema::disableForeignKeyConstraints();
-        Run::truncate();
-        User::truncate();
-        Schema::enableForeignKeyConstraints();
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		Schema::disableForeignKeyConstraints();
+		ModeratorAssignment::truncate();
+		Run::truncate();
+		User::truncate();
+		Schema::enableForeignKeyConstraints();
 
-        $faker = \Faker\Factory::create();
-        $userFactory = User::factory();
+		$faker = \Faker\Factory::create();
+		$userFactory = User::factory();
 
-        $userFactory->count($faker->numberBetween(10, 40))->ghost()->create();
-        $userFactory->count($faker->numberBetween(10, 20))->create();
-    }
+		$userFactory->count($faker->numberBetween(10, 40))->ghost()->create();
+		$userFactory->count($faker->numberBetween(10, 20))->create();
+	}
 }

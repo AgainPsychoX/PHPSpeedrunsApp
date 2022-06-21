@@ -4,25 +4,28 @@ export interface RunId {
 	id: number;
 	gameId: number;
 	categoryId: number;
+
+	userId: number;
 }
 
 export interface RunEntry extends RunId {
-	id: number;
-	gameId: number;
 	gameName?: string;
-	categoryId: number;
 	categoryName?: string;
-	userId: number;
 	userName?: string;
-	duration: number;
-	score: number;
-	videoUrl: string;
+
 	createdAt: DateTime;
 }
 
-export interface RunDetails extends RunEntry {
-	notes: string;
+export interface RunSummary extends RunEntry {
+	duration: number;
+	score: number;
+	videoUrl: string;
+
 	state: 'pending' | 'verified' | 'invalid';
+}
+
+export interface RunDetails extends RunSummary {
+	notes: string;
 	updatedAt: DateTime;
 }
 

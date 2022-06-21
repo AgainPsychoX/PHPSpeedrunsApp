@@ -12,7 +12,7 @@ const GameFormPage = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
 
-	const game = useContext(GameContext);
+	const { game } = useContext(GameContext);
 	const isEditing = !!game;
 
 	const [validated, setValidated] = useState<boolean>(false);
@@ -168,7 +168,7 @@ const GameFormPage = () => {
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							{isEditing && <Button variant="secondary" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							{isEditing && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
 							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>

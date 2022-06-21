@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Container, Col, Row, Tabs, Tab, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchCategoryDetails } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
-import { CategoryDetails, CategoryEntry, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
+import { CategoryDetails, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
 import { getEditGamePageLink, getNewCategoryPageLink, isGameIconPlaceholder } from "../models/Game";
-import { getRunPageLink, RunEntry } from "../models/Run";
+import { getRunPageLink, RunSummary } from "../models/Run";
+import { getUserPageLink } from "../models/User";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 
 export const GamePage = () => {
 	const navigate = useNavigate();
-	const game = useContext(GameContext);
-	const categoryDetails = useContext(CategoryContext);
+	const { game, isModerator: isGameModerator } = useContext(GameContext);
+	const { category: categoryDetails } = useContext(CategoryContext);
 	const [activeKey, setActiveKey] = useState<string>('');
-
-	const isGameModerator = true;
 
 	useEffect(() => {
 		if (!game) return;
@@ -42,7 +40,7 @@ export const GamePage = () => {
 						<img src={game.icon} className="rounded-sm w-100" />
 					}
 				</Col>
-				<Col xs={12} md={7} className="">
+				<Col xs={12} md={7}>
 					<small>Tytuł i rok wydania</small>
 					<h1>{game.name} <small className="text-muted">({game.publishYear})</small></h1>
 					{game.description && <>
@@ -53,12 +51,18 @@ export const GamePage = () => {
 						<h5>Zasady gry</h5>
 						<p>{game.rules}</p>
 					</>}
+					<h5>Moderatorzy</h5>
+					<ul>
+						{game.moderators.length > 0
+							? game.moderators.map(user => <li className="mb-1" key={user.id}><Link to={getUserPageLink(user)}>{user.name}</Link></li>)
+							: <small>(brak bezpośrednich moderatorów)</small>
+						}
+					</ul>
 				</Col>
 			</Row>
 		</Container>
 		<Container>
 			{isGameModerator && <Row className="mb-3">
-				<div className="h5">Moderacja</div>
 				<Col className="gap-2 hstack justify-content-center justify-content-lg-start">
 					<Link className="btn btn-outline-secondary" role="button" to={getEditGamePageLink(game)}>Edytuj lub usuń grę</Link>
 					<Link className="btn btn-outline-secondary" role="button" to={getNewCategoryPageLink(game)}>Dodaj kategorię</Link>
@@ -83,7 +87,7 @@ export const GamePage = () => {
 								{game.categories.map(category =>
 									<Tab key={category.id} eventKey={category.id.toString()} title={category.name} className="px-2">
 										{categoryDetails.id == category.id
-											? <CategoryTabContent category={categoryDetails}/>
+											? <CategoryTabContent/>
 											: <GenericLoadingSection divStyle={{paddingBottom: '80vh'}} />
 										}
 									</Tab>
@@ -101,12 +105,11 @@ export default GamePage;
 
 
 
-const CategoryTabContent = ({
-	category
-} : {
-	category: CategoryDetails
-}) => {
-	const isCategoryModerator = true;
+const CategoryTabContent = () => {
+	const { category, isModerator } = useContext(CategoryContext);
+	if (!category) {
+		return <GenericLoadingSection/>
+	}
 
 	return <>
 		{category.rules && <>
@@ -114,12 +117,19 @@ const CategoryTabContent = ({
 			<p>{category.rules}</p>
 		</>}
 		<div className="gap-2 hstack justify-content-center mb-3">
-			{isCategoryModerator && <>
+			{isModerator && <>
 				<Link className="btn btn-outline-secondary" role="button" to={getEditCategoryPageLink(category)}>Edytuj lub usuń kategorię</Link>
 				{/* <Link className="btn btn-outline-secondary" role="button" to={getManageCategoryModeratorsPageLink(category)}>Edytuj lub usuń kategorię</Link> */}
 			</>}
 			<Link className="btn btn-outline-secondary" role="button" to={getNewRunPageLink(category)}>Dodaj podejście</Link>
 		</div>
+		<h5>Moderatorzy</h5>
+		<ul>
+			{category.moderators.length > 0
+				? category.moderators.map(user => <li className="mb-1" key={user.id}><Link to={getUserPageLink(user)}>{user.name}</Link></li>)
+				: <small>(brak bezpośrednich moderatorów)</small>
+			}
+		</ul>
 		{(category.runs && category.runs.length > 0)
 			? <>
 				<h5>Podejścia</h5>
@@ -143,7 +153,7 @@ const CategoryTabContent = ({
 	</>;
 };
 
-const RunRow = ({place, category, run}: { place: number, category: CategoryDetails, run: RunEntry }) => {
+const RunRow = ({place, category, run}: { place: number, category: CategoryDetails, run: RunSummary }) => {
 	const navigate = useNavigate();
 	return <tr
 		key={run.id}

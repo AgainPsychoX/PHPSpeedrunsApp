@@ -79,6 +79,8 @@ class RunController extends Controller
 	 */
 	public function store(StoreRunRequest $request)
 	{
+		Gate::authorize('create');
+
 		$run = Run::create($request->all())->loadMissing('category');
 		return new RunResource($run);
 	}
@@ -92,6 +94,8 @@ class RunController extends Controller
 	 */
 	public function update(UpdateRunRequest $request, Run $run)
 	{
+		Gate::authorize('update', $run);
+
 		$run->update($request->all());
 		$run = $run->refresh()->loadMissing('category');
 		return new RunResource($run);
@@ -105,6 +109,8 @@ class RunController extends Controller
 	 */
 	public function destroy(Run $run)
 	{
+		Gate::authorize('delete', $run);
+
 		$run->delete();
 		return response()->noContent();
 	}

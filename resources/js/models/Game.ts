@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { CategoryEntry } from "./Category";
+import { UserEntry } from "./User";
 
 export interface GameEntry {
 	id: number;
@@ -19,7 +20,11 @@ export interface GameDetails extends GameSummary {
 	rules: string;
 	createdAt: DateTime;
 	updatedAt: DateTime;
+
 	categories: CategoryEntry[];
+	moderators: UserEntry[];
+
+	runsCount: number;
 }
 
 export const isGameIconPlaceholder = (entry: GameEntry) => entry.icon.includes('placeholder');

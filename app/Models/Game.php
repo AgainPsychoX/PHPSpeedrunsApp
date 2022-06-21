@@ -24,7 +24,16 @@ class Game extends Model
 
 	public function moderators()
 	{
-		return $this->morphMany(ModeratorAssignment::class, 'target');
+		return User::query()
+			->joinSub(ModeratorAssignment::gameFor($this), 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
+		;
+	}
+
+	public function directModerators()
+	{
+		return User::query()
+			->joinSub(ModeratorAssignment::directGameFor($this), 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
+		;
 	}
 
 	public function iconUrl()

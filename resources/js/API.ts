@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry, GameSummary } from "./models/Game";
-import { RunDetails, RunEntry } from "./models/Run";
+import { RunDetails, RunEntry, RunSummary } from "./models/Run";
 import { UserDetails, UserEntry, UserSummary } from "./models/User";
 import settings from "./settings";
 
@@ -135,7 +135,7 @@ export const fetchUserRuns = async (
 ) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	const response = await simplyFetchJSON(`${settings.apiRoot}/runs?player=${id}&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
-	const json = await response.json() as any as { data: RunEntry[]; meta: PaginationMeta };
+	const json = await response.json() as any as { data: RunSummary[]; meta: PaginationMeta };
 	for (const run of json.data) convertDates(run);
 	return json;
 }
