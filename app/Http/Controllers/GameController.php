@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,8 +24,9 @@ class GameController extends Controller
 	public function index(Request $request)
 	{
 		$queryParams = $request->query();
+
 		$orderBy = $queryParams['orderBy'] ?? 'popular';
-		$direction = null;
+		$direction = $queryParams['direction'] ?? null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
 

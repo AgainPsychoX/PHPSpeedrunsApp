@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
+use App\Models\User;
+use App\Models\Game;
+use App\Models\Category;
+
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -27,6 +31,10 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
+
+		Route::model('user', User::class);
+		Route::model('game', Game::class);
+		Route::model('category', Category::class);
 
         $this->routes(function () {
             Route::middleware('api')

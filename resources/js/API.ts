@@ -3,8 +3,9 @@ import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry, GameSummary } from "./models/Game";
 import { RunDetails, RunEntry, RunSummary } from "./models/Run";
-import { UserDetails, UserEntry, UserSummary } from "./models/User";
+import { ModeratorScope, ModeratorSummary, UserDetails, UserEntry, UserSummary } from "./models/User";
 import settings from "./settings";
+import { parseBoolean } from "./utils/SomeUtils";
 
 
 
@@ -26,7 +27,18 @@ const baseHeadersAnd = (other: Record<string, string> = {}): Record<string, stri
 	...other
 });
 
-const simplyFetchJSON = (url: string) => fetch(url, { headers: baseHeadersAnd() });
+const simplyFetchJSON = (url: string) => fetch(url, { headers: baseHeadersAnd() }).then(jsonOrThrowIfNotOk);
+
+const prepareURLSearchParams = (data: Record<string, string>) => {
+	for (const [key, value] of Object.entries(data))
+		if (value === undefined)
+			delete data[key];
+	const params = new URLSearchParams(data);
+	// for (const [key, value] of Object.entries(data))
+	// 	if (value === undefined)
+	// 		params.delete(key);
+	return params;
+}
 
 export interface PaginationMeta {
 	current_page: number;
@@ -51,8 +63,13 @@ const convertDates = (o: any, fields: string[] = ['createdAt', 'updateAt']) => {
 ////////////////////////////////////////////////////////////////////////////////
 // State
 
+export const isExpectingLoggedIn = () => parseBoolean(localStorage.getItem('expectLoggedIn'));
+
 export const initialize = async () => {
 	await fetch(`${settings.authRoot}/sanctum/csrf-cookie`);
+	return {
+		expectingLoggedIn: isExpectingLoggedIn(),
+	};
 }
 
 export const login = async (formData: FormData) => {
@@ -64,22 +81,25 @@ export const login = async (formData: FormData) => {
 		localStorage.setItem('expectLoggedIn', r.ok ? '1' : '0');
 		return r;
 	}).then(throwIfNotOk);
-	return true;
 }
 
 export const logout = async () => {
 	localStorage.setItem('expectLoggedIn', '0');
-	return fetch(`${settings.authRoot}/logout`, {
+	await fetch(`${settings.authRoot}/logout`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
-	}).then(r => r.ok);
+	}).then(throwIfNotOk);
 }
 
 export const fetchCurrentUser = async () => {
-	return simplyFetchJSON(`${settings.apiRoot}/user`)
-		.then(jsonOrThrowIfNotOk)
-		.then(({ data }: { data: UserDetails }) => convertDates(data, ['joinedAt']))
-	;
+	try {
+		const { data } = await simplyFetchJSON(`${settings.apiRoot}/user`);
+		localStorage.setItem('expectLoggedIn', '1');
+		return convertDates(data, ['joinedAt']) as UserDetails;
+	}
+	catch {
+		localStorage.setItem('expectLoggedIn', '0');
+	}
 }
 
 export const registerUser = async (formData: FormData) => {
@@ -88,7 +108,6 @@ export const registerUser = async (formData: FormData) => {
 		headers: baseHeadersAnd(),
 		body: formData
 	}).then(throwIfNotOk);
-	return true;
 }
 
 
@@ -105,24 +124,23 @@ export interface FetchUsersOptions {
 	orderBy?: UsersOrderBy;
 	direction?: 'asc' | 'desc' | undefined;
 	search?: string;
+	ghosts?: 'exclude' | 'only' | 'silent' | 'marked' | 'any';
 }
 export const fetchUsers = async (options: FetchUsersOptions) => {
-	const params = new URLSearchParams(options as Record<string, string>);
-	const response = await simplyFetchJSON(`${settings.apiRoot}/users?${params.toString()}`);
-	const { data, meta } = await response.json() as any as { data: UserSummary[]; meta: PaginationMeta };
-	for (const user of data) {
+	const params = prepareURLSearchParams(options as Record<string, string>);
+	const json = await simplyFetchJSON(`${settings.apiRoot}/users?${params.toString()}`);
+	for (const user of json.data) {
 		convertDates(user, ['joinedAt']);
 		if (user.latestRun) {
 			convertDates(user.latestRun, ['at']);
 		}
 	}
-	return { data, meta };
+	return json as { data: UserSummary[]; meta: PaginationMeta };
 }
 
 export const fetchUserDetails = async (entryOrId: UserEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/users/${id}`);
-	const { data } = await response.json() as any as { data: UserDetails };
+	const { data } = await simplyFetchJSON(`${settings.apiRoot}/users/${id}`);
 	return convertDates(data, ['joinedAt']) as UserDetails;
 }
 
@@ -134,10 +152,47 @@ export const fetchUserRuns = async (
 	direction?: 'asc' | 'desc'
 ) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/runs?player=${id}&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
-	const json = await response.json() as any as { data: RunSummary[]; meta: PaginationMeta };
+	const json = await simplyFetchJSON(`${settings.apiRoot}/runs?player=${id}&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
 	for (const run of json.data) convertDates(run);
-	return json;
+	return json as { data: RunSummary[]; meta: PaginationMeta };
+}
+
+////////////////////////////////////////
+// Moderators
+
+type ModerationTarget = GameEntry | CategoryEntry | 'global';
+const moderationTargetToPath = (target: ModerationTarget) => {
+	if (target == 'global') return '';
+	if ((target as GameEntry).publishYear) return `games/${target.id}/`;
+	if ((target as CategoryEntry).gameId) return `categories/${target.id}/`
+	throw new Error();
+}
+
+export const fetchModerators = async (where: ModerationTarget) => {
+	const json = await simplyFetchJSON(`${settings.apiRoot}/${moderationTargetToPath(where)}moderators`)
+	for (const moderator of json.data) {
+		convertDates(moderator, ['joinedAt', 'assignedAt', 'revokedAt']);
+	}
+	return json as { data: ModeratorSummary[] };
+}
+
+export const addModerator = async (who: UserEntry, where: ModerationTarget) => {
+	const { data } = await fetch(`${settings.apiRoot}/${moderationTargetToPath(where)}moderators/${who.id}`, {
+		method: 'PUT',
+		headers: baseHeadersAnd()
+	}).then(jsonOrThrowIfNotOk);
+	convertDates(data, ['joinedAt', 'assignedAt', 'revokedAt']);
+	return data as ModeratorSummary;
+}
+
+export const removeModerator = async (who: ModeratorSummary) => {
+	const path = who.scope == 'global' ? '' :
+		who.scope == 'game' ? `games/${who.targetId}/` :
+		who.scope == 'category' ? `categories/${who.targetId}/` : 'wtf?';
+	await fetch(`${settings.apiRoot}/${path}moderators/${who.id}`, {
+		method: 'DELETE',
+		headers: baseHeadersAnd(),
+	}).then(throwIfNotOk);
 }
 
 ////////////////////////////////////////
@@ -149,48 +204,42 @@ export const fetchGamesDirectory = async (
 	orderBy: GamesDirectoryOrderBy = 'popularity',
 	direction?: 'asc' | 'desc'
 ) => {
-	const response = await simplyFetchJSON(`${settings.apiRoot}/games?orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`).then(throwIfNotOk);
-	const { data: games, meta } = await response.json() as { data: GameSummary[]; meta: PaginationMeta };
-	for (const game of games) convertDates(game, ['createdAt', 'updateAt', 'latestRunAt']);
-	return { games, meta };
+	const json = await simplyFetchJSON(`${settings.apiRoot}/games?orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`)
+	for (const game of json.data) convertDates(game, ['createdAt', 'updateAt', 'latestRunAt']);
+	return json as { data: GameSummary[]; meta: PaginationMeta };
 }
 
-const receiveGameDetails = async (response: Response) => {
-	const { data: game } = await response.json();
-	if (!game.categories) game.categories = [];
-	for (const category of game.categories) {
+const receiveGameDetails = async (json: any) => {
+	for (const category of json.data.categories) {
 		convertDates(category);
 	}
-	return convertDates(game) as GameDetails;
+	return convertDates(json.data) as GameDetails;
 }
 
 export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/games/${id}`).then(throwIfNotOk);
-	return receiveGameDetails(response);
+	return receiveGameDetails(await simplyFetchJSON(`${settings.apiRoot}/games/${id}`));
 }
 
 export const createGame = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/games`, {
+	return receiveGameDetails(await fetch(`${settings.apiRoot}/games`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveGameDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const updateGame = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
+	return receiveGameDetails(await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
 		method: 'PATCH',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveGameDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const deleteGame = async (entryOrId: GameEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	return fetch(`${settings.apiRoot}/games/${id}`, {
+	await fetch(`${settings.apiRoot}/games/${id}`, {
 		method: 'DELETE',
 		headers: baseHeadersAnd(),
 	}).then(throwIfNotOk);
@@ -199,43 +248,39 @@ export const deleteGame = async (entryOrId: GameEntry | number) => {
 ////////////////////////////////////////
 // Categories
 
-const receiveCategoryDetails = async (response: Response) => {
-	const { data: category } = await response.json();
-	if (!category.runs) category.runs = [];
-	for (const run of category.runs) {
-		run.gameId = category.gameId;
+const receiveCategoryDetails = async (json: any) => {
+	if (!json.data.runs) json.data.runs = [];
+	for (const run of json.data.runs) {
+		run.gameId = json.data.gameId;
 		convertDates(run);
 	}
-	return convertDates(category) as CategoryDetails;
+	return convertDates(json.data) as CategoryDetails;
 }
 
 export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/categories/${id}`).then(throwIfNotOk);
-	return receiveCategoryDetails(response);
+	return receiveCategoryDetails(await simplyFetchJSON(`${settings.apiRoot}/categories/${id}`));
 }
 
 export const createCategory = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/categories`, {
+	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/categories`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveCategoryDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const updateCategory = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/categories/${formData.get('id')}`, {
+	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/categories/${formData.get('id')}`, {
 		method: 'PATCH',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveCategoryDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	return fetch(`${settings.apiRoot}/categories/${id}`, {
+	await fetch(`${settings.apiRoot}/categories/${id}`, {
 		method: 'DELETE',
 		headers: baseHeadersAnd(),
 	}).then(throwIfNotOk);
@@ -244,38 +289,34 @@ export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
 ////////////////////////////////////////
 // Runs
 
-const receiveRunDetails = async (response: Response) => {
-	const { data: run } = await response.json();
-	return convertDates(run) as RunDetails;
+const receiveRunDetails = async (json: any) => {
+	return convertDates(json.data) as RunDetails;
 }
 
 export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const response = await simplyFetchJSON(`${settings.apiRoot}/runs/${id}`).then(throwIfNotOk);
-	return receiveRunDetails(response);
+	return receiveRunDetails(await simplyFetchJSON(`${settings.apiRoot}/runs/${id}`));
 }
 
 export const createRun = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/runs`, {
+	return receiveRunDetails(await fetch(`${settings.apiRoot}/runs`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveRunDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const updateRun = async (formData: FormData) => {
-	const response = await fetch(`${settings.apiRoot}/runs/${formData.get('id')}`, {
+	return receiveRunDetails(await fetch(`${settings.apiRoot}/runs/${formData.get('id')}`, {
 		method: 'PATCH',
 		headers: baseHeadersAnd(),
 		body: formData
-	}).then(throwIfNotOk);
-	return receiveRunDetails(response);
+	}).then(jsonOrThrowIfNotOk));
 }
 
 export const deleteRun = async (entryOrId: RunEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	return fetch(`${settings.apiRoot}/runs/${id}`, {
+	await fetch(`${settings.apiRoot}/runs/${id}`, {
 		method: 'DELETE',
 		headers: baseHeadersAnd(),
 	}).then(throwIfNotOk);
@@ -287,14 +328,19 @@ export const deleteRun = async (entryOrId: RunEntry | number) => {
 
 export default {
 	initialize,
+	isExpectingLoggedIn,
 	login,
 	logout,
 	fetchCurrentUser,
 	registerUser,
 
-	fetchPlayers: fetchUsers,
+	fetchUsers,
 	fetchUserDetails,
 	fetchUserRuns,
+
+	fetchModerators,
+	addModerator,
+	removeModerator,
 
 	fetchGamesDirectory,
 	fetchGameDetails,

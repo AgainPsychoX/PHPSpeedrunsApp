@@ -49,6 +49,7 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 			API.registerUser(formData)
 				.then(async () => {
 					const user = await API.fetchCurrentUser();
+					if (!user) throw new Error();
 					onLogin(user);
 					navigate('/');
 				})

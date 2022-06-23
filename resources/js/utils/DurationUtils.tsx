@@ -48,17 +48,19 @@ export const formatDurationHTML = (duration: number): JSX.Element => {
 	</>;
 }
 
-export const durationByTimerRegex = /(?:(\d+):)?(\d+):(\d+):(\d+)(?:[,.](\d+))?/;
-export const durationByWordsRegex = /^\s*(?:(\d+)\s*d(?:ays?)?[\s,]*)?(?:(\d+)\s*h(?:ours?)?[\s,]*)?(?:(\d+)\s*m(?:in(?:ute)?s?)?[\s,]*)?(?:(\d+)\s*s(?:ec(?:ond)?s?)?[\s,]*)?(?:(\d+)\s*(?:ms|mill?i?s)[\s,]*)?/i;
+export const durationByTimerRegex = /^(?:(\d+):)?(\d+):(\d+):(\d+)(?:[,.](\d+))?$/;
+export const durationByWordsRegex = /^\s*(?:(\d+)\s*d(?:ays?)?[\s,]*)?(?:(\d+)\s*h(?:ours?)?[\s,]*)?(?:(\d+)\s*m(?:in(?:ute)?s?)?[\s,]*)?(?:(\d+)\s*s(?:ec(?:ond)?s?)?[\s,]*)?(?:(\d+)\s*(?:ms|mill?i?s)[\s,]*)?$/i;
 
 export const parseDuration = (string: string) => {
 	const pattern = string.includes(":") ? durationByTimerRegex : durationByWordsRegex;
 	const result = pattern.exec(string);
-	if (!result) return 0;
+	if (!result) return -1;
 	const days    = parseInt(result[1]) || 0;
 	const hours   = parseInt(result[2]) || 0;
 	const minutes = parseInt(result[3]) || 0;
 	const seconds = parseInt(result[4]) || 0;
-	const millis  = parseInt(result[5]) || 0;
+	let millis    = parseInt(result[5]) || 0;
+	if (pattern == durationByTimerRegex && millis)
+		millis /= 10 ** result[5].length;
 	return (((days * 24 + hours) * 60 + minutes) * 60 + seconds) * 1000 + millis;
 }

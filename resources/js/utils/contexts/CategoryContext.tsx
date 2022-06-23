@@ -9,7 +9,7 @@ import GameContext from './GameContext';
 interface CategoryContextData {
 	category?: CategoryDetails;
 	isModerator: boolean;
-};
+}
 
 const CategoryContext = createContext<CategoryContextData>({
 	isModerator: false,
@@ -19,7 +19,7 @@ export default CategoryContext;
 export const CategoryContextRouterOutlet = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
-	const { isModerator : isGameModerator } = useContext(GameContext);
+	const { isModerator: isGameModerator } = useContext(GameContext);
 	const { categoryIdPart } = useParams<{categoryIdPart: string}>();
 	const [category, setCategory] = useState<CategoryDetails>();
 	const [isModerator, setIsModerator] = useState<boolean>(false);
@@ -34,7 +34,6 @@ export const CategoryContextRouterOutlet = () => {
 				setIsModerator(isGameModerator || !!(currentUser &&
 					category.moderators.find(e => e.id === currentUser.id)
 				));
-
 			})
 			.catch(error => {
 				console.error(error);

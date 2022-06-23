@@ -34,6 +34,7 @@ export const getNewGamePageLink = () => `/games/new`;
 
 export const getGamePageLink = (e: GameEntry) => `/games/${e.id}`;
 export const getEditGamePageLink = (e: GameEntry) => `/games/${e.id}/edit`;
+export const getGameModerationPageLink = (e: GameEntry) => `/games/${e.id}/moderators`;
 
 export const getCategoriesPageLink = (e: GameEntry) => `/games/${e.id}/categories`;
 export const getNewCategoryPageLink = (e: GameEntry) => `/games/${e.id}/categories/new`;

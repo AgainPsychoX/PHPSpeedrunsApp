@@ -29,7 +29,7 @@ export const GameContextRouterOutlet = () => {
 		fetchGameDetails(gameId)
 			.then(game => {
 				setGame(game);
-				setIsModerator(!!(currentUser && game.moderators.find(e => e.id === currentUser.id)));
+				setIsModerator(!!(currentUser && (currentUser.isAdmin || game.moderators.find(e => e.id === currentUser.id))));
 			})
 			.catch(error => {
 				console.error(error);

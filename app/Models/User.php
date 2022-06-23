@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,7 +54,7 @@ class User extends Authenticatable
 		return $this->hasMany(Run::class);
 	}
 
-	public function roles()
+	public function moderatorAssignments()
 	{
 		return $this->belongsToMany(ModeratorAssignment::class);
 	}
@@ -64,25 +65,26 @@ class User extends Authenticatable
 	}
 
 	public function isGlobalModerator() {
-		return ModeratorAssignment::global()->where('user_id', $this->id)->exists();
+		return ModeratorAssignment::active()->global()->where('user_id', $this->id)->exists();
 	}
 
-	public function isGameModerator(Game|int $game)
-	{
-		return ModeratorAssignment::gameFor($game)->where('user_id', $this->id)->exists();
+	public function isGameModerator(Game|int $game) {
+		return ModeratorAssignment::active()->game($game)->where('user_id', $this->id)->exists();
 	}
 
-	public function isCategoryModerator(Category|int $category)
-	{
-		return ModeratorAssignment::categoryFor($category)->where('user_id', $this->id)->exists();
+	public function isCategoryModerator(Category|int $category) {
+		return ModeratorAssignment::active()->category($category)->where('user_id', $this->id)->exists();
 	}
 
 	public function isAnyModerator() {
-		return ModeratorAssignment::active()->where(function ($query) {
-			$query->where('target_type', 'global')
-				->orWhere('target_type', 'game')
-				->orWhere('target_type', 'category')
-			;
-		});
+		return ModeratorAssignment::active()->any()->exists();
+	}
+
+
+
+	public static function scopeGhosts(Builder $query, bool|null $state = true) {
+		if (is_null($state)) return $query; // anything
+		if ($state) return $query->whereNull('users.password'); // only ghosts
+		/*if false*/return $query->whereNotNull('users.password'); // only non-ghosts
 	}
 }

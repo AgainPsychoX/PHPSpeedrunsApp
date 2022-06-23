@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink, RunSummary } from "../models/Run";
+import { UserEntry } from "../models/User";
 import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 import { buildPagination } from "../utils/Pagination";
@@ -21,7 +22,7 @@ const UserPage = () => {
 			<div className="h2">{user.name}</div>
 
 			{user.email && <>
-				<a style={{color: 'initial', textDecoration: 'none' }} href={`mailto:${user.email}`}>
+				<a href={`mailto:${user.email}`} className="text-reset text-decoration-none">
 					<small className="text-muted">E-mail</small>
 					<div className="h2">{user.email}</div>
 				</a>
@@ -44,10 +45,6 @@ const UserPage = () => {
 				<small className="text-muted">Tag Discord</small>
 				<div className="h2">{user.discord}</div>
 			</>}
-			{/* <Link style={{color: 'initial', textDecoration: 'none' }} to={`/games/${game.id}/categories/${category.id}`}>
-				<small className="text-muted">Kategoria</small>
-				<h2>{category.name}</h2>
-			</Link> */}
 
 			{user.profileDescription.length > 0 && <>
 				<small className="text-muted">Opis profilu</small>
@@ -64,7 +61,6 @@ const UserRunsSection = ({
 }: {
 	initialPage?: number;
 }) => {
-	const navigate = useNavigate();
 	const user = useContext(UserContext);
 	const [runs, setRuns] = useState<RunSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
@@ -86,14 +82,14 @@ const UserRunsSection = ({
 		</Container>
 	}
 
-	const anyRunWithScore = runs?.find(run => !!run.score);
+	const anyRunWithScore = !!(runs?.find(run => !!run.score));
 
 	return <Container>
 		<small className="text-muted">Ostatnie podejścia</small>
 		{runs ?
 			runs.length > 0
 				? <>
-					<Table striped hover>
+					<Table hover>
 						<thead>
 							<tr>
 								<th>Gra</th>
@@ -104,19 +100,7 @@ const UserRunsSection = ({
 							</tr>
 						</thead>
 						<tbody>
-							{runs.map(run => (
-								<tr
-									key={run.id}
-									style={{cursor: 'pointer'}}
-									onClick={() => navigate(getRunPageLink(run))}
-								>
-									<td>{run.gameName}</td>
-									<td>{run.categoryName}</td>
-									{anyRunWithScore && <td>{run.score || '-'}</td>}
-									<td>{formatDurationHTML(run.duration)}</td>
-									<td>{run.createdAt.toRelative()}</td>
-								</tr>
-							))}
+							{runs.map(run => <UserRunRow key={run.id} run={run} anyRunWithScore={anyRunWithScore} />)}
 						</tbody>
 					</Table>
 					{paginationMeta && buildPagination(paginationMeta, onPage)}
@@ -129,4 +113,21 @@ const UserRunsSection = ({
 			: <GenericLoadingSection description="Ładowanie podejść..." />
 		}
 	</Container>
+}
+
+const UserRunRow = ({run, anyRunWithScore}: {run: RunSummary, anyRunWithScore: boolean}) => {
+	const navigate = useNavigate();
+	const onClick = () => navigate(getRunPageLink(run));
+	return <tr
+		key={run.id}
+		className="cursor-pointer"
+		onClick={onClick}
+		tabIndex={0} onKeyDown={event => event.key == 'Enter' && onClick()}
+	>
+		<td>{run.gameName}</td>
+		<td>{run.categoryName}</td>
+		{anyRunWithScore && <td>{run.score || '-'}</td>}
+		<td>{formatDurationHTML(run.duration)}</td>
+		<td>{run.createdAt.toRelative()}</td>
+	</tr>
 }

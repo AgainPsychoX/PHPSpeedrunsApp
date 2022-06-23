@@ -18,7 +18,7 @@ class CategoryPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->isGameModerator($category->gameId);
+		return $user->isGameModerator($category->game_id);
 	}
 
 	/**
@@ -42,6 +42,30 @@ class CategoryPolicy
 	 */
 	public function delete(User $user, Category $category)
 	{
-		return $user->isGameModerator($category->gameId);
+		return $user->isGameModerator($category->game_id);
+	}
+
+	/**
+	 * Determine whether the user add moderators for the category.
+	 *
+	 * @param  \App\Models\Category  $category
+	 * @param  \App\Models\Game  $game
+	 * @return \Illuminate\Auth\Access\Response|bool
+	 */
+	public function addModerator(Category $category, Game $game)
+	{
+		return $user->isGameModerator($category->game_id);
+	}
+
+	/**
+	 * Determine whether the user remove moderators for the category.
+	 *
+	 * @param  \App\Models\Category  $category
+	 * @param  \App\Models\Game  $game
+	 * @return \Illuminate\Auth\Access\Response|bool
+	 */
+	public function removeModerator(Category $category, Game $game)
+	{
+		return $user->isGameModerator($category->game_id);
 	}
 }

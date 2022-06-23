@@ -4,7 +4,7 @@ import UsersTable from "../components/UsersTable";
 
 const UsersPage = () => {
 	return <main>
-		<Container className="overflow-auto">
+		<Container>
 			<UsersTable heading="Gracze" initialSorting="latestRun,asc" allowNavigateToLatestRun />
 		</Container>
 	</main>

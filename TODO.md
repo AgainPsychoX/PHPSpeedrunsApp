@@ -12,7 +12,6 @@
 + Roles management: 
 	+ List mods in games/categories, button to edit the list, search/form in modal.
 	+ Global administrators as separate admin panel.
-+ Better checking permissions.
 
 
 
@@ -33,7 +32,8 @@
 
 ### Ideas
 
-+ Position moderation buttons better.
++ Use own modal in place of `window.alert` and `window.confirm`.
++ Make horizontal scrollable panes to have scrolls both on top and bottom ([simulate second one](https://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table)).
 + Fortify is obstacle...
 	+ Rename `name` param of `POST /login` to `login`. 
 	+ Localize login error messages.
@@ -54,7 +54,7 @@
 + Use ESLint, especially for React early bug detection (like conditional hooks).
 	+ Include it in Webpack, so it's automatic.
 	+ Fix all errors and possible warnings.
-+ Use `AbortController` to cancel some requests if necessary (i.e. when switching sorting method fast).
++ Context loading could maybe use `AbortController` to avoid double requests when failing to expect logged in, but its edge case.
 + Keep sorting mode and pagination in URL (querystring), allow faster coming back to the result
 + Implement entry/summary/details model options on backend (save bandwidth).
 + After adding/editing/deleting which results in navigation, there could be toast/notification/alert with information about success.

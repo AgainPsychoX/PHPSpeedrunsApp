@@ -12,7 +12,7 @@ const GameFormPage = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
 
-	const { game } = useContext(GameContext);
+	const { game, isModerator } = useContext(GameContext);
 	const isEditing = !!game;
 
 	const [validated, setValidated] = useState<boolean>(false);
@@ -78,7 +78,7 @@ const GameFormPage = () => {
 		}
 	}, [game, navigate]);
 
-	if (!currentUser) {
+	if (!currentUser || !(currentUser.isAdmin || isModerator)) {
 		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator gry!" />
 	}
 

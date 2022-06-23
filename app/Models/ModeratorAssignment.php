@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ModeratorAssignment extends Model
 {
@@ -19,6 +21,11 @@ class ModeratorAssignment extends Model
 		'assigned_at',
 		'revoked_at',
 		'revoked_by',
+	];
+
+	protected $casts = [
+		'assigned_at' => 'datetime',
+		'revoked_at' => 'datetime',
 	];
 
 	public function user()
@@ -46,42 +53,63 @@ class ModeratorAssignment extends Model
 		return $this->belongsTo(User::class, 'revoked_by');
 	}
 
-	public static function active()
+
+
+	public static function scopeActive(Builder $query)
 	{
-		return ModeratorAssignment::whereNull('revoked_at');
+		return $query->whereNull('revoked_at');
 	}
 
-
-
-	public static function global()
+	public function scopeGlobal(Builder $query)
 	{
-		return ModeratorAssignment::active()->where('target_type', 'global');
+		return $query->where('target_type', 'global');
 	}
 
-	public static function directGameFor(Game|int $game)
+	public static function scopeGame(Builder $query, Game|int $game, $direct = false)
 	{
-		return ModeratorAssignment::active()->where('target_type', 'game')->where('target_id', $game instanceof Game ? $game->id : $game);
-	}
-
-	public static function gameFor(Game|int $game)
-	{
-		return ModeratorAssignment::active()->where(function ($query) use($game) {
-			$query->where('target_type', 'global')
+		if ($direct)
+			return $query
+				->where('target_type', 'game')
+				->where('target_id', $game instanceof Game ? $game->id : $game);
+		else
+			return $query
+				->where('target_type', 'global')
 				->orWhere('target_type', 'game')->where('target_id', $game instanceof Game ? $game->id : $game);
-		});
 	}
 
-	public static function directCategoryFor(Category|int $category)
+	public static function scopeCategory(Builder $query, Category|int $category, $direct = false)
 	{
-		return ModeratorAssignment::active()->where('target_type', 'category')->where('target_id', $category instanceof Category ? $category->id : $category);
-	}
-
-	public static function categoryFor(Category|int $category)
-	{
-		return ModeratorAssignment::active()->where(function ($query) use($category) {
-			$query->where('target_type', 'global')
+		if ($direct)
+			return $query
+				->where('target_type', 'category')
+				->where('target_id', $category instanceof Category ? $category->id : $category);
+		else
+			return $query
+				->where('target_type', 'global')
 				->orWhere('target_type', 'game')->where('target_id', $category->game_id)
 				->orWhere('target_type', 'category')->where('target_id', $category instanceof Category ? $category->id : $category);
-		});
+	}
+
+	public static function scopeAny(Builder $query) {
+		return $query
+			->where('target_type', 'global')
+			->orWhere('target_type', 'game')
+			->orWhere('target_type', 'category');
+	}
+
+
+
+	public static function scopeByType(Builder $query) {
+		return $query->orderByRaw("FIELD(`target_type`, 'global', 'game', 'category')");
+	}
+
+
+
+	public static function scopeJoinUser(Builder $query, $fields = ['id', 'name', 'email', 'created_at']) {
+		return $query->joinSub(User::select($fields), 'users', fn ($join) => $join->on('users.id', '=', 'moderator_assignments.user_id'));
+	}
+
+	public static function scopeJoinAssignedBy(Builder $query, $fields = ['id', 'name']) {
+		return $query->leftJoinSub(User::select($fields), 'assigned_by_user', fn ($join) => $join->on('assigned_by_user.id', '=', 'moderator_assignments.assigned_by'));
 	}
 }

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Col, Row, Tabs, Tab, Table } from "react-bootstrap";
+import { Container, Col, Row, Tabs, Tab, Table, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
-import { CategoryDetails, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
-import { getEditGamePageLink, getNewCategoryPageLink, isGameIconPlaceholder } from "../models/Game";
+import { CategoryDetails, getCategoryModerationPageLink, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
+import { getEditGamePageLink, getGameModerationPageLink, getNewCategoryPageLink, isGameIconPlaceholder } from "../models/Game";
 import { getRunPageLink, RunSummary } from "../models/Run";
 import { getUserPageLink } from "../models/User";
 import CategoryContext from "../utils/contexts/CategoryContext";
@@ -32,17 +32,26 @@ export const GamePage = () => {
 		return <GenericLoadingPage />
 	}
 
+	const gameHasIcon = game.icon && !isGameIconPlaceholder(game);
+
 	return <main>
 		<Container>
 			<Row className="mb-3">
-				<Col xs={12} md={5} className="order-md-1 px-0 p-md-2 mb-2 mt-0 mt-md-3">
-					{game.icon && isGameIconPlaceholder(game) ||
+				{gameHasIcon && <>
+					<Col xs={12} md={5} className="order-md-1 px-0 p-md-2 mb-2 mb-md-0 mt-0">
 						<img src={game.icon} className="rounded-sm w-100" />
-					}
-				</Col>
-				<Col xs={12} md={7}>
-					<small>Tytuł i rok wydania</small>
-					<h1>{game.name} <small className="text-muted">({game.publishYear})</small></h1>
+					</Col>
+				</>}
+				<Col xs={12} md={gameHasIcon ? 7 : 12}>
+					<div className="hstack gap-2 flex-wrap">
+						<div>
+							<small>Tytuł i rok wydania</small>
+							<h1>{game.name} <small className="text-muted">({game.publishYear})</small></h1>
+						</div>
+						<div className="ms-auto">
+							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getEditGamePageLink(game)}>Edytuj lub usuń grę</Button>}
+						</div>
+					</div>
 					{game.description && <>
 						<h5>Opis</h5>
 						<p>{game.description}</p>
@@ -51,10 +60,19 @@ export const GamePage = () => {
 						<h5>Zasady gry</h5>
 						<p>{game.rules}</p>
 					</>}
-					<h5>Moderatorzy</h5>
+					<div className="hstack gap-2 flex-wrap">
+						<h5>Moderatorzy</h5>
+						<div className="ms-auto">
+							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getGameModerationPageLink(game)}>Zarządzaj moderatorami</Button>}
+						</div>
+					</div>
 					<ul>
 						{game.moderators.length > 0
-							? game.moderators.map(user => <li className="mb-1" key={user.id}><Link to={getUserPageLink(user)}>{user.name}</Link></li>)
+							? game.moderators.map(user =>
+								<li className="mb-1" key={user.id}>
+									<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
+								</li>
+							)
 							: <small>(brak bezpośrednich moderatorów)</small>
 						}
 					</ul>
@@ -62,20 +80,18 @@ export const GamePage = () => {
 			</Row>
 		</Container>
 		<Container>
-			{isGameModerator && <Row className="mb-3">
-				<Col className="gap-2 hstack justify-content-center justify-content-lg-start">
-					<Link className="btn btn-outline-secondary" role="button" to={getEditGamePageLink(game)}>Edytuj lub usuń grę</Link>
-					<Link className="btn btn-outline-secondary" role="button" to={getNewCategoryPageLink(game)}>Dodaj kategorię</Link>
-					{/* <Link className="btn btn-outline-secondary" role="button" to={getManageGameModeratorsPageLink(game)}>Zarządzaj moderatorami</Link> */}
-				</Col>
-			</Row>}
-			<Row className="">
+			<Row>
 				<Col xs={12}>
-					<h4>Kategorie</h4>
+					<div className="hstack gap-2 flex-wrap">
+						<h4>Kategorie</h4>
+						<div className="ms-auto">
+							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getNewCategoryPageLink(game)}>Dodaj kategorię</Button>}
+						</div>
+					</div>
 					{categoryDetails
 						?
 							<Tabs
-								className="mb-3 px-2"
+								className="px-2"
 								activeKey={activeKey}
 								onSelect={(key: string | null) => {
 									setActiveKey(key || categoryDetails.id.toString());
@@ -85,7 +101,11 @@ export const GamePage = () => {
 								}}
 							>
 								{game.categories.map(category =>
-									<Tab key={category.id} eventKey={category.id.toString()} title={category.name} className="px-2">
+									<Tab
+										key={category.id} eventKey={category.id.toString()}
+										title={category.name}
+										tabClassName="h3" className="p-2 shadow-sm"
+									>
 										{categoryDetails.id == category.id
 											? <CategoryTabContent/>
 											: <GenericLoadingSection divStyle={{paddingBottom: '80vh'}} />
@@ -116,24 +136,31 @@ const CategoryTabContent = () => {
 			<h5>Zasady kategorii</h5>
 			<p>{category.rules}</p>
 		</>}
-		<div className="gap-2 hstack justify-content-center mb-3">
-			{isModerator && <>
-				<Link className="btn btn-outline-secondary" role="button" to={getEditCategoryPageLink(category)}>Edytuj lub usuń kategorię</Link>
-				{/* <Link className="btn btn-outline-secondary" role="button" to={getManageCategoryModeratorsPageLink(category)}>Edytuj lub usuń kategorię</Link> */}
-			</>}
-			<Link className="btn btn-outline-secondary" role="button" to={getNewRunPageLink(category)}>Dodaj podejście</Link>
+		<div className="hstack gap-2 flex-wrap">
+			<h5>Moderatorzy</h5>
+			<div className="ms-auto"/>
+			{isModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getCategoryModerationPageLink(category)}>Zarządzaj moderatorami</Button>}
 		</div>
-		<h5>Moderatorzy</h5>
 		<ul>
 			{category.moderators.length > 0
-				? category.moderators.map(user => <li className="mb-1" key={user.id}><Link to={getUserPageLink(user)}>{user.name}</Link></li>)
+				? category.moderators.map(user =>
+					<li className="mb-1" key={user.id}>
+						<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
+					</li>
+				)
 				: <small>(brak bezpośrednich moderatorów)</small>
 			}
 		</ul>
+		<div className="gap-2 hstack justify-content-center mb-3">
+			{isModerator && <>
+				<Button variant="outline-secondary" as={Link} to={getEditCategoryPageLink(category)}>Edytuj lub usuń kategorię</Button>
+			</>}
+			<Button variant="outline-secondary" as={Link} to={getNewRunPageLink(category)}>Dodaj podejście</Button>
+		</div>
 		{(category.runs && category.runs.length > 0)
 			? <>
 				<h5>Podejścia</h5>
-				<Table striped hover>
+				<Table hover className="mb-0">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -155,10 +182,12 @@ const CategoryTabContent = () => {
 
 const RunRow = ({place, category, run}: { place: number, category: CategoryDetails, run: RunSummary }) => {
 	const navigate = useNavigate();
+	const onClick = () => navigate(getRunPageLink(run));
 	return <tr
 		key={run.id}
-		style={{cursor: 'pointer'}}
-		onClick={() => navigate(getRunPageLink(run))}
+		className="cursor-pointer"
+		onClick={onClick}
+		tabIndex={0} onKeyDown={event => event.key == 'Enter' && onClick()}
 	>
 		<td>{place}</td>
 		<td>{run.userName}</td>

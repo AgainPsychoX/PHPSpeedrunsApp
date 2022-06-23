@@ -9,10 +9,10 @@ const images = [
 
 export const HomePage = () => {
 	return <main>
-		<Carousel indicators={false} style={{height: '32em'}} className="overflow-hidden mb-3">
+		<Carousel indicators={false} fade style={{height: '66vh'}} className="overflow-hidden mb-3" id="home">
 			{images.map(image =>
 				<Carousel.Item key={image.url}>
-					<img className="d-block w-100 h-100" style={{objectFit: 'cover'}} src={image.url} />
+					<img src={image.url} />
 				</Carousel.Item>
 			)}
 		</Carousel>

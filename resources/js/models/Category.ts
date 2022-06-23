@@ -21,6 +21,7 @@ export interface CategoryDetails extends CategoryEntry {
 
 export const getCategoryPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}`;
 export const getEditCategoryPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}/edit`;
+export const getCategoryModerationPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}/moderators`;
 
 export const getRunsPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}/runs`;
 export const getNewRunPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}/runs/new`;

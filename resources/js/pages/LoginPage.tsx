@@ -29,6 +29,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 			API.login(new FormData(form))
 				.then(async () => {
 					const user = await API.fetchCurrentUser();
+					if (!user) throw new Error();
 					onLogin(user);
 					navigate('/');
 				})

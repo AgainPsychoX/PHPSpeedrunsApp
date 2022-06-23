@@ -22,18 +22,9 @@ class Game extends Model
 		return $this->hasMany(Category::class);
 	}
 
-	public function moderators()
+	public function moderators($direct = false)
 	{
-		return User::query()
-			->joinSub(ModeratorAssignment::gameFor($this), 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
-		;
-	}
-
-	public function directModerators()
-	{
-		return User::query()
-			->joinSub(ModeratorAssignment::directGameFor($this), 'a', fn ($join) => $join->on('users.id', '=', 'a.user_id'))
-		;
+		return ModeratorAssignment::active()->game($this, $direct)->joinUser()->byType()->orderBy('users.name');
 	}
 
 	public function iconUrl()

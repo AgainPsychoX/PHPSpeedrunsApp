@@ -6,7 +6,6 @@ import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
 import { CategoryContextRouterOutlet } from "./utils/contexts/CategoryContext";
 import { RunContextRouterOutlet } from "./utils/contexts/RunContext";
 import { UserContextRouterOutlet } from "./utils/contexts/UserContext";
-import { parseBoolean } from "./utils/SomeUtils";
 import { GenericLoadingPage } from "./components/GenericLoading";
 import MyFooter from "./components/MyFooter";
 import MyNavbar from "./components/MyNavbar";
@@ -25,24 +24,16 @@ import UserPage from "./pages/UserPage";
 import GameFormPage from "./pages/GameFormPage";
 import CategoryFormPage from "./pages/CategoryFormPage";
 import RunFormPage from "./pages/RunFormPage";
+import GameModerationPage from "./pages/GameModerationPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
 	const [user, setUser] = useState<UserDetails>();
 
 	useEffect(() => {
-		API.initialize().then(async () => {
-			if (parseBoolean(localStorage.getItem('expectLoggedIn'))) {
-				await API.fetchCurrentUser()
-					.then(details => {
-						localStorage.setItem('expectLoggedIn', '1');
-						setUser(details);
-					})
-					.catch(() => {
-						localStorage.setItem('expectLoggedIn', '0')
-					})
-				;
-			}
+		API.initialize().then(async ({expectingLoggedIn}) => {
+			const promise = API.fetchCurrentUser().then(setUser);
+			if (expectingLoggedIn) await promise;
 			setReady(true);
 		});
 	}, [])
@@ -66,12 +57,14 @@ const App = () => {
 							<Route path=":gameIdPart" element={<GameContextRouterOutlet/>}>
 								<Route index element={<GamePage/>} />
 								<Route path="edit" element={<GameFormPage/>} />
+								<Route path="moderators" element={<GameModerationPage/>} />
 								<Route path="categories">
 									<Route index element={<GamePage/>} />
 									<Route path="new" element={<CategoryFormPage/>} />
 									<Route path=":categoryIdPart" element={<CategoryContextRouterOutlet/>}>
 										<Route index element={<GamePage/>} />
 										<Route path="edit" element={<CategoryFormPage/>} />
+										{/* <Route path="moderators" element={<CategoryModerationPage/>} /> */}
 										<Route path="runs">
 											<Route index element={<GamePage/>} />
 											<Route path="new" element={<RunFormPage/>} />

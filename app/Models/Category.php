@@ -32,13 +32,8 @@ class Category extends Model
 		return $this->hasMany(Run::class);
 	}
 
-	public function moderators()
+	public function moderators($direct = false)
 	{
-		return ModeratorAssignment::categoryFor($this);
-	}
-
-	public function directModerators()
-	{
-		return ModeratorAssignment::directCategoryFor($this);
+		return ModeratorAssignment::active()->category($this, $direct)->joinUser()->byType()->orderBy('users.name');
 	}
 }

@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Col, Container, Form, Row } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Link, NavLink } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import { fetchGamesDirectory, GamesDirectoryOrderBy, PaginationMeta } from "../API";
 import { GenericLoadingSection } from "../components/GenericLoading";
-import { GameSummary } from "../models/Game";
+import { GameSummary, getNewGamePageLink } from "../models/Game";
 import { buildPagination } from "../utils/Pagination";
 
 type Sorting = `${GamesDirectoryOrderBy},${'desc' | 'asc'}` | 'alphanumeric';
@@ -31,11 +32,12 @@ const GamesPage = ({
 	const [games, setGames] = useState<GameSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 	const [sorting, setSorting] = useState<Sorting>('popularity,desc');
-	const [orderBy, direction] = sorting.split(',') as [GamesDirectoryOrderBy, ('desc' | 'asc' | undefined)];
+	const [sortingDebounced] = useDebounce(sorting, 500);
+	const [orderBy, direction] = sortingDebounced.split(',') as [GamesDirectoryOrderBy, ('desc' | 'asc' | undefined)];
 
 	const onPage = useCallback((page: number) => {
 		(async () => {
-			const { games, meta } = await fetchGamesDirectory(page, orderBy, direction);
+			const { data: games, meta } = await fetchGamesDirectory(page, orderBy, direction);
 			setGames(games);
 			setPaginationMeta(meta);
 		})();
@@ -45,7 +47,7 @@ const GamesPage = ({
 
 	return <main>
 		<Container>
-			<div className="hstack flex-wrap">
+			<div className="hstack gap-2 flex-wrap">
 				<h2>Katalog gier</h2>
 				<div className="ms-auto">
 					<Form.Group className="m-auto" controlId="sortingSelection">
@@ -55,6 +57,9 @@ const GamesPage = ({
 							)}
 						</Form.Select>
 					</Form.Group>
+				</div>
+				<div>
+					<Button variant="outline-secondary" as={Link} to={getNewGamePageLink()}>Dodaj grę</Button>
 				</div>
 			</div>
 			{games

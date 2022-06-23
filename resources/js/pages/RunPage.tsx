@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { GenericLoadingPage } from "../components/GenericLoading";
@@ -13,7 +13,7 @@ import { formatDurationHTML } from "../utils/DurationUtils";
 const RunPage = () => {
 	const { game } = useContext(GameContext);
 	const { category, isModerator } = useContext(CategoryContext);
-	const run = useContext(RunContext);
+	const { run } = useContext(RunContext);
 
 	if (!game || !category || !run) {
 		return <GenericLoadingPage/>
@@ -21,12 +21,19 @@ const RunPage = () => {
 
 	return <main>
 		<Container>
-			<Link style={{color: 'initial', textDecoration: 'none' }} to={`/games/${game.id}`}>
-				<small className="text-muted">Gra</small>
-				<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
-			</Link>
+			<div className="hstack gap-2 flex-wrap">
+				<Link to={`/games/${game.id}`} className="text-reset text-decoration-none">
+					<small className="text-muted">Gra</small>
+					<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
+				</Link>
+				{isModerator && <>
+					<div className="ms-auto" />
+					<Button variant="outline-secondary" onClick={() => window.confirm()}>Weryfikuj</Button>
+					<Button variant="outline-secondary" as={Link} to={getEditRunPageLink(run)}>Edytuj lub usuń podejście</Button>
+				</>}
+			</div>
 
-			<Link style={{color: 'initial', textDecoration: 'none' }} to={`/games/${game.id}/categories/${category.id}`}>
+			<Link to={`/games/${game.id}/categories/${category.id}`} className="text-reset text-decoration-none">
 				<small className="text-muted">Kategoria</small>
 				<div className="h2">{category.name}</div>
 			</Link>
@@ -51,13 +58,6 @@ const RunPage = () => {
 			{run.notes.length > 0 && <>
 				<small className="text-muted">Notatka</small>
 				<p>{run.notes}</p>
-			</>}
-			{isModerator && <>
-				<div className="h5">Moderacja</div>
-				<div className="gap-2 hstack justify-content-center justify-content-lg-start">
-					<Link className="btn btn-outline-secondary" role="button" to={getEditRunPageLink(run)}>Edytuj lub usuń grę</Link>
-					{/* <Button variant="outline-secondary" onClick={}>Weryfikuj</Button> */}
-				</div>
 			</>}
 		</Container>
 	</main>

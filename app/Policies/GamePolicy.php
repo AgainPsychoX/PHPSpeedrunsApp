@@ -44,4 +44,28 @@ class GamePolicy
 	{
 		return $user->isGlobalModerator($game);
 	}
+
+	/**
+	 * Determine whether the user add moderators for the game.
+	 *
+	 * @param  \App\Models\User  $user
+	 * @param  \App\Models\Game  $game
+	 * @return \Illuminate\Auth\Access\Response|bool
+	 */
+	public function addModerator(User $user, Game $game)
+	{
+		return $user->isGlobalModerator();
+	}
+
+	/**
+	 * Determine whether the user remove moderators for the game.
+	 *
+	 * @param  \App\Models\User  $user
+	 * @param  \App\Models\Game  $game
+	 * @return \Illuminate\Auth\Access\Response|bool
+	 */
+	public function removeModerator(User $user, Game $game)
+	{
+		return $user->isGlobalModerator();
+	}
 }

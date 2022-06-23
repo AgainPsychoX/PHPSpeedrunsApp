@@ -28,7 +28,7 @@ class CategoryResource extends JsonResource
 			'updatedAt' => $this->updated_at,
 
 			'runs' => RunResource::collection($this->whenLoaded('runs')),
-			'moderators' => $this->when($this->loadModerators == 'direct', fn() => UserSummaryResource::collection($this->directModerators()->get())),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn() => ModeratorSummaryResource::collection($this->moderators(true)->get())),
 		];
 	}
 }

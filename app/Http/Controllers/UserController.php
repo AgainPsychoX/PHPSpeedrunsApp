@@ -24,12 +24,11 @@ class UserController extends Controller
 	public function index(Request $request)
 	{
 		$queryParams = $request->query();
+
 		$orderBy = $queryParams['orderBy'] ?? 'latestRun';
-		$direction = null;
+		$direction = $queryParams['direction'] ?? null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
-		$requiredRuns = intval($queryParams['minimumRuns'] ?? 0);
-		$search = $queryParams['search'] ?? null;
 
 		// Latest run
 		if (str_starts_with($orderBy, 'l')) {
@@ -62,33 +61,11 @@ class UserController extends Controller
 					'games.name as latest_run_game_name',
 				)
 			;
-
-			if ($search) {
-				$query
-					->where('users.name', 'like', "%$search%")
-					->orWhere('users.email', 'like', "%$search%")
-				;
-			}
-
-			if ($requiredRuns > 0) {
-				$query->having('runs_count', '>=', $requiredRuns);
-			}
-
 			$query->orderBy('latest_run_at', $direction ?: 'desc');
 		}
 		// Other, less composite ordering
 		else {
 			$query = User::withCount('runs');
-			if ($requiredRuns > 0) {
-				$query->having('runs_count', '>=', $requiredRuns);
-			}
-
-			if ($search) {
-				$query
-					->where('users.name', 'like', "%$search%")
-					->orWhere('users.email', 'like', "%$search%")
-				;
-			}
 
 			// Alphanumeric
 			if (str_starts_with($orderBy, 'a')) {
@@ -109,6 +86,14 @@ class UserController extends Controller
 				], 400);
 			}
 		}
+
+		$search = $queryParams['search'] ?? null;
+		$ghosts = $queryParams['ghosts'] ?? 'any';
+		$minimumRuns = intval($queryParams['minimumRuns'] ?? 0);
+
+		if ($search) $query->where('users.name', 'like', "%$search%")->orWhere('users.email', 'like', "%$search%");
+		if ($ghosts == 'exclude') $query->ghosts(false); else if ($ghosts == 'only') $query->ghosts();
+		if ($minimumRuns > 0) $query->having('runs_count', '>=', $minimumRuns);
 
 		return UserSummaryResource::collection($query->paginate(40));
 	}

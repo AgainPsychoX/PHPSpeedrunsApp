@@ -16,7 +16,7 @@ const CategoryFormPage = () => {
 	const { currentUser } = useContext(AppContext);
 
 	const { game } = useContext(GameContext);
-	const { category } = useContext(CategoryContext);
+	const { category, isModerator } = useContext(CategoryContext);
 	const isEditing = !!category;
 
 	const [validated, setValidated] = useState<boolean>(false);
@@ -81,12 +81,12 @@ const CategoryFormPage = () => {
 		}
 	}, [game, category, navigate]);
 
-	if (!game) {
-		return <GenericLoadingPage/>;
+	if (!currentUser || !(currentUser.isAdmin || isModerator)) {
+		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator kategorii!" />
 	}
 
-	if (!currentUser) {
-		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator kategorii!" />
+	if (!game) {
+		return <GenericLoadingPage/>;
 	}
 
 	if (category && category.gameId != game.id) {

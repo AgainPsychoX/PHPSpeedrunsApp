@@ -4,7 +4,11 @@ import { fetchRunDetails } from '../../API';
 import { GenericLoadingSection } from '../../components/GenericLoading';
 import { RunDetails } from '../../models/Run';
 
-const RunContext = createContext<RunDetails | undefined>(undefined);
+interface RunContextData {
+	run?: RunDetails;
+}
+
+const RunContext = createContext<RunContextData>({});
 export default RunContext;
 
 export const RunContextRouterOutlet = () => {
@@ -31,7 +35,9 @@ export const RunContextRouterOutlet = () => {
 		return <GenericLoadingSection/>
 	}
 
-	return <RunContext.Provider value={run}>
+	return <RunContext.Provider value={{
+		run
+	}}>
 		<Outlet/>
 	</RunContext.Provider>
 }

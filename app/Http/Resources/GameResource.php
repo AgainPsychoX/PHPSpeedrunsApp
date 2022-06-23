@@ -36,7 +36,7 @@ class GameResource extends JsonResource
 			'updatedAt' => $this->whenNotNull($this->updated_at),
 
 			'categories' => CategoryResource::collection($this->whenLoaded('categories')),
-			'moderators' => $this->when($this->loadModerators == 'direct', fn () => UserSummaryResource::collection($this->directModerators()->get())),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn () => ModeratorSummaryResource::collection($this->moderators(true)->get())),
 		];
 	}
 }

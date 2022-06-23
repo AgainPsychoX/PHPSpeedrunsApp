@@ -32,6 +32,7 @@ const UsersTable = ({
 	userTooltip = 'Kliknij, by przejść do profilu użytkownika',
 	onUserClick,
 	allowNavigateToLatestRun = false,
+	ghosts = 'marked',
 }: {
 	heading?: string;
 	sortingOptions?: Sorting[],
@@ -42,6 +43,7 @@ const UsersTable = ({
 	userTooltip?: string | ((user: UserSummary) => string) | undefined;
 	onUserClick?: (user: UserSummary) => void;
 	allowNavigateToLatestRun?: boolean;
+	ghosts?: 'exclude' | 'only' | 'silent' | 'marked';
 }) => {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState<UserSummary[]>();
@@ -53,7 +55,8 @@ const UsersTable = ({
 	const [searchTextDebounced, { flush: searchNow }] = useDebounce(searchText, 1000);
 
 	const [sorting, setSorting] = useState<Sorting>(initialSorting);
-	const [orderBy, direction] = sorting.split(',') as [UsersOrderBy, ('desc' | 'asc' | undefined)];
+	const [sortingDebounced] = useDebounce(sorting, 500);
+	const [orderBy, direction] = sortingDebounced.split(',') as [UsersOrderBy, ('desc' | 'asc' | undefined)];
 	const withLatestRun = orderBy == 'latestRun';
 
 	const onClick = useCallback((user: UserSummary) => {
@@ -64,11 +67,11 @@ const UsersTable = ({
 	const onPage = useCallback((page: number) => {
 		(async () => {
 			setUsers(undefined);
-			const { data, meta } = await fetchUsers({ page, orderBy, direction, search: searchTextDebounced });
+			const { data, meta } = await fetchUsers({page, orderBy, direction, search: searchTextDebounced, ghosts });
 			setUsers(data);
 			setPaginationMeta(meta);
 		})();
-	}, [orderBy, direction, searchTextDebounced]);
+	}, [orderBy, direction, searchTextDebounced, ghosts]);
 
 	const onSortingChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(event => {
 		if (!users) return;
@@ -106,11 +109,13 @@ const UsersTable = ({
 				</InputGroup>
 			</Form>
 		</div>
+		<div className="overflow-auto">
 		{users
 			?
-				<Table striped hover>
+				<Table hover>
 					<thead>
-						<tr>
+						<tr className="text-nowrap">
+							{ghosts == 'marked' && <td></td>}
 							<th>Nazwa użytkownika</th>
 							{showEmails && <th>E-mail</th>}
 							<th>Data dołączenia</th>
@@ -122,13 +127,17 @@ const UsersTable = ({
 						{users.map(user => (
 							<tr
 								key={user.id}
-								style={{cursor: 'pointer'}}
+								className="cursor-pointer"
 								title={typeof userTooltip === 'string' ? userTooltip || undefined : userTooltip(user)}
 								onClick={() => onClick(user)}
+								tabIndex={0} onKeyDown={event => event.key == 'Enter' && onClick(user)}
 							>
+								{ghosts == 'marked' && <td className="p-1 pb-0">
+									{user.isGhost && <i className="bi-balloon fs-5" role="img" aria-label="Duch" title="Ten gracz to duch - niezarejestrowany użytkownik, którego podejścia są dodawane z zewnątrz (np. przez moderatorów)."></i>}
+								</td>}
 								<td>{user.name}</td>
 								{showEmails && <td>{user.email}</td>}
-								<td>{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>
+								<td className="text-nowrap text-center">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>
 								<td className="text-center">{user.runsCount === undefined ? '?' : user.runsCount}</td>
 								{withLatestRun && (
 									user.latestRun === undefined
@@ -150,11 +159,17 @@ const UsersTable = ({
 								)}
 							</tr>
 						))}
+						{users.length == 0 && <tr>
+							<td colSpan={42} className="text-center text-muted">
+								Nie znaleziono żadnych wyników.
+							</td>
+						</tr>}
 					</tbody>
 				</Table>
 			:
 				<GenericLoadingSection description="Ładowanie graczy..." />
 		}
+		</div>
 		{paginationMeta && buildPagination(paginationMeta, onPage)}
 	</>
 };

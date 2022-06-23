@@ -25,11 +25,11 @@ const RunFormPage = () => {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AppContext);
 
-	const { category } = useContext(CategoryContext);
-	const run = useContext(RunContext);
+	const { category, isModerator } = useContext(CategoryContext);
+	const { run } = useContext(RunContext);
 	const isEditing = !!run;
 
-	const [duration, setDuration] = useState<number>();
+	const [duration, setDuration] = useState<number>(0);
 	const [videoUrl, setVideoUrl] = useState<string>();
 	const [videoUrlValidated, setVideoUrlValidated] = useState<string | false | undefined>(undefined);
 	const validateVideoUrl = useDebouncedCallback(() => {
@@ -136,12 +136,12 @@ const RunFormPage = () => {
 		}
 	}, [category, run, navigate]);
 
-	if (!category || !player) {
-		return <GenericLoadingPage/>;
+	if (!currentUser || !(isModerator || run?.userId == currentUser.id )) {
+		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator kategorii lub właściciel podejścia!" />
 	}
 
-	if (!currentUser) {
-		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator kategorii!" />
+	if (!category || !player) {
+		return <GenericLoadingPage/>;
 	}
 
 	if (run && run.categoryId != category.id) {
@@ -161,7 +161,7 @@ const RunFormPage = () => {
 								<Form.Control
 									name="userName" type="text" pattern=".{3,64}" required
 									value={player.name} readOnly
-									style={{cursor: 'pointer'}} onClick={() => setShowUserSelectionModal(true)}
+									className="cursor-pointer" onClick={() => setShowUserSelectionModal(true)}
 								/>
 							</Col>
 							<Col xs={12} sm={3} md={2}>
@@ -190,7 +190,7 @@ const RunFormPage = () => {
 							<Form.Control
 								name="durationInputText" type="text" required
 								defaultValue={run ? formatDurationText(run.duration, 'm') : ''}
-								isInvalid={duration == 0} onChange={(event) => setDuration(parseDuration(event.target.value))}
+								isInvalid={duration < 0} onChange={(event) => setDuration(parseDuration(event.target.value))}
 							/>
 							<Form.Control.Feedback type="invalid">Czas musi być podany w postaci: <code>1h 23m 45s 678ms</code> lub <code>01:23:45,678</code> (i podobne).</Form.Control.Feedback>
 						</Form.Group>
