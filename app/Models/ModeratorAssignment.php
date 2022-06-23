@@ -72,9 +72,10 @@ class ModeratorAssignment extends Model
 				->where('target_type', 'game')
 				->where('target_id', $game instanceof Game ? $game->id : $game);
 		else
-			return $query
-				->where('target_type', 'global')
-				->orWhere('target_type', 'game')->where('target_id', $game instanceof Game ? $game->id : $game);
+			return $query->where(fn ($query) =>
+				$query->where('target_type', 'global')
+					->orWhere('target_type', 'game')->where('target_id', $game instanceof Game ? $game->id : $game)
+			);
 	}
 
 	public static function scopeCategory(Builder $query, Category|int $category, $direct = false)
@@ -84,17 +85,25 @@ class ModeratorAssignment extends Model
 				->where('target_type', 'category')
 				->where('target_id', $category instanceof Category ? $category->id : $category);
 		else
-			return $query
-				->where('target_type', 'global')
-				->orWhere('target_type', 'game')->where('target_id', $category->game_id)
-				->orWhere('target_type', 'category')->where('target_id', $category instanceof Category ? $category->id : $category);
+			return $query->where(fn ($query) =>
+				$query->where('target_type', 'global')
+					->orWhere(fn ($query) =>
+						$query->where('target_type', 'game')
+							  ->where('target_id', $category->game_id)
+					)
+					->orWhere(fn ($query) =>
+						$query->where('target_type', 'category')
+							  ->where('target_id', $category instanceof Category ? $category->id : $category)
+					)
+			);
 	}
 
 	public static function scopeAny(Builder $query) {
-		return $query
-			->where('target_type', 'global')
-			->orWhere('target_type', 'game')
-			->orWhere('target_type', 'category');
+		return $query->where(function ($query) {
+			$query->where('target_type', 'global')
+				->orWhere('target_type', 'game')
+				->orWhere('target_type', 'category');
+		});
 	}
 
 
