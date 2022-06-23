@@ -19,16 +19,13 @@ class RunResource extends JsonResource
 			'id' => $this->id,
 
 			'categoryId' => $this->category_id,
-			'categoryName' => $this->whenLoaded('category', fn () => $this->category->name),
+			'categoryName' => $this->category_name ?? $this->whenLoaded('category', fn () => $this->category->name),
 
-			'gameId' => $this->whenLoaded('category', fn () => $this->category->game_id),
-			'gameName' => $this->when(
-				$this->relationLoaded('category') && $this->category->relationLoaded('game'),
-				fn () => $this->game->name,
-			),
+			'gameId' => $this->game_id ?? $this->whenLoaded('category', fn () => $this->category->game_id),
+			'gameName' => $this->whenNotNull($this->game_name),
 
 			'userId' => $this->user_id,
-			'userName' => $this->whenLoaded('user', fn () => $this->user->name),
+			'userName' => $this->user_name ?? $this->whenLoaded('user', fn () => $this->user->name),
 
 			'createdAt' => $this->created_at,
 

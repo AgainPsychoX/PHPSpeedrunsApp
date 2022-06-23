@@ -31,12 +31,10 @@ class RunController extends Controller
 			$orderBy = $queryParams['orderBy'] ?? 'latest';
 
 			if (str_starts_with($orderBy, 'l')) {
-				return RunResource::collection(
-					Run::where('user_id', (int) $player)
-						->with('category.game')
-						->orderBy('created_at', $direction ?: 'desc')
-						->paginate(40)
-				);
+				$query = Run::forUser((int) $player)
+					->orderBy('created_at', $direction ?: 'desc');
+				// dd($query->toSql());
+				return RunResource::collection($query->paginate(40));
 			}
 
 			return response()->json([

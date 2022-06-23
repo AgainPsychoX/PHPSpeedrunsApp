@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +37,40 @@ class Run extends Model
 	public function user()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+
+
+	public static function scopeUser(Builder $query, User|int $user)
+	{
+		return $query->where('user_id', $user instanceof User ? $user->id : $user);
+	}
+
+	public static function scopeGame(Builder $query, Game|int $game)
+	{
+		return $query
+			->joinSub(Category::select(['id', 'gameId']), 'categories', fn ($join) => $join->on('categories.id', '=', 'runs.category_id'))
+			->where('game_id', $game instanceof Game ? $game->id : $game);
+	}
+
+	public static function scopeCategory(Builder $query, Category|int $category)
+	{
+		return $query->where('category_id', $category instanceof Category ? $category->id : $category);
+	}
+
+
+
+	public static function scopeForUser(Builder $query, User|int $user)
+	{
+		return $query->user($user)
+			->joinSub(Category::select(['id', 'name', 'game_id']), 'categories', fn ($join) => $join->on('categories.id', '=', 'runs.category_id'))
+			->joinSub(Game::select(['id', 'name', 'publish_year']), 'games', fn ($join) => $join->on('games.id', '=', 'categories.game_id'))
+			->addSelect([
+				'runs.*',
+				'categories.name as category_name',
+				'games.id as game_id',
+				'games.name as game_name',
+				'games.publish_year as game_year'
+			]);
 	}
 }
