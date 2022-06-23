@@ -138,7 +138,7 @@ class ModeratorAssignmentController extends Controller
 	public function gameIndex(Game $game)
 	{
 		$query = ModeratorAssignment::active()->game($game)->joinUser()->joinAssignedBy()
-			->byType()->orderBy('users.name')
+			->orderByScope()->orderBy('users.name')
 			->select(ModeratorAssignmentController::moderatorSummaryFields);
 		return ModeratorSummaryResource::collection($query->get());
 	}
@@ -215,7 +215,7 @@ class ModeratorAssignmentController extends Controller
 	public function categoryIndex(Category $category)
 	{
 		$query = ModeratorAssignment::active()->category($category)->joinUser()->joinAssignedBy()
-			->byType()->orderBy('users.name')
+			->orderByScope()->orderBy('users.name')
 			->select(ModeratorAssignmentController::moderatorSummaryFields);
 		return ModeratorSummaryResource::collection($query->get());
 	}

@@ -24,19 +24,6 @@ return new class extends Migration
         Schema::table('runs', function (Blueprint $table) {
             $table->enum('state', ['pending', 'verified', 'invalid']);
         });
-
-        Schema::create('run_moderation_actions', function (Blueprint $table) {
-            $table->foreignIdFor(Run::class)->constrained();
-            $table->foreignIdFor(User::class)->constrained();
-            $table->enum('action', [
-                'verify', 'unverify',
-                'invalidate', 'revalidate',
-                'retime', 'rescore', 'emend',
-                'move-category', 'ghost-merge'
-            ]);
-            $table->text('note')->default('');
-            $table->timestamp('timestamp')->useCurrent();
-        });
     }
 
     /**
@@ -57,7 +44,5 @@ return new class extends Migration
                 'state',
             ]);
         });
-
-        Schema::dropIfExists('run_moderation_actions');
     }
 };

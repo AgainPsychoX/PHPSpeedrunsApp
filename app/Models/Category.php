@@ -34,6 +34,9 @@ class Category extends Model
 
 	public function moderators($direct = false)
 	{
-		return ModeratorAssignment::active()->category($this, $direct)->joinUser()->byType()->orderBy('users.name');
+		if ($direct)
+			return ModeratorAssignment::active()->category($this, true)->joinUser()->orderBy('users.name');
+		else
+			return ModeratorAssignment::active()->category($this, false)->joinUser()->orderByScope()->orderBy('users.name');
 	}
 }

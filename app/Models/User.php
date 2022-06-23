@@ -76,6 +76,10 @@ class User extends Authenticatable
 		return ModeratorAssignment::active()->category($category)->where('user_id', $this->id)->exists();
 	}
 
+	public function isRunModerator(Run $run) {
+		return isCategoryModerator($run->category_id);
+	}
+
 	public function isAnyModerator() {
 		return ModeratorAssignment::active()->any()->exists();
 	}

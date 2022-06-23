@@ -30,7 +30,7 @@ class RunPolicy
 	 */
 	public function update(User $user, Run $run)
 	{
-		return $user->id === $run->user_id || $user->isCategoryModerator($category);
+		return $user->id === $run->user_id || $user->isCategoryModerator($run->category_id);
 	}
 
 	/**
@@ -42,6 +42,18 @@ class RunPolicy
 	 */
 	public function delete(User $user, Run $run)
 	{
-		return $user->id === $run->user_id || $user->isCategoryModerator($category);
+		return $user->id === $run->user_id || $user->isCategoryModerator($run->category_id);
+	}
+
+	/**
+	 * Determine whether the user can vote for the run verification.
+	 *
+	 * @param  \App\Models\User  $user
+	 * @param  \App\Models\Run  $run
+	 * @return \Illuminate\Auth\Access\Response|bool
+	 */
+	public function vote(User $user, Run $run)
+	{
+		return $user->isCategoryModerator($run->category_id);
 	}
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ModeratorSummaryResource extends JsonResource
+class ModeratorSummaryResource extends ModeratorEntryResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -13,13 +13,8 @@ class ModeratorSummaryResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		return [
-			'id' => $this->user_id,
-			'name' => $this->name,
-			'email' => $this->email,
+		return array_merge(parent::toArray($request), [
 			'joinedAt' => $this->created_at,
-
-			'scope' => $this->target_type,
 			'targetId' => $this->target_id,
 
 			'assignedAt' => $this->assigned_at,
@@ -27,6 +22,6 @@ class ModeratorSummaryResource extends JsonResource
 				'id' => $this->assigned_by,
 				'name' => $this->assigned_by_name,
 			],
-		];
+		]);
 	}
 }

@@ -9,14 +9,12 @@
 + Change/forget password.
 + Proper Add/edit/delete users (by admin; incl. ghosts)
 + Ghosts will have predefined email: `${username}@gho.st`.
-+ Roles management: 
-	+ List mods in games/categories, button to edit the list, search/form in modal.
-	+ Global administrators as separate admin panel.
 
 
 
 ### Secondary
 
++ After voting on verify run, it should update the list and status.
 + Update contexts after modified.
 + Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).
@@ -25,6 +23,7 @@
 + More dynamic coded `HomePage` carousel.
 + Add small bar between navbar and content on pages, possibly related to the content.
 + Pagination for runs.
+	+ `CategoryDetails` would always have first page of runs and pagination meta included (pointing at `runs.index`).
 + Better profile page, country table and flags.
 + Search user runs for specific game (and category).
 
@@ -32,6 +31,7 @@
 
 ### Ideas
 
++ Reposition stuff on `RunPage`: fill width with data above the video, let button go below.
 + Cleaner distinction between moderators origin on `ModeratorsListSection` (different colors for global/game/category?).
 + Use own modal in place of `window.alert` and `window.confirm`.
 + Make horizontal scrollable panes to have scrolls both on top and bottom ([simulate second one](https://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table)).

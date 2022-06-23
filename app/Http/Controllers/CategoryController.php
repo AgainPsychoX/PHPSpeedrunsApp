@@ -29,14 +29,24 @@ class CategoryController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
+	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Models\Category  $category
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Category $category)
+	public function show(Request $request, Category $category)
 	{
+		$userId = $request->user();
+		$isModerator = $request->user()->isCategoryModerator($category);
 		$scoreRule = $category->score_rule;
 		$category = $category->loadMissing([
-			'runs' => function ($query) use($scoreRule) {
+			'runs' => function ($query) use($scoreRule, $isModerator, $userId) {
+				// Unless moderator or owner, list only verified runs
+				if (!$isModerator) {
+					$query = $query->where(fn ($query) =>
+						$query->where('state', 'verified')->orWhere('user_id', $userId)
+					);
+				}
+				// Sorting according to the category score rule
 				if ($scoreRule != 'none') {
 					$query = $query->orderBy('score', $scoreRule == 'low' ? 'ASC' : 'DESC');
 				}

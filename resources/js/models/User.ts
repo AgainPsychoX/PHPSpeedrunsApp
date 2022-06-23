@@ -47,10 +47,13 @@ export const currentUserPageLink = '/users/current';
 export const getUserPageLink = (e: UserEntry) => `/users/${e.id}`;
 
 export type ModeratorScope = 'global' | 'game' | 'category';
-export interface ModeratorSummary extends UserEntry {
+export interface ModeratorEntry extends UserEntry {
+	scope: ModeratorScope;
+}
+
+export interface ModeratorSummary extends ModeratorEntry {
 	joinedAt: DateTime;
 
-	scope: ModeratorScope;
 	targetId: number;
 
 	assignedAt: DateTime;

@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry, GameSummary } from "./models/Game";
 import { RunDetails, RunEntry, RunSummary } from "./models/Run";
+import { RunVerification, RunVerificationVote } from "./models/RunVerification";
 import { ModeratorScope, ModeratorSummary, UserDetails, UserEntry, UserSummary } from "./models/User";
 import settings from "./settings";
 import { parseBoolean } from "./utils/SomeUtils";
@@ -321,6 +322,29 @@ export const deleteRun = async (entryOrId: RunEntry | number) => {
 		headers: baseHeadersAnd(),
 	}).then(throwIfNotOk);
 }
+
+////////////////////////////////////////
+// Verifications
+
+export const fetchRunVerifications = async (entryOrId: RunEntry | number) => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const json = await simplyFetchJSON(`${settings.apiRoot}/runs/${id}/verifiers`);
+	for (const entry of json.data) convertDates(entry, ['timestamp']);
+	return json.data as RunVerification[];
+}
+
+export const voteVerifyRun = async (entryOrId: RunEntry | number, vote: RunVerificationVote, note: string = '') => {
+	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
+	const json = await fetch(`${settings.apiRoot}/runs/${id}')}/voteVerify`, {
+		method: 'POST',
+		headers: baseHeadersAnd({
+			'Content-Type': 'application/json',
+		}),
+		body: JSON.stringify({vote, note})
+	}).then(jsonOrThrowIfNotOk);
+	return convertDates(json.data, ['timestamp']) as RunVerification;
+}
+
 
 
 

@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { RunSummary } from "./Run";
-import { UserEntry } from "./User";
+import { ModeratorEntry } from "./User";
 
 export interface CategoryEntry {
 	id: number;
@@ -16,7 +16,7 @@ export interface CategoryDetails extends CategoryEntry {
 	updatedAt: DateTime;
 
 	runs: RunSummary[];
-	moderators: UserEntry[];
+	moderators: ModeratorEntry[];
 }
 
 export const getCategoryPageLink = (e: CategoryEntry) => `/games/${e.gameId}/categories/${e.id}`;

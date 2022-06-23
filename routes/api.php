@@ -7,6 +7,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RunController;
 use App\Http\Controllers\ModeratorAssignmentController;
+use App\Http\Controllers\RunVerificationController;
 use App\Http\Resources\UserDetailsResource;
 
 /*
@@ -36,6 +37,8 @@ Route::middleware('auth')->group(function () {
 			'categories' => [],
 		];
 	});
+
+	// Moderators management
 	Route::get   ('/moderators',                              [ModeratorAssignmentController::class, 'globalIndex'   ]);
 	Route::put   ('/moderators/{user}',                       [ModeratorAssignmentController::class, 'globalAdd'     ]);
 	Route::delete('/moderators/{user}',                       [ModeratorAssignmentController::class, 'globalRemove'  ]);
@@ -45,6 +48,10 @@ Route::middleware('auth')->group(function () {
 	Route::get   ('/categories/{category}/moderators',        [ModeratorAssignmentController::class, 'categoryIndex' ]);
 	Route::put   ('/categories/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryAdd'   ]);
 	Route::delete('/categories/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryRemove']);
+
+	// Simple runs verification
+	Route::get ('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);
+	Route::post('/runs/{run}/voteVerify', [RunVerificationController::class, 'vote']);
 });
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);

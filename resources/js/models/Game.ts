@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { CategoryEntry } from "./Category";
-import { UserEntry } from "./User";
+import { ModeratorEntry } from "./User";
 
 export interface GameEntry {
 	id: number;
@@ -22,7 +22,7 @@ export interface GameDetails extends GameSummary {
 	updatedAt: DateTime;
 
 	categories: CategoryEntry[];
-	moderators: UserEntry[];
+	moderators: ModeratorEntry[];
 
 	runsCount: number;
 }

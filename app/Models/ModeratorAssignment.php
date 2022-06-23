@@ -85,11 +85,17 @@ class ModeratorAssignment extends Model
 				->where('target_type', 'category')
 				->where('target_id', $category instanceof Category ? $category->id : $category);
 		else
+			if (is_int($category)) {
+				$gameId = Category::findOrFail($category)->game_id;
+			}
+			else {
+				$gameId = $category->game_id;
+			}
 			return $query->where(fn ($query) =>
 				$query->where('target_type', 'global')
 					->orWhere(fn ($query) =>
 						$query->where('target_type', 'game')
-							  ->where('target_id', $category->game_id)
+							  ->where('target_id', $gameId)
 					)
 					->orWhere(fn ($query) =>
 						$query->where('target_type', 'category')
@@ -108,8 +114,12 @@ class ModeratorAssignment extends Model
 
 
 
-	public static function scopeByType(Builder $query) {
+	public static function scopeOrderByScope(Builder $query) {
 		return $query->orderByRaw("FIELD(`target_type`, 'global', 'game', 'category')");
+	}
+
+	public static function scopeWidestScopePerUser(Builder $query) {
+		return $query->select(DB::raw("ELT(MAX(FIELD(`target_type`, 'global', 'game', 'category')), 'global', 'game', 'category')"), 'user_id')->groupBy('user_id');
 	}
 
 
