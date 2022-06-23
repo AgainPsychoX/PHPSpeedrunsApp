@@ -79,7 +79,7 @@ class ModeratorAssignmentController extends Controller
 			'target_type' => 'global',
 			//'target_id' => null,
 			'assigned_by' => $assigner->id,
-			//'assigned_at' => Carbon::now()->timestamp, // Auto-generated in database anyway
+			//'assigned_at' => Carbon::now()->toDateTimeString(), // Auto-generated in database anyway
 		]);
 		return ModeratorSummaryResource::make(
 			$this->saturateIntoModeratorSummary($instance, $user, $assigner));
@@ -116,7 +116,7 @@ class ModeratorAssignmentController extends Controller
 
 		$affected = ModeratorAssignment::active()->global()->where('user_id', $user->id)->update([
 			'revoked_by' => $request->user()->id,
-			'revoked_at' => Carbon::now()->timestamp,
+			'revoked_at' => Carbon::now()->toDateTimeString(),
 		]);
 		return response()->json([
 			"message" => $affected == 0
@@ -172,7 +172,7 @@ class ModeratorAssignmentController extends Controller
 			'target_type' => 'game',
 			'target_id' => $game->id,
 			'assigned_by' => $assigner->id,
-			//'assigned_at' => Carbon::now()->timestamp, // Auto-generated in database anyway
+			//'assigned_at' => Carbon::now()->toDateTimeString(), // Auto-generated in database anyway
 		]);
 		return ModeratorSummaryResource::make(
 			$this->saturateIntoModeratorSummary($instance, $user, $assigner));
@@ -192,7 +192,7 @@ class ModeratorAssignmentController extends Controller
 
 		$affected = ModeratorAssignment::active()->game($game)->where('user_id', $user->id)->update([
 			'revoked_by' => $request->user()->id,
-			'revoked_at' => Carbon::now()->timestamp,
+			'revoked_at' => Carbon::now()->toDateTimeString(),
 		]);
 		return response()->json([
 			"message" => $affected == 0
@@ -214,7 +214,7 @@ class ModeratorAssignmentController extends Controller
 	 */
 	public function categoryIndex(Category $category)
 	{
-		$query = ModeratorAssignment::active()->category($game)->joinUser()->joinAssignedBy()
+		$query = ModeratorAssignment::active()->category($category)->joinUser()->joinAssignedBy()
 			->byType()->orderBy('users.name')
 			->select(ModeratorAssignmentController::moderatorSummaryFields);
 		return ModeratorSummaryResource::collection($query->get());
@@ -238,7 +238,7 @@ class ModeratorAssignmentController extends Controller
 				"message" => "Ghost users cannot be assigned moderator roles.",
 			], 406);
 		}
-		if ($user->isGameModerator($category)) {
+		if ($user->isGameModerator($category->game_id)) {
 			return response()->json([
 				"message" => "This user already is a moderator for this game.",
 			], 409);
@@ -246,10 +246,10 @@ class ModeratorAssignmentController extends Controller
 
 		$instance = ModeratorAssignment::create([
 			'user_id' => $user->id,
-			'target_type' => 'game',
+			'target_type' => 'category',
 			'target_id' => $category->id,
 			'assigned_by' => $request->user()->id,
-			//'assigned_at' => Carbon::now()->timestamp, // Auto-generated in database anyway
+			//'assigned_at' => Carbon::now()->toDateTimeString(), // Auto-generated in database anyway
 		]);
 		return ModeratorSummaryResource::make(
 			$this->saturateIntoModeratorSummary($instance, $user, $assigner));
@@ -269,7 +269,7 @@ class ModeratorAssignmentController extends Controller
 
 		$affected = ModeratorAssignment::active()->category($category)->where('user_id', $user->id)->update([
 			'revoked_by' => $request->user()->id,
-			'revoked_at' => Carbon::now()->timestamp,
+			'revoked_at' => Carbon::now()->toDateTimeString(),
 		]);
 		return response()->json([
 			"message" => $affected == 0

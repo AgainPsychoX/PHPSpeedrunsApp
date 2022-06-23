@@ -160,7 +160,7 @@ export const fetchUserRuns = async (
 ////////////////////////////////////////
 // Moderators
 
-type ModerationTarget = GameEntry | CategoryEntry | 'global';
+export type ModerationTarget = GameEntry | CategoryEntry | 'global';
 const moderationTargetToPath = (target: ModerationTarget) => {
 	if (target == 'global') return '';
 	if ((target as GameEntry).publishYear) return `games/${target.id}/`;

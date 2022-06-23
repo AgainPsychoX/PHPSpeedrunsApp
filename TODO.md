@@ -32,6 +32,7 @@
 
 ### Ideas
 
++ Cleaner distinction between moderators origin on `ModeratorsListSection` (different colors for global/game/category?).
 + Use own modal in place of `window.alert` and `window.confirm`.
 + Make horizontal scrollable panes to have scrolls both on top and bottom ([simulate second one](https://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table)).
 + Fortify is obstacle...

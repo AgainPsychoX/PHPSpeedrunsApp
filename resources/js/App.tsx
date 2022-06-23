@@ -25,6 +25,8 @@ import GameFormPage from "./pages/GameFormPage";
 import CategoryFormPage from "./pages/CategoryFormPage";
 import RunFormPage from "./pages/RunFormPage";
 import GameModerationPage from "./pages/GameModerationPage";
+import CategoryModerationPage from "./pages/CategoryModerationPage";
+import GlobalModerationPage from "./pages/GlobalModerationPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -51,6 +53,7 @@ const App = () => {
 				<Routes>
 					<Route path="/">
 						<Route index element={<HomePage/>} />
+						<Route path="moderators" element={<GlobalModerationPage/>} />
 						<Route path="games">
 							<Route index element={<GamesPage />} />
 							<Route path="new" element={<GameFormPage/>} />
@@ -64,7 +67,7 @@ const App = () => {
 									<Route path=":categoryIdPart" element={<CategoryContextRouterOutlet/>}>
 										<Route index element={<GamePage/>} />
 										<Route path="edit" element={<CategoryFormPage/>} />
-										{/* <Route path="moderators" element={<CategoryModerationPage/>} /> */}
+										<Route path="moderators" element={<CategoryModerationPage/>} />
 										<Route path="runs">
 											<Route index element={<GamePage/>} />
 											<Route path="new" element={<RunFormPage/>} />

@@ -48,11 +48,11 @@ class CategoryPolicy
 	/**
 	 * Determine whether the user add moderators for the category.
 	 *
+	 * @param  \App\Models\User  $user
 	 * @param  \App\Models\Category  $category
-	 * @param  \App\Models\Game  $game
 	 * @return \Illuminate\Auth\Access\Response|bool
 	 */
-	public function addModerator(Category $category, Game $game)
+	public function addModerator(User $user, Category $category)
 	{
 		return $user->isGameModerator($category->game_id);
 	}
@@ -60,11 +60,11 @@ class CategoryPolicy
 	/**
 	 * Determine whether the user remove moderators for the category.
 	 *
+	 * @param  \App\Models\User  $user
 	 * @param  \App\Models\Category  $category
-	 * @param  \App\Models\Game  $game
 	 * @return \Illuminate\Auth\Access\Response|bool
 	 */
-	public function removeModerator(Category $category, Game $game)
+	public function removeModerator(User $user, Category $category)
 	{
 		return $user->isGameModerator($category->game_id);
 	}

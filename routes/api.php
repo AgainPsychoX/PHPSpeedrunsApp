@@ -36,15 +36,15 @@ Route::middleware('auth')->group(function () {
 			'categories' => [],
 		];
 	});
-	Route::get   ('/moderators',                            [ModeratorAssignmentController::class, 'globalIndex'   ]);
-	Route::put   ('/moderators/{user}',                     [ModeratorAssignmentController::class, 'globalAdd'     ]);
-	Route::delete('/moderators/{user}',                     [ModeratorAssignmentController::class, 'globalRemove'  ]);
-	Route::get   ('/games/{game}/moderators',               [ModeratorAssignmentController::class, 'gameIndex'     ]);
-	Route::put   ('/games/{game}/moderators/{user}',        [ModeratorAssignmentController::class, 'gameAdd'       ]);
-	Route::delete('/games/{game}/moderators/{user}',        [ModeratorAssignmentController::class, 'gameRemove'    ]);
-	Route::get   ('/category/{category}/moderators',        [ModeratorAssignmentController::class, 'categoryIndex' ]);
-	Route::put   ('/category/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryAdd'   ]);
-	Route::delete('/category/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryRemove']);
+	Route::get   ('/moderators',                              [ModeratorAssignmentController::class, 'globalIndex'   ]);
+	Route::put   ('/moderators/{user}',                       [ModeratorAssignmentController::class, 'globalAdd'     ]);
+	Route::delete('/moderators/{user}',                       [ModeratorAssignmentController::class, 'globalRemove'  ]);
+	Route::get   ('/games/{game}/moderators',                 [ModeratorAssignmentController::class, 'gameIndex'     ]);
+	Route::put   ('/games/{game}/moderators/{user}',          [ModeratorAssignmentController::class, 'gameAdd'       ]);
+	Route::delete('/games/{game}/moderators/{user}',          [ModeratorAssignmentController::class, 'gameRemove'    ]);
+	Route::get   ('/categories/{category}/moderators',        [ModeratorAssignmentController::class, 'categoryIndex' ]);
+	Route::put   ('/categories/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryAdd'   ]);
+	Route::delete('/categories/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryRemove']);
 });
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);
