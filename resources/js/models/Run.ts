@@ -16,12 +16,14 @@ export interface RunEntry extends RunId {
 	createdAt: DateTime;
 }
 
+export type RunStatus = 'pending' | 'verified' | 'invalid';
+
 export interface RunSummary extends RunEntry {
 	duration: number;
 	score: number;
 	videoUrl: string;
 
-	state: 'pending' | 'verified' | 'invalid';
+	state: RunStatus;
 }
 
 export interface RunDetails extends RunSummary {

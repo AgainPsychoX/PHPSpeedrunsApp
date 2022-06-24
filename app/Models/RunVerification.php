@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Run;
 use App\Models\User;
@@ -39,13 +40,29 @@ class RunVerification extends Model
 
 
 
-	public static function scopeForRunWithModerator(Builder $query, Run $run) {
-		return $query
-			->joinSub(User::select(['id', 'name' /*, 'email'*/]), 'users', fn ($join) => $join->on('users.id', '=', 'run_verifications.user_id'))
-			->joinSub(ModeratorAssignment::category($run->category_id)->widestScopePerUser()->select(['user_id', 'target_type']), 'a', fn ($join) => $join->on('a.user_id', '=', 'users.id'))
-			->addSelect([
-				'run_verifications.*',
-				'users.id', 'users.name', /*'users.email as user_email',*/ 'target_type'
+	public static function votesForRun(Run $run) {
+		return RunVerification::where('run_id', $run->id)
+			->select([
+				'run_id',
+				DB::raw("sum(case `vote` when 'yes' then 1 else 0 end) as `yes_count`"),
+				DB::raw("sum(case `vote` when 'no' then 1 else 0 end) as `no_count`"),
+				DB::raw("sum(case `vote` when 'abstain' then 1 else 0 end) as `abstain_count`"),
+			])->first();
+	}
+
+	public static function forRunWithModerators(Run $run) {
+		return RunVerification::where('run_id', $run->id)
+			->joinSub(
+				ModeratorAssignment::active()
+					->category($run->category_id)
+					->joinWidestScopePerUser()
+					->joinUser(['id', 'name', /*'email'*/])
+					->select(['users.id', 'users.name', 'widest_target_type as target_type', 'target_id'])
+				,
+				'a', fn ($join) => $join->on('a.id', '=', 'run_verifications.user_id'))
+			->select([
+				'run_verifications.user_id as id', 'name', /*'email',*/ 'target_type',
+				'run_verifications.*'
 			]);
 	}
 }

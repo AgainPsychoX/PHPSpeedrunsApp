@@ -67,6 +67,7 @@ class ModeratorAssignment extends Model
 
 	public static function scopeGame(Builder $query, Game|int $game, $direct = false)
 	{
+		$query = $query->addSelect(['target_type', 'target_id']);
 		if ($direct)
 			return $query
 				->where('target_type', 'game')
@@ -80,6 +81,7 @@ class ModeratorAssignment extends Model
 
 	public static function scopeCategory(Builder $query, Category|int $category, $direct = false)
 	{
+		$query = $query->addSelect(['target_type', 'target_id']);
 		if ($direct)
 			return $query
 				->where('target_type', 'category')
@@ -105,7 +107,7 @@ class ModeratorAssignment extends Model
 	}
 
 	public static function scopeAny(Builder $query) {
-		return $query->where(function ($query) {
+		return $query->addSelect('target_type')->where(function ($query) {
 			$query->where('target_type', 'global')
 				->orWhere('target_type', 'game')
 				->orWhere('target_type', 'category');
@@ -118,11 +120,15 @@ class ModeratorAssignment extends Model
 		return $query->orderByRaw("FIELD(`target_type`, 'global', 'game', 'category')");
 	}
 
-	public static function scopeWidestScopePerUser(Builder $query) {
-		return $query->select(DB::raw("ELT(MAX(FIELD(`target_type`, 'global', 'game', 'category')), 'global', 'game', 'category')"), 'user_id')->groupBy('user_id');
+
+
+	public static function widestScopePerUser() {
+		return ModeratorAssignment::select(DB::raw("ELT(MAX(FIELD(`target_type`, 'global', 'game', 'category')), 'global', 'game', 'category') as `widest_target_type`"), 'user_id')->groupBy('user_id');
 	}
 
-
+	public static function scopeJoinWidestScopePerUser(Builder $query) {
+		return $query->joinSub(ModeratorAssignment::widestScopePerUser(), 'w', fn ($join) => $join->on('w.user_id', '=', 'moderator_assignments.user_id'));
+	}
 
 	public static function scopeJoinUser(Builder $query, $fields = ['id', 'name', 'email', 'created_at']) {
 		return $query->joinSub(User::select($fields), 'users', fn ($join) => $join->on('users.id', '=', 'moderator_assignments.user_id'));

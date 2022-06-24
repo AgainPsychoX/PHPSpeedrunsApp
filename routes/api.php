@@ -50,10 +50,14 @@ Route::middleware('auth')->group(function () {
 	Route::delete('/categories/{category}/moderators/{user}', [ModeratorAssignmentController::class, 'categoryRemove']);
 
 	// Simple runs verification
-	Route::get ('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);
 	Route::post('/runs/{run}/voteVerify', [RunVerificationController::class, 'vote']);
 });
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('runs', RunController::class);
+
+// Simple runs verifications listing
+Route::get ('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);
+
+

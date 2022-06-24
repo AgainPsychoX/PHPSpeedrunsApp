@@ -21,7 +21,7 @@ class RunVerificationResource extends JsonResource
 			'moderator' => $this->when(!is_null($this->target_type), fn () => ModeratorEntryResource::make($this)),
 			'vote' => $this->vote,
 			'note' => $this->note ?? '',
-			'timestamp' => $this->timestamp,
+			'timestamp' => $this->timestamp->toIso8601ZuluString(),
 		];
 	}
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 use App\Http\Resources\RunVerificationResource;
@@ -17,15 +16,15 @@ use App\Models\ModeratorAssignment;
 class RunVerificationController extends Controller
 {
 	private function updateRunState(Run $run) {
-		$yes = RunVerification::forRunWithModerator($run)->where('vote', 'yes')->count();
-		$no = RunVerification::forRunWithModerator($run)->where('vote', 'yes')->count();
+		$results = RunVerification::votesForRun($run);
 		$required = $run->category->verification_requirement;
 
-		$status = 'pending';
-		if ($yes >= $required) $status = 'verified';
-		else if ($no > 1) $status = 'invalid';
+		$state = 'pending';
+		$delta = $results->yes_count - $results->no_count;
+		if ($delta >= $required) $state = 'verified';
+		else if ($results->no_count > 1) $state = 'invalid';
 
-		$run->update(['status' => $status]);
+		$run->update(['state' => $state]);
 	}
 
 	/**
@@ -36,7 +35,7 @@ class RunVerificationController extends Controller
 	 */
 	public function index(Run $run)
 	{
-		$query = RunVerification::forRunWithModerator($run)->whereIn('vote', ['yes', 'no'])->orderBy('timestamp');
+		$query = RunVerification::forRunWithModerators($run)->orderBy('timestamp');
 		return RunVerificationResource::collection($query->get());
 	}
 
@@ -53,7 +52,7 @@ class RunVerificationController extends Controller
 
 		if (!in_array($request->vote, ['yes', 'no', 'abstain'])) {
 			return response()->json([
-				"message" => "'vote' should be 'yes' or 'no'.",
+				"message" => "'vote' should be 'yes', 'no' or 'abstain'.",
 			], 400);
 		}
 
@@ -82,8 +81,12 @@ class RunVerificationController extends Controller
 		$instance->id = $verifier->id;
 		$instance->name = $verifier->name;
 		//$instance->email = $verifier->email;
-		$instance->target_type = ModeratorAssignment::where('user_id', $verifier->id)
-			->category($run->category_id)->widestScopePerUser()->first(['user_id', 'target_type'])->target_type;
+		$instance->target_type = ModeratorAssignment::where('moderator_assignments.user_id', $verifier->id)
+			->category($run->category_id)
+			->joinWidestScopePerUser()
+			->select(['moderator_assignments.user_id', 'widest_target_type as target_type', 'target_id'])
+			->first()->target_type
+		;
 
 		return RunVerificationResource::make($instance);
 	}

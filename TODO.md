@@ -14,7 +14,6 @@
 
 ### Secondary
 
-+ After voting on verify run, it should update the list and status.
 + Update contexts after modified.
 + Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).

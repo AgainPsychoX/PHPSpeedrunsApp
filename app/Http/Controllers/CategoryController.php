@@ -35,15 +35,22 @@ class CategoryController extends Controller
 	 */
 	public function show(Request $request, Category $category)
 	{
-		$userId = $request->user();
-		$isModerator = $request->user()->isCategoryModerator($category);
+		$currentUser = $request->user();
+		if ($currentUser) {
+			$currentUserId = $currentUser->id;
+			$isModerator = $currentUser->isCategoryModerator($category);
+		}
+		else {
+			$currentUserId = 0;
+			$isModerator = false;
+		}
 		$scoreRule = $category->score_rule;
 		$category = $category->loadMissing([
-			'runs' => function ($query) use($scoreRule, $isModerator, $userId) {
+			'runs' => function ($query) use($scoreRule, $isModerator, $currentUserId) {
 				// Unless moderator or owner, list only verified runs
 				if (!$isModerator) {
 					$query = $query->where(fn ($query) =>
-						$query->where('state', 'verified')->orWhere('user_id', $userId)
+						$query->where('state', 'verified')->orWhere('user_id', $currentUserId)
 					);
 				}
 				// Sorting according to the category score rule
