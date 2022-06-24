@@ -5,7 +5,7 @@ import SoftRedirect from "./common/SoftRedirect";
 
 const GlobalModerationPage = () => {
 	const { currentUser } = useContext(AppContext);
-	const isGlobalModerator = currentUser?.isAdmin!;
+	const isGlobalModerator = currentUser?.isAdmin;
 
 	if (!isGlobalModerator) {
 		return <SoftRedirect to="/login" variant="warning" text="Musisz być zalogowany jako moderator globalny!" />

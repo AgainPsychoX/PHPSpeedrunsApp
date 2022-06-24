@@ -74,7 +74,7 @@ class CategoryController extends Controller
 	{
 		Gate::authorize('create');
 
-		return $this->show(Category::create([
+		return $this->show($request, Category::create([
 			'game_id' => $request->gameId,
 			'name' => $request->name,
 			'rules' => $request->rules ?? '',
@@ -99,14 +99,14 @@ class CategoryController extends Controller
 		}
 
 		$category->update([
-			'game_id' => $request->gameId,
+			//'game_id' => $request->gameId,
 			'name' => $request->name,
 			'rules' => $request->rules,
 			'score_rule' => $request->gameId,
 			'verification_requirement' => $request->verificationRequirement,
 		]);
 		$category = $category->refresh();
-		return $this->show($category);
+		return $this->show($request, $category);
 	}
 
 	/**

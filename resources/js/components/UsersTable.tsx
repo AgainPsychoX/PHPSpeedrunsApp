@@ -10,6 +10,7 @@ import { buildPagination } from "../utils/Pagination";
 
 type Sorting = `${Exclude<UsersOrderBy, 'alphanumeric'>},${'desc' | 'asc'}` | 'alphanumeric';
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 const sortingToString: PartialRecord<Sorting, string> = {
@@ -145,9 +146,9 @@ const UsersTable = ({
 										: <td
 											title={allowNavigateToLatestRun ? "Kliknij, by przejść do szczegółów podejścia" : undefined}
 											onClick={event => {
-												if (allowNavigateToLatestRun) {
+												if (allowNavigateToLatestRun && user.latestRun) {
 													event.stopPropagation();
-													navigate(getRunPageLink(user.latestRun!));
+													navigate(getRunPageLink(user.latestRun));
 												}
 											}}
 										>

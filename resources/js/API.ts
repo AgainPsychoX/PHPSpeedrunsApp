@@ -4,7 +4,7 @@ import { CategoryDetails, CategoryEntry } from "./models/Category";
 import { GameDetails, GameEntry, GameSummary } from "./models/Game";
 import { RunDetails, RunEntry, RunSummary } from "./models/Run";
 import { RunVerification, RunVerificationVote } from "./models/RunVerification";
-import { ModeratorScope, ModeratorSummary, UserDetails, UserEntry, UserSummary } from "./models/User";
+import { ModeratorSummary, UserDetails, UserEntry, UserSummary } from "./models/User";
 import settings from "./settings";
 import { parseBoolean } from "./utils/SomeUtils";
 
@@ -50,6 +50,7 @@ export interface PaginationMeta {
 	total: number;
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const convertDates = (o: any, fields: string[] = ['createdAt', 'updateAt']) => {
 	for (const field of fields) {
 		if (o[field]) {
@@ -210,6 +211,7 @@ export const fetchGamesDirectory = async (
 	return json as { data: GameSummary[]; meta: PaginationMeta };
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const receiveGameDetails = async (json: any) => {
 	for (const category of json.data.categories) {
 		convertDates(category);
@@ -250,6 +252,7 @@ export const deleteGame = async (entryOrId: GameEntry | number) => {
 ////////////////////////////////////////
 // Categories
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const receiveCategoryDetails = async (json: any) => {
 	if (!json.data.runs) json.data.runs = [];
 	for (const run of json.data.runs) {
@@ -292,6 +295,7 @@ export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
 ////////////////////////////////////////
 // Runs
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const receiveRunDetails = async (json: any) => {
 	return convertDates(json.data) as RunDetails;
 }
@@ -336,7 +340,7 @@ export const fetchRunVerifications = async (entryOrId: RunEntry | number) => {
 	return json.data as RunVerification[];
 }
 
-export const voteVerifyRun = async (entryOrId: RunEntry | number, vote: RunVerificationVote, note: string = '') => {
+export const voteVerifyRun = async (entryOrId: RunEntry | number, vote: RunVerificationVote, note = '') => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	const json = await fetch(`${settings.apiRoot}/runs/${id}')}/voteVerify`, {
 		method: 'POST',

@@ -26,7 +26,7 @@ export const GamePage = () => {
 				navigate(getCategoryPageLink(game.categories[0]), { replace: true });
 			}
 		}
-	}, [game, categoryDetails])
+	}, [game, categoryDetails, activeKey, navigate])
 
 	if (!game) {
 		return <GenericLoadingPage />

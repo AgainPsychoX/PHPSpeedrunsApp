@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink, RunSummary } from "../models/Run";
-import { UserEntry } from "../models/User";
 import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 import { buildPagination } from "../utils/Pagination";

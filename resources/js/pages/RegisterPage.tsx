@@ -8,7 +8,7 @@ import AppContext from "../utils/contexts/AppContext";
 import { parseBoolean } from "../utils/SomeUtils";
 import SoftRedirect from "./common/SoftRedirect";
 
-const negateDefined = (value: any) => {
+const negateDefined = (value: unknown | undefined) => {
 	if (value === undefined) return undefined;
 	return !value;
 }

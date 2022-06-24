@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Accordion, Button, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
@@ -6,7 +6,7 @@ import { fetchRunVerifications, voteVerifyRun } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getEditRunPageLink, RunStatus } from "../models/Run";
 import { RunVerification, RunVerificationVote } from "../models/RunVerification";
-import { getUserPageLink, ModeratorEntry } from "../models/User";
+import { getUserPageLink } from "../models/User";
 import AppContext from "../utils/contexts/AppContext";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
@@ -77,7 +77,7 @@ const RunPage = () => {
 				// TODO: generic error handling page
 			}
 		})();
-	}, [run, currentUser]);
+	}, [run, currentUser, verifications]);
 
 	if (!game || !category || !run) {
 		return <GenericLoadingPage/>
@@ -167,7 +167,7 @@ const RunPage = () => {
 															case 'abstain': return <><span>Wstrzymuje się</span> </>
 														}
 													})()}
-													<Link to={getUserPageLink(verification.moderator!)} className="text-decoration-none">{verification.moderator!.name}</Link>
+													<Link to={getUserPageLink(verification.moderator)} className="text-decoration-none">{verification.moderator.name}</Link>
 													<time className="text-muted" dateTime={verification.timestamp.toISO()}> ({verification.timestamp.toRelative()})</time>
 													{verification.note && verification.note.length > 0 && <>
 														<div><small className="text-muted">Notatka: </small> {verification.note}</div>

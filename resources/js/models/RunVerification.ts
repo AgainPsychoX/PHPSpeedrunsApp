@@ -5,7 +5,7 @@ export type RunVerificationVote = 'yes' | 'no' | 'abstain';
 export interface RunVerification {
 	runId: number;
 	userId: number;
-	moderator?: ModeratorEntry;
+	moderator: ModeratorEntry;
 	vote: RunVerificationVote
 	note?: string;
 	timestamp: DateTime;

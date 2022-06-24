@@ -83,7 +83,7 @@ const ModeratorsListSection = ({
 			case 'game':
 				if (!window.confirm(`${outsideScopeNote}Czy na pewno chcesz usunąć '${moderator.name}' z pozycji moderatora gry?`)) return;
 				break;
-			case 'game':
+			case 'category':
 				if (!window.confirm(`${outsideScopeNote}Czy na pewno chcesz usunąć '${moderator.name}' z pozycji moderatora kategorii?`)) return;
 				break;
 			default:

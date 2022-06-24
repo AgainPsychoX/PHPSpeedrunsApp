@@ -9,6 +9,7 @@ import { buildPagination } from "../utils/Pagination";
 
 type Sorting = `${GamesDirectoryOrderBy},${'desc' | 'asc'}` | 'alphanumeric';
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>
 
 const sortingToString: PartialRecord<Sorting, string> = {

@@ -7,7 +7,7 @@ import RunContext from "./contexts/RunContext";
 
 export const DebugContexts = () => {
 	const { currentUser } = useContext(AppContext);
-	const isGlobalModerator = currentUser?.isAdmin!;
+	const isGlobalModerator =currentUser?.isAdmin;
 
 	const { game, isModerator: isGameModerator } = useContext(GameContext);
 	const isDirectGameModerator = !!(game?.moderators.find(m => m.id == currentUser?.id));

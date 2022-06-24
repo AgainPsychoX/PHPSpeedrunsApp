@@ -7,7 +7,7 @@ import SoftRedirect from "./common/SoftRedirect";
 
 const GameModerationPage = () => {
 	const { currentUser } = useContext(AppContext);
-	const isGlobalModerator = currentUser?.isAdmin!;
+	const isGlobalModerator = currentUser?.isAdmin;
 	const { game, isModerator: isGameModerator } = useContext(GameContext);
 
 	if (!game) {
@@ -22,8 +22,8 @@ const GameModerationPage = () => {
 		<ModeratorsListSection
 			target={game}
 			canView={isGameModerator}
-			canAdd={isGlobalModerator}
-			canRemove={isGlobalModerator}
+			canAdd={isGlobalModerator!}
+			canRemove={isGlobalModerator!}
 			heading={<h2 title={`Gra #${game.id} '${game.name}' (${game.publishYear})`}>
 				Moderatorzy gry {game.name}
 			</h2>}

@@ -16,7 +16,7 @@ import { formatDurationText, parseDuration } from "../utils/DurationUtils";
 import SoftRedirect from "./common/SoftRedirect";
 import UsersTable from "../components/UsersTable";
 
-const negateDefined = (value: any) => {
+const negateDefined = (value: unknown | undefined) => {
 	if (value === undefined) return undefined;
 	return !value;
 }
@@ -30,7 +30,7 @@ const RunFormPage = () => {
 	const isEditing = !!run;
 
 	const [duration, setDuration] = useState<number>(0);
-	const [videoUrl, setVideoUrl] = useState<string>();
+	const [videoUrl, setVideoUrl] = useState<string>('');
 	const [videoUrlValidated, setVideoUrlValidated] = useState<string | false | undefined>(undefined);
 	const validateVideoUrl = useDebouncedCallback(() => {
 		if (videoUrl && ReactPlayer.canPlay(videoUrl))
@@ -83,8 +83,8 @@ const RunFormPage = () => {
 				const formData = new FormData(form);
 				formData.delete('durationInputText');
 				formData.set('userId', player.id.toString());
-				formData.set('duration', duration!.toString());
-				formData.set('videoUrl', videoUrl!);
+				formData.set('duration', duration.toString());
+				formData.set('videoUrl', videoUrl);
 				if (run) {
 					// Pass only changing things and ID
 					for (const key in run)

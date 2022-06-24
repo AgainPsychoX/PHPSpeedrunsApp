@@ -121,8 +121,8 @@ const GameFormPage = () => {
 							</Col>
 							<Col xs={12} sm={3} md={2}>
 								<Button variant="outline-secondary" className="w-100" onClick={() => {
-									if (isIconBeingOverwritten) {
-										iconFileInputRef.current!.value = '';
+									if (isIconBeingOverwritten && iconFileInputRef.current) {
+										iconFileInputRef.current.value = '';
 										setIsIconFileSelected(false);
 										setIsIconBeingOverwritten(false);
 									}
