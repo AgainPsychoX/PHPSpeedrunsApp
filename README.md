@@ -103,6 +103,7 @@ POST            api/games/{game}/categories/{category}/runs
 GET|HEAD        api/runs/{run} 
 PUT|PATCH       api/runs/{run} 
 DELETE          api/runs/{run} 
+GET|HEAD        api/runs
 
 # Weryfikacja podejścia
 GET|HEAD        api/runs/{run}/verifiers 

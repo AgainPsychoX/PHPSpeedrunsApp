@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
 	// Simple runs verification
 	Route::post('/runs/{run}/voteVerify', [RunVerificationController::class, 'vote']);
 });
+Route::get('/runs', [RunController::class, 'index']);
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);
 Route::apiResource('games.categories', CategoryController::class)->shallow();

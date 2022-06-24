@@ -388,4 +388,7 @@ export default {
 	createRun,
 	updateRun,
 	deleteRun,
+
+	fetchRunVerifications,
+	voteVerifyRun,
 }
