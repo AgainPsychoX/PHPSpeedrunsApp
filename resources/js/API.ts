@@ -231,8 +231,9 @@ export const createGame = async (formData: FormData) => {
 }
 
 export const updateGame = async (formData: FormData) => {
+	formData.append('_method', 'PATCH');
 	return receiveGameDetails(await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
-		method: 'PATCH',
+		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
 	}).then(jsonOrThrowIfNotOk));
@@ -272,8 +273,9 @@ export const createCategory = async (formData: FormData) => {
 }
 
 export const updateCategory = async (formData: FormData) => {
+	formData.append('_method', 'PATCH');
 	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/categories/${formData.get('id')}`, {
-		method: 'PATCH',
+		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
 	}).then(jsonOrThrowIfNotOk));
@@ -308,8 +310,9 @@ export const createRun = async (formData: FormData) => {
 }
 
 export const updateRun = async (formData: FormData) => {
+	formData.append('_method', 'PATCH');
 	return receiveRunDetails(await fetch(`${settings.apiRoot}/runs/${formData.get('id')}`, {
-		method: 'PATCH',
+		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
 	}).then(jsonOrThrowIfNotOk));
