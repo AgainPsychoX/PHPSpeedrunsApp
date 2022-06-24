@@ -30,12 +30,12 @@ class StoreUserRequest extends FormRequest
 			'name' => $this->usernameRules(),
 			'email' => 'required_with:password|prohibited:password|string|email|max:255|unique:users,email',
 			'password' => array_merge(['sometimes', 'nullable'], $this->passwordRules()),
-			'countryId' => 'sometimes|nullable|string|size:3',
-			'youtubeUrl' => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?youtube\.com\/(channel\/UC[\w-]{21}[AQgw]|(c\/|user\/)?[\w-]+)$/i' ],
-			'twitchUrl'  => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?twitch\.tv\/[\w-]+)$/i '],
-			'twitterUrl' => [ 'sometimes', 'nullable', 'string', 'regex:/^https:\/\/twitter.com\/([a-zA-Z0-9_]+)\/?$/i' ],
+			'country_id' => 'sometimes|nullable|string|size:3',
+			'youtube_url' => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?youtube\.com\/(channel\/UC[\w-]{21}[AQgw]|(c\/|user\/)?[\w-]+)$/i' ],
+			'twitch_url'  => [ 'sometimes', 'nullable', 'string', 'regex:/^https?:\/\/(www\.)?twitch\.tv\/[\w-]+)$/i '],
+			'twitter_url' => [ 'sometimes', 'nullable', 'string', 'regex:/^https:\/\/twitter.com\/([a-zA-Z0-9_]+)\/?$/i' ],
 			'discord' => 'sometimes|nullable|string|regex:/^.{3,32}#[0-9]{4}$/',
-			'profileDescription' => 'sometimes|nullable|string|max:4000',
+			'profile_description' => 'sometimes|nullable|string|max:4000',
 		];
 	}
 }

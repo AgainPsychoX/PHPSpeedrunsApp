@@ -36,7 +36,7 @@ class GameResource extends JsonResource
 			'updatedAt' => $this->whenNotNull($this->updated_at),
 
 			'categories' => CategoryResource::collection($this->whenLoaded('categories')),
-			'moderators' => $this->when($this->loadModerators == 'direct', fn () => ModeratorEntryResource::collection($this->moderators(true)->get(['users.id', 'users.name', 'users.email', 'target_type as scope']))),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn () => ModeratorEntryResource::collection($this->moderators(true)->addSelect(['users.id', 'users.name', 'users.email', 'target_type'])->get())),
 		];
 	}
 }

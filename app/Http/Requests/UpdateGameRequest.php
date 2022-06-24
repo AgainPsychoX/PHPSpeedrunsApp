@@ -28,7 +28,8 @@ class UpdateGameRequest extends FormRequest
 			'description'   => 'sometimes|nullable|string|max:4000',
 			'rules'         => 'sometimes|nullable|string|max:4000',
 			'icon'          => 'sometimes|file|dimensions:min_width=100,min_height=100,max_width=800,max_height=800|mimes:jpeg,png,webp',
-			'publishYear'   => 'sometimes|required|integer|between:1970,2200',
+			'publish_year'  => 'sometimes|required|integer|between:1970,2200',
+			'remove_icon'   => 'sometimes|required|boolean',
 		];
 	}
 }

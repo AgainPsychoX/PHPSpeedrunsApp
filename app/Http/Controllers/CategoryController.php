@@ -9,6 +9,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoryCollection;
+use App\Models\Game;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -68,19 +69,14 @@ class CategoryController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \App\Http\Requests\StoreCategoryRequest  $request
+	 * @param  \App\Models\Game  $game
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(StoreCategoryRequest $request)
+	public function store(StoreCategoryRequest $request, Game $game)
 	{
-		Gate::authorize('create');
+		Gate::authorize('create', [Category::class, $game]);
 
-		return $this->show($request, Category::create([
-			'game_id' => $request->gameId,
-			'name' => $request->name,
-			'rules' => $request->rules ?? '',
-			'score_rule' => $request->gameId ?? 'none',
-			'verification_requirement' => $request->verificationRequirement ?? 1,
-		]));
+		return $this->show($request, Category::create($request->all()));
 	}
 
 	/**
@@ -94,17 +90,17 @@ class CategoryController extends Controller
 	{
 		Gate::authorize('update', $category);
 
+		if ($request->filled('category_id') && $category->id != $request->category_id && !$user->isGlobalModerator()) {
+			return response()->json([
+				"message" => "You need to be global moderator to move categories between games.",
+			], 403);
+		}
+
 		if ($category->verification_requirement != $request->verification_requirement) {
 			// TODO: update all related runs
 		}
 
-		$category->update([
-			//'game_id' => $request->gameId,
-			'name' => $request->name,
-			'rules' => $request->rules,
-			'score_rule' => $request->gameId,
-			'verification_requirement' => $request->verificationRequirement,
-		]);
+		$category->update($request->all());
 		$category = $category->refresh();
 		return $this->show($request, $category);
 	}

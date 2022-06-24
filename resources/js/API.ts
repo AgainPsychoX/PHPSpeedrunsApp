@@ -268,7 +268,7 @@ export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) =>
 }
 
 export const createCategory = async (formData: FormData) => {
-	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/categories`, {
+	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/games/${formData.get('gameId')}/categories`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
@@ -306,7 +306,7 @@ export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
 }
 
 export const createRun = async (formData: FormData) => {
-	return receiveRunDetails(await fetch(`${settings.apiRoot}/runs`, {
+	return receiveRunDetails(await fetch(`${settings.apiRoot}/games/${formData.get('gameId')}/categories/${formData.get('categoryId')}/runs`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData

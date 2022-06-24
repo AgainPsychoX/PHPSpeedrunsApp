@@ -54,8 +54,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::apiResource('users', UserController::class);
 Route::apiResource('games', GameController::class);
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('runs', RunController::class);
+Route::apiResource('games.categories', CategoryController::class)->shallow();
+Route::apiResource('games.categories.runs', RunController::class)->shallow();
 
 // Simple runs verifications listing
 Route::get ('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);

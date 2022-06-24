@@ -90,6 +90,8 @@ const RunPage = () => {
 		: run.state
 	;
 
+	const canEdit = isModerator || run.id == currentUser?.id;
+
 	return <main>
 		<Container>
 			<div className="hstack gap-2 flex-wrap">
@@ -97,7 +99,7 @@ const RunPage = () => {
 					<small className="text-muted">Gra</small>
 					<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
 				</Link>
-				{isModerator && <>
+				{canEdit && <>
 					<div className="ms-auto" />
 					<Button variant="outline-secondary" as={Link} to={getEditRunPageLink(run)}>Edytuj lub usuń podejście</Button>
 				</>}
@@ -148,7 +150,7 @@ const RunPage = () => {
 										{voteButtons.map(def =>
 											<Button
 												key={def.vote}
-												variant={`${currentUserVote == def.vote ? '' : 'outline'}-${def.color}`} size="sm"
+												variant={`${currentUserVote == def.vote ? '' : 'outline-'}${def.color}`} size="sm"
 												disabled={currentUserVote == def.vote} onClick={() => doVerify(def.vote)}
 											>{def.text}</Button>
 										)}

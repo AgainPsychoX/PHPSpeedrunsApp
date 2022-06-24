@@ -43,7 +43,14 @@ const RunFormPage = () => {
 		setDuration(run.duration);
 		setVideoUrl(run.videoUrl);
 		setVideoUrlValidated(run.videoUrl);
-	}, [run]);
+		if (run.state == 'verified' && run.userId == currentUser?.id) {
+			setAlert({
+				'variant': 'info',
+				'heading': 'Już zweryfikowano',
+				'content': 'To podejście zostało już zweryfikowane, więc nie zezwala się edycji jego szczegółów innej niż notatki.',
+			});
+		}
+	}, [run, currentUser]);
 
 	const [validated, setValidated] = useState<boolean>(false);
 	const [alert, setAlert] = useState<SimpleAlertData>();
@@ -148,6 +155,8 @@ const RunFormPage = () => {
 		return <SoftRedirect to={getEditRunPageLink(run)} variant="danger" text="Podejście nie odpowiada do kontekstu kategorii." />
 	}
 
+	const lockExceptNotes = run && run.state == 'verified' && run.userId == currentUser?.id;
+
 	return <main>
 		<Container>
 			<Row className="justify-content-center my-4">
@@ -161,11 +170,11 @@ const RunFormPage = () => {
 								<Form.Control
 									name="userName" type="text" pattern=".{3,64}" required
 									value={player.name} readOnly
-									className="cursor-pointer" onClick={() => setShowUserSelectionModal(true)}
+									className="cursor-pointer" onClick={() => isModerator && setShowUserSelectionModal(true)}
 								/>
 							</Col>
 							<Col xs={12} sm={3} md={2}>
-								<Button variant="outline-secondary" className="w-100" onClick={() => setShowUserSelectionModal(true)}>Wybierz</Button>
+								<Button variant="outline-secondary" className="w-100" onClick={() => isModerator && setShowUserSelectionModal(true)}>Wybierz</Button>
 							</Col>
 							<Modal
 								size={'xl'} fullscreen={'lg-down'}
@@ -189,7 +198,7 @@ const RunFormPage = () => {
 							<Form.Label>Czas podejścia</Form.Label>
 							<Form.Control
 								name="durationInputText" type="text" required
-								defaultValue={run ? formatDurationText(run.duration, 'm') : ''}
+								defaultValue={run ? formatDurationText(run.duration, 'm') : ''} disabled={lockExceptNotes}
 								isInvalid={duration < 0} onChange={(event) => setDuration(parseDuration(event.target.value))}
 							/>
 							<Form.Control.Feedback type="invalid">Czas musi być podany w postaci: <code>1h 23m 45s 678ms</code> lub <code>01:23:45,678</code> (i podobne).</Form.Control.Feedback>
@@ -198,7 +207,7 @@ const RunFormPage = () => {
 							<Form.Label>Wynik podejścia</Form.Label>
 							<Form.Control
 								name="score" type="number" step={1} pattern="[0-9]+" required
-								defaultValue={run?.score ?? 0}
+								defaultValue={run?.score ?? 0} disabled={lockExceptNotes}
 							/>
 							<Form.Control.Feedback type="invalid">Wynik musi być podany jako liczba nieujemna całkowita.</Form.Control.Feedback>
 						</Form.Group>
@@ -210,7 +219,7 @@ const RunFormPage = () => {
 								value={videoUrl} onChange={event => {
 									setVideoUrl(event.target.value);
 									validateVideoUrl();
-								}} isInvalid={negateDefined(videoUrlValidated)}
+								}} isInvalid={negateDefined(videoUrlValidated)} disabled={lockExceptNotes}
 							/>
 							<Form.Control.Feedback type="invalid">Nieprawidłowy URL wideo. Wymagany jest link na platformę YouTube.</Form.Control.Feedback>
 							{videoUrlValidated && <div>
@@ -231,7 +240,7 @@ const RunFormPage = () => {
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							{isEditing && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							{isEditing && (!lockExceptNotes || isModerator) && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
 							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>

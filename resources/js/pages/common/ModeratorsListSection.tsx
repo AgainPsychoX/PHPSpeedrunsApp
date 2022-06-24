@@ -30,7 +30,7 @@ const ModeratorsListSection = ({
 	canAdd: boolean;
 	canRemove: boolean;
 	heading?: string | JSX.Element;
-	note?: string | JSX.Element;
+	note?: string | JSX.Element | null;
 	addModalHeading?: string | JSX.Element;
 }) => {
 	const navigate = useNavigate();
@@ -107,9 +107,11 @@ const ModeratorsListSection = ({
 
 	if (!ready || !canView) return <GenericLoadingPage/>
 
-	note ||= <>
-		Wyróżnione <span className="text-primary fw-bold">kolorem</span> nazwy użytkownika oznaczają, że dany użytkownik jest moderatorem pośrednim, więc nie można go usunąć bez usuwania go z pozycji moderatora szerszego stopnia.
-	</>
+	if (note !== null) {
+		note ||= <>
+			Wyróżnione <span className="text-primary fw-bold">kolorem</span> nazwy użytkownika oznaczają, że dany użytkownik jest moderatorem pośrednim, więc nie można go usunąć bez usuwania go z pozycji moderatora szerszego stopnia.
+		</>
+	}
 
 	return <>
 		<Container>

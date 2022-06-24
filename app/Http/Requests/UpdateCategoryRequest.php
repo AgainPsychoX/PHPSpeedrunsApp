@@ -25,11 +25,11 @@ class UpdateCategoryRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'gameId' => 'sometimes|required_with:name|exists:games,id',
+			'game_id' => 'sometimes|required_with:name|exists:games,id',
 			'name' => 'sometimes|required_with:game_id|string|between:3,64|unique_two:categories,name,game_id,' . $this->game_id,
 			'rules' => 'sometimes|nullable|string|max:4000',
-			'scoreRule' => [ 'sometimes', 'required', Rule::in(['none', 'high', 'low']) ],
-			'verificationRequirement' => 'sometimes|required|integer|between:1,10',
+			'score_rule' => [ 'sometimes', 'required', Rule::in(['none', 'high', 'low']) ],
+			'verification_requirement' => 'sometimes|required|integer|between:1,10',
 		];
 	}
 }

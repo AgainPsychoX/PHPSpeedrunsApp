@@ -28,7 +28,7 @@ class CategoryResource extends JsonResource
 			'updatedAt' => $this->updated_at,
 
 			'runs' => RunResource::collection($this->whenLoaded('runs')),
-			'moderators' => $this->when($this->loadModerators == 'direct', fn() => ModeratorEntryResource::collection($this->moderators(true)->get(['users.id', 'users.name', 'users.email', 'target_type as scope']))),
+			'moderators' => $this->when($this->loadModerators == 'direct', fn() => ModeratorEntryResource::collection($this->moderators(true)->addSelect(['users.id', 'users.name', 'users.email', 'target_type'])->get())),
 		];
 	}
 }

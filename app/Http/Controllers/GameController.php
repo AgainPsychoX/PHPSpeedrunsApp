@@ -106,7 +106,7 @@ class GameController extends Controller
 	 */
 	public function store(StoreGameRequest $request)
 	{
-		Gate::authorize('create');
+		Gate::authorize('create', Game::class);
 
 		if ($request->hasFile('iconFile')) {
 			$ext = strtolower($request->iconFile->extension());
@@ -115,10 +115,7 @@ class GameController extends Controller
 		else {
 			$ext = 'none';
 		}
-		$request->merge([
-			'publish_year' => $request->publishYear,
-			'icon' => $ext,
-		]);
+		$request->merge([ 'icon' => $ext ]);
 
 		$game = Game::create($request->all());
 
@@ -143,24 +140,26 @@ class GameController extends Controller
 		if ($request->hasFile('iconFile')) {
 			$ext = strtolower($request->iconFile->extension());
 			if ($ext == 'jpg') $ext = 'jpeg';
+			$request->merge([ 'icon' => $ext ]);
 		}
 		else {
-			if (boolval($request->removeIcon)) {
+			if (boolval($request->remove_icon)) {
 				$oldExt = $game->icon;
 				$ext = 'none';
-				$request->merge([ 'icon '=> $ext ]);
+				$request->merge([ 'icon' => $ext ]);
 			}
 		}
-		$request->merge([ 'publish_year' => $request->publishYear ]);
 
 		$game->update($request->all());
 		$game = $game->refresh();
 
-		if ($ext == 'none') {
-			Storage::delete("public/images/games/$game->id/icon.$oldExt");
-		}
-		else {
-			Storage::putFileAs("public/images/games/$game->id", $request->iconFile, "icon.$ext", 'public');
+		if (isset($ext)) {
+			if ($ext == 'none') {
+				Storage::delete("public/images/games/$game->id/icon.$oldExt");
+			}
+			else {
+				Storage::putFileAs("public/images/games/$game->id", $request->iconFile, "icon.$ext", 'public');
+			}
 		}
 
 		return $this->show($game);
@@ -178,6 +177,7 @@ class GameController extends Controller
 
 		$count = $game->categories()->count();
 		if ($count == 0) {
+			Storage::delete("public/images/games/$game->id/icon.$request->icon");
 			$game->delete();
 			return response()->noContent();
 		}

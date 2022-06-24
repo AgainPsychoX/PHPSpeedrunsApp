@@ -25,11 +25,11 @@ class StoreCategoryRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'gameId' => 'required|exists:games,id',
-			'name' => 'required|string|between:3,64|unique_two:categories,name,game_id,' . $this->game_id,
-			'rules' => 'nullable|string|max:4000',
-			'scoreRule' => [ 'required', Rule::in(['none', 'high', 'low']) ],
-			'verificationRequirement' => 'required|integer|between:1,10',
+			'game_id'       => 'required|exists:games,id',
+			'name'          => 'required|string|between:3,64|unique_two:categories,name,game_id,' . $this->game_id,
+			'rules'         => 'nullable|string|max:4000',
+			'score_rule'    => [ 'required', Rule::in(['none', 'high', 'low']) ],
+			'verification_requirement' => 'required|integer|between:1,10',
 		];
 		// TODO: enforce icon aspect ratio, close to square
 		// TODO: allow larger icon file, but scale down when saving

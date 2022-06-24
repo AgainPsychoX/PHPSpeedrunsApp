@@ -18,6 +18,7 @@ const GlobalModerationPage = () => {
 			canAdd={isGlobalModerator}
 			canRemove={isGlobalModerator}
 			heading={`Moderatorzy globalni`}
+			note={null}
 		/>
 	</main>
 }

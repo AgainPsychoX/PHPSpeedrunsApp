@@ -5,6 +5,7 @@
 
 ### Main
 
++ Docs/user guide.
 + Profile editing.
 + Change/forget password.
 + Proper Add/edit/delete users (by admin; incl. ghosts)
@@ -17,7 +18,6 @@
 + Update contexts after modified.
 + Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).
-+ Docs/user guide.
 + Home page (incl. featured runs/games/players)
 + More dynamic coded `HomePage` carousel.
 + Add small bar between navbar and content on pages, possibly related to the content.

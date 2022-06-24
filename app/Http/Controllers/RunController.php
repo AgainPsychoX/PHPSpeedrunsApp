@@ -10,6 +10,8 @@ use App\Http\Requests\UpdateRunRequest;
 use App\Http\Resources\RunResource;
 use App\Http\Resources\RunCollection;
 use App\Models\Run;
+use App\Models\Category;
+use App\Models\Game;
 
 class RunController extends Controller
 {
@@ -74,14 +76,22 @@ class RunController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \App\Http\Requests\StoreRunRequest  $request
+	 * @param  \App\Models\Game  $game
+	 * @param  \App\Models\Category  $category
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(StoreRunRequest $request)
+	public function store(StoreRunRequest $request, Game $game, Category $category)
 	{
-		Gate::authorize('create');
+		Gate::authorize('create', [Run::class, $category]);
+		$user = $request->user();
 
-		$run = Run::create($request->all())->loadMissing('category');
-		return new RunResource($run);
+		if ($request->filled('user_id') && $user->id != $request->user_id && !$user->isCategoryModerator($category)) {
+			return response()->json([
+				"message" => "You can't create runs as other player!",
+			], 403);
+		}
+
+		return $this->show(Run::create($request->all()));
 	}
 
 	/**
@@ -94,10 +104,29 @@ class RunController extends Controller
 	public function update(UpdateRunRequest $request, Run $run)
 	{
 		Gate::authorize('update', $run);
+		$isCategoryModerator = $user->isCategoryModerator($category);
+
+		if ($request->filled('user_id') && $user->id != $request->user_id && !$isCategoryModerator) {
+			return response()->json([
+				"message" => "You can't move runs to other player.",
+			], 403);
+		}
+
+		if ($request->filled('category_id') && $category->id != $request->category_id && !$user->isGameModerator($game)) {
+			return response()->json([
+				"message" => "You need to be game moderator to move runs between categories.",
+			], 403);
+		}
+
+		if ($run->state == 'verified' && $request->filledAny(array_diff(Run::getFillable(), ['notes'])) && !$isCategoryModerator) {
+			return response()->json([
+				"message" => "After run was verified, you can't edit anything, except notes.",
+			], 403);
+		}
 
 		$run->update($request->all());
-		$run = $run->refresh()->loadMissing('category');
-		return new RunResource($run);
+		$run = $run->refresh();
+		return $this->show($run);
 	}
 
 	/**

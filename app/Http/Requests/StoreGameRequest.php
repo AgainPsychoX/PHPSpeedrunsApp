@@ -27,7 +27,7 @@ class StoreGameRequest extends FormRequest
 			'name'          => 'required|string|between:3,64|unique:games,name',
 			'description'   => 'nullable|string|max:4000',
 			'rules'         => 'nullable|string|max:4000',
-			'iconFile'      => 'file|dimensions:min_width=100,min_height=100,max_width=800,max_height=800|mimes:jpeg,png,webp',
+			'icon_file'     => 'file|dimensions:min_width=100,min_height=100,max_width=800,max_height=800|mimes:jpeg,png,webp',
 			'publishYear'   => 'required|integer|between:1970,2200',
 		];
 		// TODO: enforce icon aspect ratio, close to square

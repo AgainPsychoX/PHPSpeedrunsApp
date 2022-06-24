@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\Run;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Run;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RunPolicy
@@ -14,9 +15,10 @@ class RunPolicy
 	 * Determine whether the user can create models.
 	 *
 	 * @param  \App\Models\User  $user
+	 * @param  \App\Models\Category  $category
 	 * @return \Illuminate\Auth\Access\Response|bool
 	 */
-	public function create(User $user)
+	public function create(User $user, Category $category)
 	{
 		return true;
 	}
