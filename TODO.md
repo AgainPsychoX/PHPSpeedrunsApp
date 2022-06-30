@@ -7,16 +7,12 @@
 
 ### Main
 
-+ Docs/user guide.
++ Fix bugs ;)
++ Make sure validation works everywhere.
 + Profile editing.
 + Change/forget password.
 + Proper Add/edit/delete users (by admin; incl. ghosts)
 + Ghosts will have predefined email: `${username}@gho.st`.
-
-
-
-### Secondary
-
 + Update contexts after modified.
 + Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).
