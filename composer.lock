@@ -6206,16 +6206,16 @@
         },
         {
             "name": "mmo/faker-images",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/morawskim/faker-images.git",
-                "reference": "985f76583f41e52a5519116464e18152fb716a41"
+                "reference": "08365bd5c30a4cfeaebd90749b968e75b60b7fb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/morawskim/faker-images/zipball/985f76583f41e52a5519116464e18152fb716a41",
-                "reference": "985f76583f41e52a5519116464e18152fb716a41",
+                "url": "https://api.github.com/repos/morawskim/faker-images/zipball/08365bd5c30a4cfeaebd90749b968e75b60b7fb9",
+                "reference": "08365bd5c30a4cfeaebd90749b968e75b60b7fb9",
                 "shasum": ""
             },
             "require": {
@@ -6255,9 +6255,9 @@
             ],
             "support": {
                 "issues": "https://github.com/morawskim/faker-images/issues",
-                "source": "https://github.com/morawskim/faker-images/tree/v0.6.0"
+                "source": "https://github.com/morawskim/faker-images/tree/v0.6.1"
             },
-            "time": "2021-11-29T18:32:04+00:00"
+            "time": "2022-10-10T15:12:10+00:00"
         },
         {
             "name": "mockery/mockery",
