@@ -1,7 +1,17 @@
 
 # Serwis z rankingami speedrunów
 
-Projekt zrealizowany przez Patryka Ludwikowskiego w ramach zaliczenia przedmiotu Aplikacje Internetowe, Uniwersytet Rzeszowski 2022.
+## Zaliczenie przedmiotów
+
+* Projekt częściowo zrealizowany przez Patryka Ludwikowskiego w ramach zaliczenia przedmiotu Aplikacje Internetowe, Uniwersytet Rzeszowski 2022.
+
+* Projekt zostanie przebudowany dla implementacji założeń projektu aplikacji przygotowanej przez Bartosza Słowika, Dominika Machnika, Michała Kulę, Patryka Ludwikowskiego oraz Piotra Szteinmillera w ramach zaliczenia przedmiotu Projektowanie Interfejsów Internetowych, Uniwersytet Rzeszowski 2022.
+
+  Używamy [tablicy na Trello](https://trello.com/b/Mb1437l3/projektowanie-interfejs%C3%B3w-internetowych) do organizacji pracy.
+
+* Projekt i jego realizacja zostaną udokumentowane przez Dominika Machnika, Michała Kulę, Patryka Ludwikowskiego w ramach zaliczenia przedmiotu Inżynierii Oprogramowania, Uniwersytet Rzeszowski 2022.
+
+Oficjalna dokumentacja specyficzna dla danego przedmiotu będzie dostarczona przez inny kanał, ale to repozytorium zawiera jakieś śladowe ilości.
 
 
 
