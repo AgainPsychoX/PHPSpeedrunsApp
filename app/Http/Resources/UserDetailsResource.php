@@ -17,7 +17,7 @@ class UserDetailsResource extends UserSummaryResource
 			'twitchUrl' => $this->twitch_url,
 			'twitterUrl' => $this->twitter_url,
 			'discord' => $this->discord,
-			'profileDescription' => $this->profile_description,
+			'profileDescription' => $this->profile_description ?? "",
 		]);
 	}
 }
