@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Col, Row, Tabs, Tab, Table, Button } from "react-bootstrap";
+import { Container, Col, Row, Tabs, Tab, Table, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { CategoryDetails, getCategoryModerationPageLink, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
@@ -127,9 +127,13 @@ export default GamePage;
 
 const CategoryTabContent = () => {
 	const { category, isModerator } = useContext(CategoryContext);
+	const [onlyVerified, setOnlyVerified] = useState<boolean>(!isModerator);
+
 	if (!category) {
 		return <GenericLoadingSection/>
 	}
+
+	const filteredRuns = category.runs.filter(run => onlyVerified ? (run.state === 'verified') : (run.state !== 'invalid'));
 
 	return <>
 		{category.rules && <>
@@ -157,9 +161,14 @@ const CategoryTabContent = () => {
 			</>}
 			<Button variant="outline-secondary" as={Link} to={getNewRunPageLink(category)}>Dodaj podejście</Button>
 		</div>
-		{(category.runs && category.runs.length > 0)
+		{(filteredRuns && filteredRuns.length > 0)
 			? <>
-				<h5>Podejścia</h5>
+				<div className="hstack gap-2 flex-wrap mb-2">
+					<h5 className="mb-0">Podejścia</h5>
+					<div className="ms-auto">
+						<Form.Check type="checkbox" label="Tylko zweryfikowane" id="only-verified-switch" onChange={event => setOnlyVerified(event.target.checked)} checked={onlyVerified} />
+					</div>
+				</div>
 				<Table hover className="mb-0">
 					<thead>
 						<tr>
@@ -171,7 +180,7 @@ const CategoryTabContent = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{category.runs.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
+						{filteredRuns.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
 					</tbody>
 				</Table>
 			</>
