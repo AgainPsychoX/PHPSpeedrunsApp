@@ -176,16 +176,15 @@ class GameController extends Controller
 		Gate::authorize('delete', $game);
 
 		$count = $game->categories()->count();
-		if ($count == 0) {
-			Storage::delete("public/images/games/$game->id/icon.$request->icon");
-			$game->delete();
-			return response()->noContent();
-		}
-		else {
+		if ($count > 0) {
 			return response()->json([
 				"message" => "There are categories associated with this game. You need either delete or move those first.",
 				"count" => $count,
 			], 409);
 		}
+
+		Storage::deleteDirectory("public/images/games/$game->id/");
+		$game->delete();
+		return response()->noContent();
 	}
 }
