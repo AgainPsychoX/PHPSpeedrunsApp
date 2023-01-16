@@ -38,7 +38,7 @@ export const GamePage = () => {
 		<Container>
 			<Row className="mb-3">
 				{gameHasIcon && <>
-					<Col xs={12} md={5} className="order-md-1 px-0 p-md-2 mb-2 mb-md-0 mt-0">
+					<Col xs={12} md={5} className="order-md-1 px-0 px-sm-half-gutter mb-2 mb-md-0 mt-0">
 						<img src={game.icon} className="rounded-sm w-100" />
 					</Col>
 				</>}

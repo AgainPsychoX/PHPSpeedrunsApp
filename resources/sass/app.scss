@@ -45,6 +45,10 @@ footer {
 	.rounded-sm {
 		border-radius: 0.3em !important;
 	}
+	.px-sm-half-gutter {
+		padding-right: calc(var(--bs-gutter-x) * 0.5) !important;
+		padding-left: calc(var(--bs-gutter-x) * 0.5) !important;
+	}
 }
 
 
