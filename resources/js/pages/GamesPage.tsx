@@ -69,8 +69,8 @@ const GamesPage = ({
 						{games.map(game => (
 							<Col key={game.id}>
 								<NavLink to={`/games/${game.id}`} className="text-decoration-none text-reset">
-									<Card>
-										<Card.Img variant="top" src={game.icon} />
+									<Card className="h-100">
+										<Card.Img variant="top" src={game.icon} style={{height: "256px", objectFit: "cover"}}/>
 										<Card.Body>
 											<Card.Title>{game.name} <small className="text-muted">({game.publishYear})</small></Card.Title>
 											{game.latestRunAt && <Card.Subtitle>aktywność {game.latestRunAt.toRelative()}</Card.Subtitle>}
