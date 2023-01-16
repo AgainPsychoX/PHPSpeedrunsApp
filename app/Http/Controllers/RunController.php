@@ -30,7 +30,7 @@ class RunController extends Controller
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
 
 		if ($player = $queryParams['player'] ?? null) {
-			$orderBy = $queryParams['orderBy'] ?? 'latest';
+			$orderBy = $queryParams['order_by'] ?? 'latest';
 
 			if (str_starts_with($orderBy, 'l')) {
 				$query = Run::forUser((int) $player)

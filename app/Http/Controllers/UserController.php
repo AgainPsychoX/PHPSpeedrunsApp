@@ -25,7 +25,7 @@ class UserController extends Controller
 	{
 		$queryParams = $request->query();
 
-		$orderBy = $queryParams['orderBy'] ?? 'latestRun';
+		$orderBy = $queryParams['order_by'] ?? 'latestRun';
 		$direction = $queryParams['direction'] ?? null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
@@ -89,7 +89,7 @@ class UserController extends Controller
 
 		$search = $queryParams['search'] ?? null;
 		$ghosts = $queryParams['ghosts'] ?? 'any';
-		$minimumRuns = intval($queryParams['minimumRuns'] ?? 0);
+		$minimumRuns = intval($queryParams['minimum_runs'] ?? 0);
 
 		if ($search) $query->where('users.name', 'like', "%$search%")->orWhere('users.email', 'like', "%$search%");
 		if ($ghosts == 'exclude') $query->ghosts(false); else if ($ghosts == 'only') $query->ghosts();

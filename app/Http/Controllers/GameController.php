@@ -25,7 +25,7 @@ class GameController extends Controller
 	{
 		$queryParams = $request->query();
 
-		$orderBy = $queryParams['orderBy'] ?? 'popular';
+		$orderBy = $queryParams['order_by'] ?? 'popular';
 		$direction = $queryParams['direction'] ?? null;
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
