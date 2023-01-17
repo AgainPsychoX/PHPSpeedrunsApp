@@ -6,7 +6,7 @@ import { fetchUsers, UsersOrderBy, PaginationMeta } from "../API";
 import { GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink } from "../models/Run";
 import { getUserPageLink, UserSummary } from "../models/User";
-import { buildPagination } from "../utils/Pagination";
+import { MyPagination } from "./MyPagination";
 
 type Sorting = `${Exclude<UsersOrderBy, 'alphanumeric'>},${'desc' | 'asc'}` | 'alphanumeric';
 
@@ -171,7 +171,7 @@ const UsersTable = ({
 				<GenericLoadingSection description="Ładowanie graczy..." />
 		}
 		</div>
-		{paginationMeta && buildPagination(paginationMeta, onPage)}
+		{paginationMeta && <MyPagination meta={paginationMeta} onSelected={onPage} />}
 	</>
 };
 export default UsersTable;

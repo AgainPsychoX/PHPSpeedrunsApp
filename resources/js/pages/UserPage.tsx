@@ -6,7 +6,7 @@ import { GenericLoadingPage, GenericLoadingSection } from "../components/Generic
 import { getRunPageLink, RunSummary } from "../models/Run";
 import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
-import { buildPagination } from "../utils/Pagination";
+import { MyPagination } from "../components/MyPagination";
 
 const UserPage = () => {
 	const user = useContext(UserContext);
@@ -102,7 +102,7 @@ const UserRunsSection = ({
 							{runs.map(run => <UserRunRow key={run.id} run={run} anyRunWithScore={anyRunWithScore} />)}
 						</tbody>
 					</Table>
-					{paginationMeta && buildPagination(paginationMeta, onPage)}
+					{paginationMeta && <MyPagination meta={paginationMeta} onSelected={onPage} />}
 				</>
 
 				// Empty runs array

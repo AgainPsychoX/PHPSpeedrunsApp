@@ -5,7 +5,7 @@ import { useDebounce } from "use-debounce";
 import { fetchGamesDirectory, GamesDirectoryOrderBy, PaginationMeta } from "../API";
 import { GenericLoadingSection } from "../components/GenericLoading";
 import { GameSummary, getNewGamePageLink } from "../models/Game";
-import { buildPagination } from "../utils/Pagination";
+import { MyPagination } from "../components/MyPagination";
 
 type Sorting = `${GamesDirectoryOrderBy},${'desc' | 'asc'}` | 'alphanumeric';
 
@@ -84,7 +84,7 @@ const GamesPage = ({
 				:
 					<GenericLoadingSection description="Ładowanie gier..." />
 			}
-			{paginationMeta && buildPagination(paginationMeta, onPage)}
+			{paginationMeta && <MyPagination meta={paginationMeta} onSelected={onPage} />}
 		</Container>
 	</main>
 };
