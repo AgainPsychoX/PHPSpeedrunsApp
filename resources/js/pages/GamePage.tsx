@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Container, Col, Row, Tabs, Tab, Table, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { CategoryDetails, getCategoryModerationPageLink, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
 import { getEditGamePageLink, getGameModerationPageLink, getNewCategoryPageLink, isGameIconPlaceholder } from "../models/Game";
@@ -9,6 +10,7 @@ import { getUserPageLink } from "../models/User";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
+import { MyPagination } from "../components/MyPagination";
 
 export const GamePage = () => {
 	const navigate = useNavigate();
@@ -132,11 +134,39 @@ const CategoryTabContent = () => {
 	const { category, isModerator } = useContext(CategoryContext);
 	const [onlyVerified, setOnlyVerified] = useState<boolean>(!isModerator);
 
+	const filteredRuns = useMemo(() => {
+		if (!category) return [];
+		return category.runs.filter(run => onlyVerified ? (run.state === 'verified') : (run.state !== 'invalid'));
+	}, [category]);
+
+	// Fake paging for runs
+	const runsPerPage = 30;
+	const [page, setPage] = useState<number>(1);
+	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
+	useEffect(() => {
+		setPaginationMeta({
+			current_page: 1,
+			last_page: Math.ceil(filteredRuns.length / runsPerPage),
+			from: 1,
+			to: Math.min(filteredRuns.length, 30),
+			total: filteredRuns.length,
+		});
+		setPage(1);
+	}, [filteredRuns]);
+	const runsChunked = useMemo(() => {
+		const pages = [];
+		for (let i = 0; i < filteredRuns.length; i += runsPerPage) {
+			const chunk = filteredRuns.slice(i, i + runsPerPage);
+			pages.push(chunk);
+		}
+		return pages;
+	}, [filteredRuns]);
+
 	if (!category) {
 		return <GenericLoadingSection/>
 	}
 
-	const filteredRuns = category.runs.filter(run => onlyVerified ? (run.state === 'verified') : (run.state !== 'invalid'));
+	const runsOnPage = runsChunked[page - 1];
 
 	return <>
 		{category.rules && <>
@@ -164,7 +194,7 @@ const CategoryTabContent = () => {
 			</>}
 			<Button variant="outline-secondary" as={Link} to={getNewRunPageLink(category)}>Dodaj podejście</Button>
 		</div>
-		{(filteredRuns && filteredRuns.length > 0)
+		{(runsOnPage && runsOnPage.length > 0)
 			? <>
 				<div className="hstack gap-2 flex-wrap mb-2">
 					<h5 className="mb-0">Podejścia</h5>
@@ -172,7 +202,7 @@ const CategoryTabContent = () => {
 						<Form.Check type="checkbox" label="Tylko zweryfikowane" id="only-verified-switch" onChange={event => setOnlyVerified(event.target.checked)} checked={onlyVerified} />
 					</div>
 				</div>
-				<Table hover className="mb-0">
+				<Table hover>
 					<thead>
 						<tr>
 							<th>#</th>
@@ -183,9 +213,10 @@ const CategoryTabContent = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{filteredRuns.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
+						{runsOnPage.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
 					</tbody>
 				</Table>
+				{paginationMeta && <MyPagination meta={paginationMeta} onSelected={setPage} className="justify-content-center mb-0" />}
 			</>
 			: <div className="h6">Brak podejść w bazie danych</div>
 		}

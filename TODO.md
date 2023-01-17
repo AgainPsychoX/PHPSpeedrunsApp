@@ -19,8 +19,7 @@
 + Home page (incl. featured runs/games/players)
 + More dynamic coded `HomePage` carousel.
 + Add small bar between navbar and content on pages, possibly related to the content.
-+ Pagination for runs.
-	+ `CategoryDetails` would always have first page of runs and pagination meta included (pointing at `runs.index`).
++ Pending verifications page.
 + Better profile page, country table and flags.
 + Search user runs for specific game (and category).
 
@@ -53,6 +52,8 @@
 	+ Include it in Webpack, so it's automatic.
 	+ Fix all errors and possible warnings.
 + Context loading could maybe use `AbortController` to avoid double requests when failing to expect logged in, but its edge case.
++ True pagination for category runs.
+	+ `CategoryDetails` would always have first page of runs and pagination meta included (pointing at `runs.index`).
 + Keep sorting mode and pagination in URL (querystring), allow faster coming back to the result
 + Implement entry/summary/details model options on backend (save bandwidth).
 + After adding/editing/deleting which results in navigation, there could be toast/notification/alert with information about success.
