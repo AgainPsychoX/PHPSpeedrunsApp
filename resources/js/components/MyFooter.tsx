@@ -7,7 +7,7 @@ const FooterLink = (props: any) => {
 }
 
 const MyFooter = () => {
-	return <footer className="mt-auto pt-2 shadow">
+	return <footer className="mt-auto py-2 shadow">
 		<Container>
 			<Row>
 				<Col xs={6} md={3}>
