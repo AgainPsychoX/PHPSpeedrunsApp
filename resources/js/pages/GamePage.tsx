@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Container, Col, Row, Tabs, Tab, Table, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { CategoryDetails, getCategoryModerationPageLink, getCategoryPageLink, getEditCategoryPageLink, getNewRunPageLink } from "../models/Category";
 import { getEditGamePageLink, getGameModerationPageLink, getNewCategoryPageLink, isGameIconPlaceholder } from "../models/Game";
@@ -79,7 +78,7 @@ export const GamePage = () => {
 				}
 			</ul>
 		</Container>
-		<Container className="mb-4">
+		<Container className="mb-4 clearfix">
 			<Row>
 				<Col xs={12}>
 					<div className="hstack gap-2 flex-wrap align-items-end mb-2">
@@ -140,17 +139,13 @@ const CategoryTabContent = () => {
 	// Fake paging for runs
 	const runsPerPage = 30;
 	const [page, setPage] = useState<number>(1);
-	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
-	useEffect(() => {
-		setPaginationMeta({
-			current_page: 1,
-			last_page: Math.ceil(filteredRuns.length / runsPerPage),
-			from: 1,
-			to: Math.min(filteredRuns.length, 30),
-			total: filteredRuns.length,
-		});
-		setPage(1);
-	}, [filteredRuns]);
+	const paginationMeta = useMemo(() => ({
+		current_page: page,
+		from: 1 + (page - 1) * runsPerPage,
+		to: Math.min(filteredRuns.length, page * runsPerPage),
+		total: filteredRuns.length,
+		last_page: Math.ceil(filteredRuns.length / runsPerPage),
+	}), [filteredRuns, page]);
 	const runsChunked = useMemo(() => {
 		const pages = [];
 		for (let i = 0; i < filteredRuns.length; i += runsPerPage) {
@@ -211,10 +206,10 @@ const CategoryTabContent = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{runsOnPage.map((run, i) => <RunRow key={run.id} place={i + 1} category={category} run={run} />)}
+						{runsOnPage.map((run, i) => <RunRow key={run.id} place={paginationMeta.from + i} category={category} run={run} />)}
 					</tbody>
 				</Table>
-				{paginationMeta && <MyPagination meta={paginationMeta} onSelected={setPage} className="justify-content-center mb-0" />}
+				<MyPagination meta={paginationMeta} onSelected={setPage} className="justify-content-center mb-0" />
 			</>
 			: <div className="h6">Brak podejść w bazie danych</div>
 		}
