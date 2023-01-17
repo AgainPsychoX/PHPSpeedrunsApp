@@ -25,7 +25,7 @@ const MyFooter = () => {
 					<FooterLink href="#"><i className="bi bi-twitch"></i> Twitch</FooterLink>
 				</Col>
 				<Col xs={12} md={6}>
-					<div className="hstack gap-2 flex-wrap mb-2">
+					<div className="hstack gap-2 flex-wrap mb-2 justify-content-center justify-content-md-start">
 						<img src="/logo.png" alt="logo" className="shadow-sm" style={{display: "inline", height: "4em"}}/>
 						<h5 className="footer-brand mb-0">SpeedrunsApp</h5>
 					</div>
