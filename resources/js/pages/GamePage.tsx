@@ -36,10 +36,10 @@ export const GamePage = () => {
 
 	return <main>
 		<Container>
-			<Row className="mb-3">
+			<Row className="mb-2">
 				{gameHasIcon && <>
 					<Col xs={12} md={5} className="order-md-1 px-0 px-sm-half-gutter mb-2 mb-md-0 mt-0">
-						<img src={game.icon} className="rounded-sm w-100" />
+						<img src={game.icon} className="rounded-sm-3 w-100" />
 					</Col>
 				</>}
 				<Col xs={12} md={gameHasIcon ? 7 : 12}>
@@ -82,16 +82,19 @@ export const GamePage = () => {
 		<Container>
 			<Row>
 				<Col xs={12}>
-					<div className="hstack gap-2 flex-wrap">
-						<h4>Kategorie</h4>
+					<div className="hstack gap-2 flex-wrap align-items-end mb-2">
+						<h4 className="mb-0">Kategorie</h4>
 						<div className="ms-auto">
 							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getNewCategoryPageLink(game)}>Dodaj kategorię</Button>}
 						</div>
 					</div>
+				</Col>
+				<Col xs={12} className="px-0 px-sm-half-gutter">
 					{categoryDetails
 						?
 							<Tabs
-								className="px-2"
+								className="px-1 px-sm-2 mx-0 mx-sm-1 border-0"
+								transition={false}
 								activeKey={activeKey}
 								onSelect={(key: string | null) => {
 									setActiveKey(key || categoryDetails.id.toString());
@@ -104,7 +107,7 @@ export const GamePage = () => {
 									<Tab
 										key={category.id} eventKey={category.id.toString()}
 										title={category.name}
-										tabClassName="h3" className="p-2 shadow-sm"
+										tabClassName="h3" className="p-2 rounded-sm-3 border-top category-tab-custom"
 									>
 										{categoryDetails.id == category.id
 											? <CategoryTabContent/>
