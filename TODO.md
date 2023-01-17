@@ -27,6 +27,7 @@
 
 ### Ideas
 
++ Change "Only verified" tick checkbox fill on category tab to make it less intrusive for eyes.
 + Reposition stuff on `RunPage`: fill width with data above the video, let button go below.
 + Cleaner distinction between moderators origin on `ModeratorsListSection` (different colors for global/game/category?).
 + Use own modal in place of `window.alert` and `window.confirm`.

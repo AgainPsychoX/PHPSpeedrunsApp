@@ -37,51 +37,49 @@ export const GamePage = () => {
 	const gameHasIcon = game.icon && !isGameIconPlaceholder(game);
 
 	return <main>
-		<Container>
-			<Row className="mb-2">
-				{gameHasIcon && <>
-					<Col xs={12} md={5} className="order-md-1 px-0 px-sm-half-gutter mb-2 mb-md-0 mt-0">
+		<Container className="mb-4">
+			{gameHasIcon && <>
+				<div className="escape-container">
+					<Col xs={12} md={5} className="order-md-1 mb-2 mb-md-0 mt-0 px-0 px-sm-half-gutter float-md-end ">
 						<img src={game.icon} className="rounded-sm-3 w-100" />
 					</Col>
-				</>}
-				<Col xs={12} md={gameHasIcon ? 7 : 12}>
-					<div className="hstack gap-2 flex-wrap">
-						<div>
-							<small>Tytuł i rok wydania</small>
-							<h1>{game.name} <small className="text-muted">({game.publishYear})</small></h1>
-						</div>
-						<div className="ms-auto">
-							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getEditGamePageLink(game)}>Edytuj lub usuń grę</Button>}
-						</div>
-					</div>
-					{game.description && <>
-						<h5>Opis</h5>
-						<p>{game.description}</p>
-					</>}
-					{game.rules && <>
-						<h5>Zasady gry</h5>
-						<p>{game.rules}</p>
-					</>}
-					<div className="hstack gap-2 flex-wrap">
-						<h5>Moderatorzy</h5>
-						<div className="ms-auto">
-							{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getGameModerationPageLink(game)}>Zarządzaj moderatorami</Button>}
-						</div>
-					</div>
-					<ul>
-						{game.moderators.length > 0
-							? game.moderators.map(user =>
-								<li className="mb-1" key={user.id}>
-									<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
-								</li>
-							)
-							: <small>(brak bezpośrednich moderatorów)</small>
-						}
-					</ul>
-				</Col>
-			</Row>
+				</div>
+			</>}
+			<div className="hstack gap-2 flex-wrap">
+				<div>
+					<small>Tytuł i rok wydania</small>
+					<h1>{game.name} <small className="text-muted">({game.publishYear})</small></h1>
+				</div>
+				<div className="ms-auto">
+					{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getEditGamePageLink(game)}>Edytuj lub usuń grę</Button>}
+				</div>
+			</div>
+			{game.description && <>
+				<h5>Opis</h5>
+				<p className="text-justify">{game.description}</p>
+			</>}
+			{game.rules && <>
+				<h5>Zasady gry</h5>
+				<p className="text-justify">{game.rules}</p>
+			</>}
+			<div className="hstack gap-2 flex-wrap">
+				<h5>Moderatorzy</h5>
+				<div className="ms-auto">
+					{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getGameModerationPageLink(game)}>Zarządzaj moderatorami</Button>}
+				</div>
+			</div>
+			<ul>
+				{game.moderators.length > 0
+					? game.moderators.map(user =>
+						<li className="mb-1" key={user.id}>
+							<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
+						</li>
+					)
+					: <small>(brak bezpośrednich moderatorów)</small>
+				}
+			</ul>
 		</Container>
-		<Container>
+		<Container className="mb-4">
 			<Row>
 				<Col xs={12}>
 					<div className="hstack gap-2 flex-wrap align-items-end mb-2">
