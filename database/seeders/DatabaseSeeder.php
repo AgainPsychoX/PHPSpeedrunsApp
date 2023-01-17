@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
 			CategorySeeder::class,
 			RunSeeder::class,
 			DefaultAdminSeeder::class,
+			PortalSeeder::class,
 		]);
 	}
 }
