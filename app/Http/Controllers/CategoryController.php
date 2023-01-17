@@ -49,7 +49,7 @@ class CategoryController extends Controller
 		$category = $category->loadMissing([
 			'runs' => function ($query) use($scoreRule, $isModerator, $currentUserId) {
 				// Unless moderator or owner, list only verified runs
-				if (!$isModerator) {
+				if (env('SHOW_UNVERIFIED_RUNS_TO_ALL', false) || !$isModerator) {
 					$query = $query->where(fn ($query) =>
 						$query->where('state', 'verified')->orWhere('user_id', $currentUserId)
 					);
