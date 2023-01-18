@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, Container, Table } from "react-bootstrap";
+import { Alert, Col, Container, OverlayTrigger, Row, Table, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
@@ -19,6 +19,41 @@ const SocialLink = ({ name, url, icon }: SocialLinkProps) => {
 	</a>
 }
 
+const DiscordLink = (props: { id: string }) => {
+	const [show, setShow] = useState(false);
+	useEffect(() => {
+		if (!show) return;
+		const a = setTimeout(() => {
+			setShow(false);
+		}, 1000);
+		return () => {
+			clearTimeout(a);
+			setShow(false);
+		}
+	}, [show]);
+
+	return <>
+		<OverlayTrigger
+			trigger={'focus'}
+			placement={'right'}
+			overlay={<Tooltip id="tooltip-copied">Skopiowano!</Tooltip>}
+			show={show}
+		>
+			<div
+				className="h2 link-muted d-inline-block pe-2"
+				style={{marginTop: '-0.25rem', paddingTop: '0.25rem'}} // Dirty fix for weird misalignment
+				title="Kliknij, by skopiować"
+				onClick={() => {
+					setShow(true);
+					window.navigator.clipboard.writeText(props.id);
+				}}
+			>
+				<i className="bi bi-discord"></i> {props.id}
+			</div>
+		</OverlayTrigger>
+	</>
+}
+
 const UserPage = () => {
 	const user = useContext(UserContext);
 
@@ -28,38 +63,50 @@ const UserPage = () => {
 
 	return <main>
 		<Container>
-			<small className="text-muted">Nazwa</small>
-			<div className="h2">{user.name}</div>
+			<Row>
+				<Col xs={12} md={6}>
+					<small className="text-muted">Nazwa</small>
+					<div className="h2">{user.name}</div>
 
-			{user.email && <>
-				<a href={`mailto:${user.email}`} className="link-muted">
-					<small className="text-muted">E-mail</small>
-					<div className="h2">{user.email}</div>
-				</a>
-			</>}
+					<small className="text-muted">Dołączył</small>
+					<div className="h2">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</div>
 
-			<small className="text-muted">Dołączył</small>
-			<div className="h2">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</div>
+					<small className="text-muted">Liczba podejść</small>
+					<div className="h2">{user.runsCount}</div>
+				</Col>
+				<Col xs={12} md={6}>
+					{user.email && <>
+						<a href={`mailto:${user.email}`} className="link-muted">
+							<small className="text-muted">E-mail</small>
+							<div className="h2">{user.email}</div>
+						</a>
+					</>}
 
-			<small className="text-muted">Liczba podejść</small>
-			<div className="h2">{user.runsCount}</div>
+					{(user.youtubeUrl || user.twitchUrl || user.twitterUrl) && <>
+						<small className="text-muted">Linki społecznościowe</small>
+						<div className="mb-2">
+							{user.youtubeUrl && <SocialLink name="YouTube" icon="youtube" url={user.youtubeUrl} />}
+							{user.twitchUrl  && <SocialLink name="Twitch"  icon="twitch"  url={user.twitchUrl}  />}
+							{user.twitterUrl && <SocialLink name="Twitter" icon="twitter" url={user.twitterUrl} />}
+						</div>
+					</>}
 
-			{(user.youtubeUrl || user.twitchUrl || user.twitterUrl) && <>
-				<small className="text-muted">Linki społecznościowe</small>
-				{user.youtubeUrl && <SocialLink name="YouTube" icon="youtube" url={user.youtubeUrl} />}
-				{user.twitchUrl  && <SocialLink name="Twitch"  icon="twitch"  url={user.twitchUrl}  />}
-				{user.twitterUrl && <SocialLink name="Twitter" icon="twitter" url={user.twitterUrl} />}
-			</>}
-
-			{user.discord && <>
-				<small className="text-muted">Tag Discord</small>
-				<div className="h2">{user.discord}</div>
-			</>}
-
-			{user.profileDescription.length > 0 && <>
-				<small className="text-muted">Opis profilu</small>
-				<p>{user.profileDescription}</p>
-			</>}
+					{user.discord && <>
+						<small className="text-muted">Tag Discord</small>
+						<div className="mb-2">
+							<DiscordLink id={user.discord} />
+						</div>
+					</>}
+				</Col>
+			</Row>
+			<Row>
+				<Col>
+					{user.profileDescription.length > 0 && <>
+						<small className="text-muted">Opis profilu</small>
+						<p>{user.profileDescription}</p>
+					</>}
+				</Col>
+			</Row>
 		</Container>
 		<UserRunsSection/>
 	</main>

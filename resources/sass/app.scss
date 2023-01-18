@@ -52,10 +52,19 @@
 	text-decoration: none;
 	color: inherit;
 	transition: color 0.15s ease-in-out;
+	cursor: pointer;
 }
 .link-muted:focus,
 .link-muted:hover {
 	color: rgba(0, 0, 0, 0.6);
+}
+
+
+
+// Solves miss-alignment issue with Bootstrap tooltips (popper.js)
+// See https://github.com/floating-ui/floating-ui/issues/457#issuecomment-367692177
+.tooltip {
+	top: 0;
 }
 
 
