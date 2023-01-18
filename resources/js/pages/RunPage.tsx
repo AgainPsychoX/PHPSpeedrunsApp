@@ -4,9 +4,11 @@ import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { fetchRunVerifications, voteVerifyRun } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
+import { getCategoryPageLink } from "../models/Category";
+import { getGamePageLink } from "../models/Game";
 import { getEditRunPageLink, RunStatus } from "../models/Run";
 import { RunVerification, RunVerificationVote } from "../models/RunVerification";
-import { getUserPageLink } from "../models/User";
+import { getUserPageLink, getUserPageLinkFromRun } from "../models/User";
 import AppContext from "../utils/contexts/AppContext";
 import CategoryContext from "../utils/contexts/CategoryContext";
 import GameContext from "../utils/contexts/GameContext";
@@ -95,7 +97,7 @@ const RunPage = () => {
 	return <main>
 		<Container>
 			<div className="hstack gap-2 flex-wrap">
-				<Link to={`/games/${game.id}`} className="text-reset text-decoration-none">
+				<Link to={getGamePageLink(game)} className="text-reset text-decoration-none">
 					<small className="text-muted">Gra</small>
 					<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
 				</Link>
@@ -105,7 +107,7 @@ const RunPage = () => {
 				</>}
 			</div>
 
-			<Link to={`/games/${game.id}/categories/${category.id}`} className="text-reset text-decoration-none">
+			<Link to={getCategoryPageLink(category)} className="text-reset text-decoration-none">
 				<small className="text-muted">Kategoria</small>
 				<div className="h2">{category.name}</div>
 			</Link>
@@ -121,8 +123,10 @@ const RunPage = () => {
 			<small className="text-muted">Czas</small>
 			<div className="h2">{formatDurationHTML(run.duration)}</div>
 
-			<small className="text-muted">Gracz</small>
-			<div className="h2">{run.userName}</div>
+			<Link to={getUserPageLinkFromRun(run)} className="text-reset text-decoration-none">
+				<small className="text-muted">Gracz</small>
+				<div className="h2">{run.userName}</div>
+			</Link>
 
 			<small className="text-muted">Nagranie</small>
 		</Container>

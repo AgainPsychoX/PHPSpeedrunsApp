@@ -45,6 +45,7 @@ export interface UserDetails extends UserSummary {
 
 export const currentUserPageLink = '/users/current';
 export const getUserPageLink = (e: UserEntry) => `/users/${e.id}`;
+export const getUserPageLinkFromRun = (e: RunId) => `/users/${e.userId}`;
 
 export type ModeratorScope = 'global' | 'game' | 'category';
 export interface ModeratorEntry extends UserEntry {
