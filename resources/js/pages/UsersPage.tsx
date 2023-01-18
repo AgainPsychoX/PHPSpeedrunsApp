@@ -5,7 +5,7 @@ import UsersTable from "../components/UsersTable";
 const UsersPage = () => {
 	return <main>
 		<Container>
-			<UsersTable heading="Gracze" initialSorting="latestRun,asc" allowNavigateToLatestRun />
+			<UsersTable heading="Gracze" initialSorting="latestRun,desc" allowNavigateToLatestRun />
 		</Container>
 	</main>
 };

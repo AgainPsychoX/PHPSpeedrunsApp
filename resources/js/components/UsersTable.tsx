@@ -15,8 +15,8 @@ type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 const sortingToString: PartialRecord<Sorting, string> = {
 	'alphanumeric': 'Alfabetyczne',
-	'latestRun,asc': 'Ostatnie podejścia',
-	'latestRun,desc': 'Najstarsze podejścia',
+	'latestRun,asc': 'Najstarsze podejścia',
+	'latestRun,desc': 'Ostatnie podejścia',
 	'joined,asc': 'Starszy gracze',
 	'joined,desc': 'Nowi gracze',
 	'runsCount,desc': 'Najwięcej podejść',
