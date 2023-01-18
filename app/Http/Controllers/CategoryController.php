@@ -58,7 +58,7 @@ class CategoryController extends Controller
 				if ($scoreRule != 'none') {
 					$query = $query->orderBy('score', $scoreRule == 'low' ? 'ASC' : 'DESC');
 				}
-				$query = $query->orderBy('duration', 'DESC');
+				$query = $query->orderBy('duration', 'ASC');
 			}
 		]);
 		$category->loadModerators = 'direct';
