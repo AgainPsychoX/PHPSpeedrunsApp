@@ -38,9 +38,9 @@ export const GamePage = () => {
 	return <main>
 		<Container className="mb-4">
 			{gameHasIcon && <>
-				<div className="escape-container">
-					<Col xs={12} md={5} className="order-md-1 mb-2 mb-md-0 mt-0 px-0 px-sm-half-gutter float-md-end ">
-						<img src={game.icon} className="rounded-sm-3 w-100" />
+				<div className="escape-container float-md-end">
+					<Col xs={12} md={5} className="mb-2 mb-md-0 mt-0 px-0 px-sm-half-gutter">
+						<img src={game.icon} className="rounded-sm-3 w-100 ps-md-3 pb-md-3" />
 					</Col>
 				</div>
 			</>}
@@ -55,11 +55,11 @@ export const GamePage = () => {
 			</div>
 			{game.description && <>
 				<h5>Opis</h5>
-				<p className="text-justify">{game.description}</p>
+				<p>{game.description}</p>
 			</>}
 			{game.rules && <>
 				<h5>Zasady gry</h5>
-				<p className="text-justify">{game.rules}</p>
+				<p>{game.rules}</p>
 			</>}
 			<div className="hstack gap-2 flex-wrap">
 				<h5>Moderatorzy</h5>
