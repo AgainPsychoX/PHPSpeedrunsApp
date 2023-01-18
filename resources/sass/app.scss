@@ -48,6 +48,16 @@
 	}
 }
 
+.link-muted {
+	text-decoration: none;
+	color: inherit;
+	transition: color 0.15s ease-in-out;
+}
+.link-muted:focus,
+.link-muted:hover {
+	color: rgba(0, 0, 0, 0.6);
+}
+
 
 
 .accordion-natural .accordion-button:not(.collapse) {
@@ -58,7 +68,7 @@
 .nav-tabs > .nav-item > .nav-link {
 	color: $text-muted;
 }
-.nav-tabs > .nav-item > .nav-link.active{
+.nav-tabs > .nav-item > .nav-link.active {
 	color: $dark;
 }
 

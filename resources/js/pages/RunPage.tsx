@@ -97,7 +97,7 @@ const RunPage = () => {
 	return <main>
 		<Container>
 			<div className="hstack gap-2 flex-wrap">
-				<Link to={getGamePageLink(game)} className="text-reset text-decoration-none">
+				<Link to={getGamePageLink(game)} className="link-muted">
 					<small className="text-muted">Gra</small>
 					<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
 				</Link>
@@ -107,7 +107,7 @@ const RunPage = () => {
 				</>}
 			</div>
 
-			<Link to={getCategoryPageLink(category)} className="text-reset text-decoration-none">
+			<Link to={getCategoryPageLink(category)} className="link-muted">
 				<small className="text-muted">Kategoria</small>
 				<div className="h2">{category.name}</div>
 			</Link>
@@ -123,7 +123,7 @@ const RunPage = () => {
 			<small className="text-muted">Czas</small>
 			<div className="h2">{formatDurationHTML(run.duration)}</div>
 
-			<Link to={getUserPageLinkFromRun(run)} className="text-reset text-decoration-none">
+			<Link to={getUserPageLinkFromRun(run)} className="link-muted">
 				<small className="text-muted">Gracz</small>
 				<div className="h2">{run.userName}</div>
 			</Link>

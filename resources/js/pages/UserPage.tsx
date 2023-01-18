@@ -8,6 +8,17 @@ import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 import { MyPagination } from "../components/MyPagination";
 
+interface SocialLinkProps {
+	name: string;
+	url: string;
+	icon?: string;
+}
+const SocialLink = ({ name, url, icon }: SocialLinkProps) => {
+	return <a href={url} target="_blank" className="link-muted">
+		<div className="h2">{icon && <i className={`bi bi-${icon}`}></i>} {name}</div>
+	</a>
+}
+
 const UserPage = () => {
 	const user = useContext(UserContext);
 
@@ -21,7 +32,7 @@ const UserPage = () => {
 			<div className="h2">{user.name}</div>
 
 			{user.email && <>
-				<a href={`mailto:${user.email}`} className="text-reset text-decoration-none">
+				<a href={`mailto:${user.email}`} className="link-muted">
 					<small className="text-muted">E-mail</small>
 					<div className="h2">{user.email}</div>
 				</a>
@@ -35,9 +46,9 @@ const UserPage = () => {
 
 			{(user.youtubeUrl || user.twitchUrl || user.twitterUrl) && <>
 				<small className="text-muted">Linki społecznościowe</small>
-				{user.youtubeUrl && <a href={user.youtubeUrl}><div className="h2">YouTube</div></a>}
-				{user.twitchUrl && <a href={user.twitchUrl}><div className="h2">Twitch</div></a>}
-				{user.twitterUrl && <a href={user.twitterUrl}><div className="h2">Twitter</div></a>}
+				{user.youtubeUrl && <SocialLink name="YouTube" icon="youtube" url={user.youtubeUrl} />}
+				{user.twitchUrl  && <SocialLink name="Twitch"  icon="twitch"  url={user.twitchUrl}  />}
+				{user.twitterUrl && <SocialLink name="Twitter" icon="twitter" url={user.twitterUrl} />}
 			</>}
 
 			{user.discord && <>

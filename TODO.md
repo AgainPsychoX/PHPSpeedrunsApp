@@ -27,10 +27,10 @@
 
 ### Ideas
 
-+ Change "Only verified" tick checkbox fill on category tab to make it less intrusive for eyes.
 + Reposition stuff on `RunPage`: fill width with data above the video, let button go below.
++ Change "Only verified" tick checkbox fill on category tab to make it less intrusive for eyes.
++ Allow for some formatting (Markdown?) in descriptions & rules.
 + Cleaner distinction between moderators origin on `ModeratorsListSection` (different colors for global/game/category?).
-+ Use own modal in place of `window.alert` and `window.confirm`.
 + Make horizontal scrollable panes to have scrolls both on top and bottom ([simulate second one](https://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table)).
 + Fortify is obstacle...
 	+ Rename `name` param of `POST /login` to `login`. 
@@ -38,7 +38,6 @@
 + Smooth placeholders when loading, try prevent content jumping too.
 + Add animation and some buttons for `SoftRedirect`.
 + Prevent navbar mobile-like mode when on half screen.
-+ Add small icons next to Youtube/Twitch/Twitter/Discord links/inputs.
 + Make outside website links have special icon next to them (maybe on hover only?).
 + Disable green border (valid) on empty optional text inputs (see register page).
 + Bootstrap text-areas with floating labels are buggy sometimes.
