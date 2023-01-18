@@ -20,7 +20,7 @@ class RunVerification extends Model
 		'run_id',
 		'user_id',
 		'vote',
-		'notes',
+		'note',
 		'timestamp',
 	];
 

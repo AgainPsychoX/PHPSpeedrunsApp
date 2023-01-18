@@ -65,7 +65,7 @@ const RunPage = () => {
 	const doVerify = useCallback((vote: RunVerificationVote) => {
 		if (!run || !currentUser) return;
 		const note = window.prompt(`Czy na pewno chcesz ustawić swój głos jako ${voteToString[vote]}?\n\nMożesz dodać także notatkę:`);
-		if (note === null) return;
+		if (note === null) return; // cancelled
 		(async () => {
 			try {
 				const verification = await voteVerifyRun(run, vote, note);
