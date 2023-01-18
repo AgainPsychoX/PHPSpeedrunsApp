@@ -55,11 +55,11 @@ export const GamePage = () => {
 			</div>
 			{game.description && <>
 				<h5>Opis</h5>
-				<p>{game.description}</p>
+				<p className="text-justify">{game.description}</p>
 			</>}
 			{game.rules && <>
 				<h5>Zasady gry</h5>
-				<p>{game.rules}</p>
+				<p className="text-justify">{game.rules}</p>
 			</>}
 			<div className="hstack gap-2 flex-wrap">
 				<h5>Moderatorzy</h5>
@@ -164,7 +164,7 @@ const CategoryTabContent = () => {
 	return <>
 		{category.rules && <>
 			<h5>Zasady kategorii</h5>
-			<p>{category.rules}</p>
+			<p className="text-justify">{category.rules}</p>
 		</>}
 		<div className="hstack gap-2 flex-wrap">
 			<h5>Moderatorzy</h5>

@@ -32,6 +32,12 @@
 	cursor: pointer;
 }
 
+// Bootstrap refuses to deliver it, as it's considered bad practice
+// See https://getbootstrap.com/docs/5.1/utilities/text/#text-alignment
+.text-justify {
+	text-align: justify;
+}
+
 @include media-breakpoint-up(sm) {
 	.rounded-sm-3 {
 		border-radius: $border-radius-lg !important;
