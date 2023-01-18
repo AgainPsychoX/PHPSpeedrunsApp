@@ -23,7 +23,6 @@
 + Better profile page, country table and flags.
 + Search user runs for specific game (and category).
 + Use own modal in place of `window.alert` and `window.confirm`.
-+ Fix "manage moderators" buttons margins
 
 
 

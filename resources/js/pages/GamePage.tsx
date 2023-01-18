@@ -63,8 +63,8 @@ export const GamePage = () => {
 				<h5>Zasady gry</h5>
 				<p className="text-justify">{game.rules}</p>
 			</>}
-			<div className="hstack gap-2 flex-wrap">
-				<h5>Moderatorzy</h5>
+			<div className="hstack gap-2 flex-wrap align-items-end mb-2">
+				<h5 className="mb-0">Moderatorzy</h5>
 				<div className="ms-auto">
 					{isGameModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getGameModerationPageLink(game)}>Zarządzaj moderatorami</Button>}
 				</div>
@@ -168,8 +168,8 @@ const CategoryTabContent = () => {
 			<h5>Zasady kategorii</h5>
 			<p className="text-justify">{category.rules}</p>
 		</>}
-		<div className="hstack gap-2 flex-wrap">
-			<h5>Moderatorzy</h5>
+		<div className="hstack gap-2 flex-wrap align-items-end mb-2">
+			<h5 className="mb-0">Moderatorzy</h5>
 			<div className="ms-auto"/>
 			{isModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getCategoryModerationPageLink(category)}>Zarządzaj moderatorami</Button>}
 		</div>
