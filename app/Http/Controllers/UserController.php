@@ -62,6 +62,8 @@ class UserController extends Controller
 				)
 			;
 			$query->orderBy('latest_run_at', $direction ?: 'desc');
+
+			$queryParams['minimum_runs'] ??= 1;
 		}
 		// Other, less composite ordering
 		else {
