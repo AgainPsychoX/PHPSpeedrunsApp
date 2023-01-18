@@ -40,7 +40,9 @@ export const GamePage = () => {
 			{gameHasIcon && <>
 				<div className="escape-container float-md-end">
 					<Col xs={12} md={5} className="mb-2 mb-md-0 mt-0 px-0 px-sm-half-gutter">
-						<img src={game.icon} className="rounded-sm-3 w-100 ps-md-3 pb-md-3" />
+						<div className="ps-md-3 pb-md-3">
+							<img src={game.icon} className="rounded-sm-3 w-100" />
+						</div>
 					</Col>
 				</div>
 			</>}
