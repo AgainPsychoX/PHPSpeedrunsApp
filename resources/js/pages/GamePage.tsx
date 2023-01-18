@@ -218,12 +218,21 @@ const CategoryTabContent = () => {
 	</>;
 };
 
+/// Adapted from https://stackoverflow.com/a/13627586/4880243
+function ordinalSuffixed(i: number) {
+	const j = i % 10, k = i % 100;
+	if (j == 1 && k != 11) return i + "st";
+	if (j == 2 && k != 12) return i + "nd";
+	if (j == 3 && k != 13) return i + "rd";
+	return i + "th";
+}
+
 const RunRow = ({place, category, run}: { place: number, category: CategoryDetails, run: RunSummary }) => {
 	const navigate = useNavigate();
 	const onClick = () => navigate(getRunPageLink(run));
 	return <tr
 		key={run.id}
-		className="cursor-pointer"
+		className={`cursor-pointer run-row place-${ordinalSuffixed(place)}`}
 		onClick={onClick}
 		tabIndex={0} onKeyDown={event => event.key == 'Enter' && onClick()}
 	>
