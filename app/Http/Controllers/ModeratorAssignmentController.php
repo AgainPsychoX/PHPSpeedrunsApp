@@ -17,7 +17,7 @@ use App\Models\ModeratorAssignment;
 class ModeratorAssignmentController extends Controller
 {
 	const moderatorSummaryFields = [
-		'user_id', 'users.name', 'email', 'created_at',
+		'users.id as id', 'users.name', 'email', 'created_at',
 		'target_type', 'target_id',
 		'assigned_by', 'assigned_by_user.name as assigned_by_name', 'assigned_at'
 	];
