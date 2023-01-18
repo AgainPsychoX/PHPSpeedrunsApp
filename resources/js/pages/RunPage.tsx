@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Accordion, Button, Container } from "react-bootstrap";
+import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { fetchRunVerifications, voteVerifyRun } from "../API";
@@ -96,39 +96,39 @@ const RunPage = () => {
 
 	return <main>
 		<Container>
-			<div className="hstack gap-2 flex-wrap">
-				<Link to={getGamePageLink(game)} className="link-muted">
-					<small className="text-muted">Gra</small>
-					<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
-				</Link>
-				{canEdit && <>
-					<div className="ms-auto" />
-					<Button variant="outline-secondary" as={Link} to={getEditRunPageLink(run)}>Edytuj lub usuń podejście</Button>
-				</>}
-			</div>
+			<Row>
+				<Col xs={12} md={6}>
+					<Link to={getGamePageLink(game)} className="link-muted">
+						<small className="text-muted">Gra</small>
+						<div className="h2">{game.name} <small className="text-muted">({game.publishYear})</small></div>
+					</Link>
 
-			<Link to={getCategoryPageLink(category)} className="link-muted">
-				<small className="text-muted">Kategoria</small>
-				<div className="h2">{category.name}</div>
-			</Link>
+					<Link to={getCategoryPageLink(category)} className="link-muted">
+						<small className="text-muted">Kategoria</small>
+						<div className="h2">{category.name}</div>
+					</Link>
 
-			<small className="text-muted">Stan Weryfikacji</small>
-			<div className="h2">{verificationStatusToString[verificationStatus]}</div>
+					<small className="text-muted">Stan weryfikacji</small>
+					<div className="h2">{verificationStatusToString[verificationStatus]}</div>
+				</Col>
+				<Col xs={12} md={6}>
+					<Link to={getUserPageLinkFromRun(run)} className="link-muted">
+						<small className="text-muted">Gracz</small>
+						<div className="h2">{run.userName}</div>
+					</Link>
 
-			{category.scoreRule !== 'none' && <>
-				<small className="text-muted">Punkty</small>
-				<div className="h2">{run.score}</div>
-			</>}
+					{category.scoreRule !== 'none' && <>
+						<small className="text-muted">Punkty</small>
+						<div className="h2">{run.score}</div>
+					</>}
 
-			<small className="text-muted">Czas</small>
-			<div className="h2">{formatDurationHTML(run.duration)}</div>
-
-			<Link to={getUserPageLinkFromRun(run)} className="link-muted">
-				<small className="text-muted">Gracz</small>
-				<div className="h2">{run.userName}</div>
-			</Link>
-
-			<small className="text-muted">Nagranie</small>
+					<small className="text-muted">Czas</small>
+					<div className="h2">{formatDurationHTML(run.duration)}</div>
+				</Col>
+			</Row>
+			<Row>
+				<small className="text-muted">Nagranie</small>
+			</Row>
 		</Container>
 		<div className="ratio ratio-16x9 mb-2 container-xl">
 			<ReactPlayer url={run.videoUrl} width="100%" height="100%" />
@@ -136,12 +136,16 @@ const RunPage = () => {
 		<Container>
 			{run.notes.length > 0 && <>
 				<small className="text-muted">Notatka</small>
-				<p className="mb-3">{run.notes}</p>
+				<p className="mb-4">{run.notes}</p>
 			</>}
 		</Container>
 		<Container>
-			<div className="pb-4"></div>
-			<Accordion className="accordion-natural mb-3">
+			<div className="hstack gap-2 justify-content-center mb-4">
+				{canEdit && <Button variant="outline-secondary" as={Link} to={getEditRunPageLink(run)}>Edytuj lub usuń podejście</Button>}
+			</div>
+		</Container>
+		<Container>
+			<Accordion className="accordion-natural mb-4">
 				<Accordion.Item eventKey="0">
 					<Accordion.Header onClick={() => {
 						if (!verificationsLoaded) loadVerifications();
