@@ -15,7 +15,8 @@ class UserSummaryResource extends UserEntryResource
 	public function toArray($request)
 	{
 		return array_merge(parent::toArray($request), [
-			'isAdmin' => $this->when(boolval($this->showIsAdmin), fn () => $this->isGlobalModerator()),
+			'isAdmin' => $this->when(boolval($this->showRole), fn () => $this->isGlobalModerator()),
+			'isAnyModerator' => $this->when(boolval($this->showRole), fn () => $this->isAnyModerator()),
 			'isGhost' => $this->isGhost(),
 			'countryId' => $this->country_id,
 			'joinedAt' => $this->created_at,

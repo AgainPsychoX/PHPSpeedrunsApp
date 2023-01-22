@@ -33,7 +33,10 @@ const UsersTable = ({
 	userTooltip = 'Kliknij, by przejść do profilu użytkownika',
 	onUserClick,
 	allowNavigateToLatestRun = false,
-	ghosts = 'marked',
+	ghosts = 'silent',
+	tryShowEmails = true,
+	showJoinDate = true,
+	showRunsCount = true,
 }: {
 	heading?: string;
 	sortingOptions?: Sorting[],
@@ -45,12 +48,15 @@ const UsersTable = ({
 	onUserClick?: (user: UserSummary) => void;
 	allowNavigateToLatestRun?: boolean;
 	ghosts?: 'exclude' | 'only' | 'silent' | 'marked';
+	tryShowEmails?: boolean;
+	showJoinDate?: boolean;
+	showRunsCount?: boolean;
 }) => {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState<UserSummary[]>();
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 
-	const showEmails = users && users[0] && !!users[0].email;
+	const showEmails = tryShowEmails && users && users[0] && !!users[0].email;
 
 	const [searchText, setSearchText] = useState<string>(initialSearch);
 	const [searchTextDebounced, { flush: searchNow }] = useDebounce(searchText, 1000);
@@ -88,26 +94,30 @@ const UsersTable = ({
 				event.preventDefault();
 				if (allowSearch) searchNow();
 			}}>
-				<InputGroup className="m-auto">
-					<Form.Control
-						type="text"
-						aria-label="Szukaj" aria-describedby="searchUsersButton"
-						placeholder="Szukaj"
-						value={searchText} onChange={(event) => setSearchText(event.target.value)}
-					/>
-					<Button variant="outline-secondary" id="searchUsersButton" onClick={() => searchNow()}>
-						Szukaj
-					</Button>
-				</InputGroup>
-				<InputGroup className="m-auto">
-					<Form.Select
-						aria-label="Sortowanie"
-						value={sorting}
-						onChange={onSortingChange}
-					>
-						{sortingOptions.map(key => <option key={key} value={key}>{sortingToString[key]}</option>)}
-					</Form.Select>
-				</InputGroup>
+				{allowSearch && <>
+					<InputGroup className="m-auto">
+						<Form.Control
+							type="text"
+							aria-label="Szukaj" aria-describedby="searchUsersButton"
+							placeholder="Szukaj"
+							value={searchText} onChange={(event) => setSearchText(event.target.value)}
+						/>
+						<Button variant="outline-secondary" id="searchUsersButton" onClick={() => searchNow()}>
+							Szukaj
+						</Button>
+					</InputGroup>
+				</>}
+				{sortingOptions.length > 1 && <>
+					<InputGroup className="m-auto">
+						<Form.Select
+							aria-label="Sortowanie"
+							value={sorting}
+							onChange={onSortingChange}
+						>
+							{sortingOptions.map(key => <option key={key} value={key}>{sortingToString[key]}</option>)}
+						</Form.Select>
+					</InputGroup>
+				</>}
 			</Form>
 		</div>
 		<div className="overflow-auto">
@@ -119,8 +129,8 @@ const UsersTable = ({
 							{ghosts == 'marked' && <td></td>}
 							<th>Nazwa użytkownika</th>
 							{showEmails && <th>E-mail</th>}
-							<th>Data dołączenia</th>
-							<th>Liczba podejść</th>
+							{showJoinDate && <th>Data dołączenia</th>}
+							{showRunsCount && <th>Liczba podejść</th>}
 							{withLatestRun && <th>Ostatnie podejście</th>}
 						</tr>
 					</thead>
@@ -138,8 +148,8 @@ const UsersTable = ({
 								</td>}
 								<td>{user.name}</td>
 								{showEmails && <td>{user.email}</td>}
-								<td className="text-nowrap text-center">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>
-								<td className="text-center">{user.runsCount === undefined ? '?' : user.runsCount}</td>
+								{showJoinDate && <td className="text-nowrap text-center">{user.joinedAt.toLocaleString({ year: 'numeric', month: 'long', day: 'numeric' })}</td>}
+								{showRunsCount && <td className="text-center">{user.runsCount === undefined ? '?' : user.runsCount}</td>}
 								{withLatestRun && (
 									user.latestRun === undefined
 										? <td>-</td>

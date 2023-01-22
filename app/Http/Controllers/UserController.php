@@ -108,7 +108,7 @@ class UserController extends Controller
 	 */
 	public function show(User $user)
 	{
-		$user->showIsAdmin = true;
+		$user->showRole = true;
 		return new UserDetailsResource($user->loadCount('runs'));
 	}
 

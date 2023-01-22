@@ -24,7 +24,7 @@ use App\Http\Resources\UserDetailsResource;
 Route::middleware('auth:sanctum')->group(function () {
 	Route::get('/user', function (Request $request) {
 		$user = $request->user();
-		$user->showIsAdmin = true;
+		$user->showRole = true;
 		return new UserDetailsResource($user->loadCount('runs'));
 	});
 });
@@ -59,6 +59,6 @@ Route::apiResource('games.categories', CategoryController::class)->shallow();
 Route::apiResource('games.categories.runs', RunController::class)->shallow();
 
 // Simple runs verifications listing
-Route::get ('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);
+Route::get('/runs/{run}/verifiers', [RunVerificationController::class, 'index']);
 
 

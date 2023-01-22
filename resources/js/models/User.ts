@@ -20,6 +20,7 @@ export interface UserSummary extends UserEntry {
 	countryId?: string;
 
 	isAdmin?: boolean;
+	isAnyModerator?: boolean;
 	isGhost: boolean;
 
 	// Optional statistics (sorting or details)
