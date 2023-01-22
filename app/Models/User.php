@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -90,5 +91,11 @@ class User extends Authenticatable
 		if (is_null($state)) return $query; // anything
 		if ($state) return $query->whereNull('users.password'); // only ghosts
 		/*if false*/return $query->whereNotNull('users.password'); // only non-ghosts
+	}
+
+
+
+	public function sendPasswordResetNotification($token) {
+		$this->notify(new ResetPasswordNotification($token));
 	}
 }

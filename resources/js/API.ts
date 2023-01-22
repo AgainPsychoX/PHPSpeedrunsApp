@@ -120,6 +120,14 @@ export const remindPassword = async (formData: FormData) => {
 	}).then(throwIfNotOk);
 }
 
+export const resetPassword = async (formData: FormData) => {
+	return fetch(`${settings.authRoot}/reset-password`, {
+		method: 'POST',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -376,6 +384,7 @@ export default {
 	fetchCurrentUser,
 	registerUser,
 	remindPassword,
+	resetPassword,
 
 	fetchUsers,
 	fetchUserDetails,

@@ -28,6 +28,7 @@ import GameModerationPage from "./pages/GameModerationPage";
 import CategoryModerationPage from "./pages/CategoryModerationPage";
 import GlobalModerationPage from "./pages/GlobalModerationPage";
 import RemindPasswordPage from "./pages/RemindPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -92,6 +93,7 @@ const App = () => {
 						<Route path="logout" element={<LogoutPage onLogout={() => setUser(undefined)}/>} />
 						<Route path="register" element={<RegisterPage onLogin={(user) => setUser(user)}/>} />
 						<Route path="remind-password" element={<RemindPasswordPage/>} />
+						<Route path="reset-password" element={<ResetPasswordPage/>} />
 					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>

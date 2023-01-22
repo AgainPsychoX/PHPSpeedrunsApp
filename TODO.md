@@ -7,31 +7,31 @@
 
 ### Main
 
-+ Fix bugs ;)
-+ Make sure validation works everywhere.
++ Think how to resolve too wide tables!
 + Profile editing.
-+ Change/forget password.
++ Change password.
 + Proper Add/edit/delete users (by admin; incl. ghosts)
 + Ghosts will have predefined email: `${username}@gho.st`.
 + Update contexts after modified.
-+ Make `RunPage` links to game/category/user highlight on hover.
 + Merging ghosts (from ghost profile).
-+ Home page (incl. featured runs/games/players)
-+ More dynamic coded `HomePage` carousel.
-+ Add small bar between navbar and content on pages, possibly related to the content.
 + Pending verifications page.
-+ Better profile page, country table and flags.
++ Add small bar between navbar and content on pages, possibly related to the content.
 + Search user runs for specific game (and category).
-+ Use own modal in place of `window.alert` and `window.confirm`.
++ Replace `window.confirm`s by nice modals in `ModeratorsListSection`
++ Add nice modals for errors when adding moderators (like when they already are moderator)
 
 
 
 ### Ideas
 
-+ Reposition stuff on `RunPage`: fill width with data above the video, let button go below.
-+ Change "Only verified" tick checkbox fill on category tab to make it less intrusive for eyes.
 + Allow for some formatting (Markdown?) in descriptions & rules.
++ Add list of favorite games on user page, maybe even with images (at least top 3)
++ Country table and flags.
++ Change "Only verified" tick checkbox fill on category tab to make it less intrusive for eyes.
++ Checkbox in delete modal, to delete non-empty category/game.
++ More dynamic coded `HomePage` carousel.
 + Cleaner distinction between moderators origin on `ModeratorsListSection` (different colors for global/game/category?).
++ Allow moderators to attach extra CSS per game, make stuff more accessible with CSS and prepare example theme.
 + Make horizontal scrollable panes to have scrolls both on top and bottom ([simulate second one](https://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table)).
 + Fortify is obstacle...
 	+ Rename `name` param of `POST /login` to `login`. 
