@@ -1,12 +1,14 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, Col, Container, OverlayTrigger, Row, Table, Tooltip } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Alert, Button, Col, Container, OverlayTrigger, Row, Table, Tooltip } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchUserRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink, RunSummary } from "../models/Run";
 import UserContext from "../utils/contexts/UserContext";
 import { formatDurationHTML } from "../utils/DurationUtils";
 import { MyPagination } from "../components/MyPagination";
+import AppContext from "../utils/contexts/AppContext";
+import { getEditUserPageLink } from "../models/User";
 
 interface SocialLinkProps {
 	name: string;
@@ -55,11 +57,14 @@ const DiscordLink = (props: { id: string }) => {
 }
 
 const UserPage = () => {
+	const { currentUser } = useContext(AppContext);
 	const user = useContext(UserContext);
 
 	if (!user) {
 		return <GenericLoadingPage/>
 	}
+
+	const canEdit = user.id == currentUser?.id || currentUser?.isAdmin;
 
 	return <main>
 		<Container>
@@ -99,6 +104,11 @@ const UserPage = () => {
 					</>}
 				</Col>
 			</Row>
+			<Container>
+				<div className="hstack gap-2 justify-content-center mb-2">
+					{canEdit && <Button variant="outline-secondary" as={Link} to={getEditUserPageLink(user)}>Edytuj profil</Button>}
+				</div>
+			</Container>
 			<Row>
 				<Col>
 					{user.profileDescription.length > 0 && <>
