@@ -1,5 +1,5 @@
 import React, { createRef, FormEventHandler, MouseEventHandler, useCallback, useContext, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { createGame, deleteGame, updateGame } from "../API";
 import SimpleAlert, { SimpleAlertData } from "../components/SimpleAlert";
@@ -23,17 +23,16 @@ const GameFormPage = () => {
 	const iconFileInputRef = createRef<HTMLInputElement>();
 
 	const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(event => {
-		const form = event.currentTarget;
-		setValidated(false);
 		event.preventDefault();
-
+		setValidated(false);
+		const form = event.currentTarget;
+		const formData = new FormData(form);
 		if (form.checkValidity() === false) {
 			event.stopPropagation();
 			setValidated(true);
 		}
 		else {
 			(() => {
-				const formData = new FormData(form);
 				if (game) {
 					// Pass only changing things and ID
 					for (const key in game)
@@ -59,22 +58,22 @@ const GameFormPage = () => {
 		}
 	}, [game, navigate]);
 
-	const handleDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(event => {
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const confirmDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(async (event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		if (!game) return;
-		if (window.confirm(`Czy jesteś pewien, że chcesz usunąć grę '${game.name}' (${game.publishYear}) z bazy danych serwisu?`)) {
-			deleteGame(game)
-				.then(() => navigate(getGamesDirectoryLink()))
-				.catch(error => {
-					console.error(error);
-					setAlert({
-						variant: 'danger',
-						heading: 'Wystąpił problem',
-						content: error.message,
-					});
-				})
-			;
+		try {
+			await deleteGame(game);
+			navigate(getGamesDirectoryLink());
+		}
+		catch (error: any) {
+			console.error(error);
+			setAlert({
+				variant: 'danger',
+				heading: 'Wystąpił problem',
+				content: error.message,
+			});
 		}
 	}, [game, navigate]);
 
@@ -83,6 +82,16 @@ const GameFormPage = () => {
 	}
 
 	return <main>
+		<Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Usuwanie gry</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>Czy jesteś pewien, że chcesz usunąć grę '{game?.name}' ({game?.publishYear}) z bazy danych serwisu? Nie będzie to odwracalne.</Modal.Body>
+			<Modal.Footer>
+			<Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Anuluj</Button>
+			<Button variant="danger" onClick={confirmDelete}>Usuń</Button>
+			</Modal.Footer>
+		</Modal>
 		<Container>
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={10} md={8} xl={6}>
@@ -168,7 +177,7 @@ const GameFormPage = () => {
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							{isEditing && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							{isEditing && <Button variant="danger" className="px-4" onClick={() => setShowDeleteModal(true)}>Usuń</Button>}
 							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>

@@ -76,10 +76,10 @@ const RunFormPage = () => {
 	const [showUserSelectionModal, setShowUserSelectionModal] = useState<boolean>(false);
 
 	const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(event => {
-		const form = event.currentTarget;
-		setValidated(false);
 		event.preventDefault();
-
+		setValidated(false);
+		const form = event.currentTarget;
+		const formData = new FormData(form);
 		if (form.checkValidity() === false) {
 			event.stopPropagation();
 			setValidated(true);
@@ -87,7 +87,6 @@ const RunFormPage = () => {
 		else {
 			if (!category || !player) return;
 			(() => {
-				const formData = new FormData(form);
 				formData.delete('durationInputText');
 				formData.set('userId', player.id.toString());
 				formData.set('duration', duration.toString());
@@ -124,22 +123,22 @@ const RunFormPage = () => {
 		}
 	}, [category, player, run, duration, videoUrl, navigate]);
 
-	const handleDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(event => {
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const confirmDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(async (event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		if (!category || !run) return;
-		if (window.confirm(`Czy jesteś pewien, że chcesz usunąć wybrane podejście z bazy danych serwisu?`)) {
-			deleteRun(run)
-				.then(() => navigate(getCategoryPageLink(category)))
-				.catch(error => {
-					console.error(error);
-					setAlert({
-						variant: 'danger',
-						heading: 'Wystąpił problem',
-						content: error.message,
-					});
-				})
-			;
+		try {
+			await deleteRun(run);
+			navigate(getCategoryPageLink(category));
+		}
+		catch (error: any) {
+			console.error(error);
+			setAlert({
+				variant: 'danger',
+				heading: 'Wystąpił problem',
+				content: error.message,
+			});
 		}
 	}, [category, run, navigate]);
 
@@ -158,6 +157,16 @@ const RunFormPage = () => {
 	const lockExceptNotes = run && run.state == 'verified' && run.userId == currentUser?.id;
 
 	return <main>
+		<Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Usuwanie podejścia</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>Czy jesteś pewien, że chcesz usunąć wybrane podejście z bazy danych serwisu?</Modal.Body>
+			<Modal.Footer>
+			<Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Anuluj</Button>
+			<Button variant="danger" onClick={confirmDelete}>Usuń</Button>
+			</Modal.Footer>
+		</Modal>
 		<Container>
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={10} md={8} xl={6}>
@@ -240,7 +249,7 @@ const RunFormPage = () => {
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							{isEditing && (!lockExceptNotes || isModerator) && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							{isEditing && (!lockExceptNotes || isModerator) && <Button variant="danger" className="px-4" onClick={() => setShowDeleteModal(true)}>Usuń</Button>}
 							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>

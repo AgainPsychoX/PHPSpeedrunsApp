@@ -17,10 +17,9 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	const [alert, setAlert] = useState<SimpleAlertData>();
 
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
-		const form = event.currentTarget;
-		setValidated(false);
 		event.preventDefault();
-
+		setValidated(false);
+		const form = event.currentTarget;
 		if (form.checkValidity() === false) {
 			event.stopPropagation();
 			setValidated(true);

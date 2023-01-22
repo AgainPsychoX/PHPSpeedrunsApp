@@ -34,16 +34,15 @@ const RegisterPage = ({onLogin}: RegisterPageProps) => {
 	}
 
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
-		const form = event.currentTarget;
 		setValidated(false);
 		event.preventDefault();
-
+		const form = event.currentTarget;
+		const formData = new FormData(form);
 		if (form.checkValidity() === false) {
 			event.stopPropagation();
 			setValidated(true);
 		}
 		else {
-			const formData = new FormData(form);
 			if (formData.get('password') != formData.get('repeatPassword') || !parseBoolean(formData.get('agreement') as string)) return;
 
 			API.registerUser(formData)

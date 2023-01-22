@@ -1,5 +1,5 @@
 import React, { FormEventHandler, MouseEventHandler, useCallback, useContext, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { createCategory, deleteCategory, updateCategory } from "../API";
 import { GenericLoadingPage } from "../components/GenericLoading";
@@ -22,11 +22,11 @@ const CategoryFormPage = () => {
 	const [validated, setValidated] = useState<boolean>(false);
 	const [alert, setAlert] = useState<SimpleAlertData>();
 
-	const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(event => {
-		const form = event.currentTarget;
-		setValidated(false);
+	const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(async (event) => {
 		event.preventDefault();
-
+		setValidated(false);
+		const form = event.currentTarget;
+		const formData = new FormData(form);
 		if (form.checkValidity() === false) {
 			event.stopPropagation();
 			setValidated(true);
@@ -34,7 +34,6 @@ const CategoryFormPage = () => {
 		else {
 			if (!game) return;
 			(() => {
-				const formData = new FormData(form);
 				if (category) {
 					// Pass only changing things and ID
 					for (const key in category)
@@ -62,22 +61,22 @@ const CategoryFormPage = () => {
 		}
 	}, [game, category, navigate]);
 
-	const handleDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(event => {
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const confirmDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(async (event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		if (!game || !category) return;
-		if (window.confirm(`Czy jesteś pewien, że chcesz usunąć kategorię '${category.name}' z gry '${game.name}' z bazy danych serwisu?`)) {
-			deleteCategory(category)
-				.then(() => navigate(getCategoriesPageLink(game)))
-				.catch(error => {
-					console.error(error);
-					setAlert({
-						variant: 'danger',
-						heading: 'Wystąpił problem',
-						content: error.message,
-					});
-				})
-			;
+		try {
+			await deleteCategory(category);
+			navigate(getCategoriesPageLink(game));
+		}
+		catch (error: any) {
+			console.error(error);
+			setAlert({
+				variant: 'danger',
+				heading: 'Wystąpił problem',
+				content: error.message,
+			});
 		}
 	}, [game, category, navigate]);
 
@@ -94,6 +93,16 @@ const CategoryFormPage = () => {
 	}
 
 	return <main>
+		<Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Usuwanie kategorii</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>Czy jesteś pewien, że chcesz usunąć kategorię '{category?.name}' z gry '{game?.name}' z bazy danych serwisu? Nie będzie to odwracalne.</Modal.Body>
+			<Modal.Footer>
+			<Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Anuluj</Button>
+			<Button variant="danger" onClick={confirmDelete}>Usuń</Button>
+			</Modal.Footer>
+		</Modal>
 		<Container>
 			<Row className="justify-content-center my-4">
 				<Col xs={12} sm={10} md={8} xl={6}>
@@ -139,7 +148,7 @@ const CategoryFormPage = () => {
 						</Form.Group>
 						<Form.Group className="mb-3 hstack justify-content-end flex-wrap gap-2">
 							<Button variant="primary" type="submit" className="px-4">Zapisz</Button>
-							{isEditing && <Button variant="danger" className="px-4" onClick={handleDelete}>Usuń</Button>}
+							{isEditing && <Button variant="danger" className="px-4" onClick={() => setShowDeleteModal(true)}>Usuń</Button>}
 							<Button variant="secondary" className="px-4" onClick={() => navigate(-1)}>Wróć</Button>
 						</Form.Group>
 					</Form>
