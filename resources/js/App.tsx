@@ -27,6 +27,7 @@ import RunFormPage from "./pages/RunFormPage";
 import GameModerationPage from "./pages/GameModerationPage";
 import CategoryModerationPage from "./pages/CategoryModerationPage";
 import GlobalModerationPage from "./pages/GlobalModerationPage";
+import RemindPasswordPage from "./pages/RemindPasswordPage";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
@@ -90,6 +91,7 @@ const App = () => {
 						<Route path="login" element={<LoginPage onLogin={(user) => setUser(user)}/>} />
 						<Route path="logout" element={<LogoutPage onLogout={() => setUser(undefined)}/>} />
 						<Route path="register" element={<RegisterPage onLogin={(user) => setUser(user)}/>} />
+						<Route path="remind-password" element={<RemindPasswordPage/>} />
 					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>

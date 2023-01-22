@@ -75,7 +75,7 @@ export const initialize = async () => {
 }
 
 export const login = async (formData: FormData) => {
-	await fetch(`${settings.authRoot}/login`, {
+	return fetch(`${settings.authRoot}/login`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
@@ -87,7 +87,7 @@ export const login = async (formData: FormData) => {
 
 export const logout = async () => {
 	localStorage.setItem('expectLoggedIn', '0');
-	await fetch(`${settings.authRoot}/logout`, {
+	return fetch(`${settings.authRoot}/logout`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 	}).then(throwIfNotOk);
@@ -105,7 +105,15 @@ export const fetchCurrentUser = async () => {
 }
 
 export const registerUser = async (formData: FormData) => {
-	await fetch(`${settings.authRoot}/register`, {
+	return fetch(`${settings.authRoot}/register`, {
+		method: 'POST',
+		headers: baseHeadersAnd(),
+		body: formData
+	}).then(throwIfNotOk);
+}
+
+export const remindPassword = async (formData: FormData) => {
+	return fetch(`${settings.authRoot}/forgot-password`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
 		body: formData
@@ -367,6 +375,7 @@ export default {
 	logout,
 	fetchCurrentUser,
 	registerUser,
+	remindPassword,
 
 	fetchUsers,
 	fetchUserDetails,

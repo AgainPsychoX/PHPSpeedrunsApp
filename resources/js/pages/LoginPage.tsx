@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Col, Container, Form, Row, Stack } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../API";
 import SimpleAlert, { SimpleAlertData } from "../components/SimpleAlert";
 import { currentUserPageLink, UserDetails } from "../models/User";
@@ -51,7 +51,7 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 	return <main>
 		<Container>
 			<Row className="justify-content-center my-4">
-				<Col xs={12} sm={8} md={6} xl={5} xxl={4}>
+				<Col xs={12} sm={10} md={7} xl={5}>
 					<h2 className="text-center">Logowanie</h2>
 					{alert && <SimpleAlert {...alert} />}
 					<Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -65,9 +65,12 @@ const LoginPage = ({onLogin}: LoginPageProps) => {
 							<Form.Label>Hasło</Form.Label>
 							<Form.Control.Feedback type="invalid">Nieprawidłowe hasło.</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group className="form-floating mb-3 hstack justify-content-between" controlId="rememberMe">
+						<Form.Group className="form-floating mb-3 hstack gap-2 justify-content-between" controlId="actions">
 							<Form.Check type="checkbox" name="remember" label="Pamiętaj mnie" />
-							<Button variant="primary" type="submit" className="px-4">Zaloguj</Button>
+							<Stack direction="horizontal" gap={2}>
+								<Button variant="outline-secondary" as={Link} to="/remind-password">Przypomnij hasło</Button>
+								<Button variant="primary" type="submit" className="px-4">Zaloguj</Button>
+							</Stack>
 						</Form.Group>
 					</Form>
 				</Col>
