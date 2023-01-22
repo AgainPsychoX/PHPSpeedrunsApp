@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
+import { Accordion, Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { fetchRunVerifications, voteVerifyRun } from "../API";
@@ -42,44 +42,45 @@ const RunPage = () => {
 	const [verificationsLoaded, setVerificationsLoaded] = useState(false);
 	const [currentUserVote, setCurrentUserVote] = useState<RunVerificationVote>('abstain');
 
-	const loadVerifications = useCallback(() => {
+	const loadVerifications = useCallback(async () => {
 		if (!run) return;
 		setVerificationsLoaded(false);
-		(async () => {
-			try {
-				const verifications = await fetchRunVerifications(run);
-				setVerifications(verifications);
-				setVerificationsLoaded(true);
-				if (currentUser) {
-					setCurrentUserVote(verifications.find(v => v.userId == currentUser.id)?.vote || 'abstain');
-				}
+		try {
+			const verifications = await fetchRunVerifications(run);
+			setVerifications(verifications);
+			setVerificationsLoaded(true);
+			if (currentUser) {
+				setCurrentUserVote(verifications.find(v => v.userId == currentUser.id)?.vote || 'abstain');
 			}
-			catch (error) {
-				console.error(error);
-				window.alert(`Wystąpił problem, przepraszamy.`);
-				// TODO: generic error handling page
-			}
-		})();
+		}
+		catch (error) {
+			console.error(error);
+			window.alert(`Wystąpił problem, przepraszamy.`);
+			// TODO: generic error handling page
+		}
 	}, [run, currentUser]);
 
-	const doVerify = useCallback((vote: RunVerificationVote) => {
-		if (!run || !currentUser) return;
-		const note = window.prompt(`Czy na pewno chcesz ustawić swój głos jako ${voteToString[vote]}?\n\nMożesz dodać także notatkę:`);
-		if (note === null) return; // cancelled
-		(async () => {
-			try {
-				const verification = await voteVerifyRun(run, vote, note);
-				setCurrentUserVote(vote);
-
-				setVerifications([...verifications.filter(v => v.userId != currentUser.id), verification])
-			}
-			catch (error) {
-				console.error(error);
-				window.alert(`Wystąpił problem, przepraszamy.`);
-				// TODO: generic error handling page
-			}
-		})();
-	}, [run, currentUser, verifications]);
+	const [proposedVote, setProposedVote] = useState<RunVerificationVote>();
+	const submitVerification = useCallback<React.FormEventHandler<HTMLFormElement>>(async (event) => {
+		event.preventDefault();
+		const form = event.currentTarget;
+		const formData = new FormData(form);
+		if (!run || !proposedVote || !currentUser) return;
+		try {
+			const note = formData.get('note') as string || '';
+			const verification = await voteVerifyRun(run, proposedVote, note);
+			setCurrentUserVote(proposedVote);
+			setVerifications([...verifications.filter(v => v.userId != currentUser.id), verification])
+		}
+		catch (error) {
+			console.error(error);
+			window.alert(`Wystąpił problem, przepraszamy.`);
+			// TODO: generic error handling page
+		}
+		finally {
+			setProposedVote(undefined);
+		}
+	}, [run, proposedVote, currentUser, verifications]);
 
 	if (!game || !category || !run) {
 		return <GenericLoadingPage/>
@@ -95,6 +96,24 @@ const RunPage = () => {
 	const canEdit = isModerator || run.id == currentUser?.id;
 
 	return <main>
+		<Modal show={!!proposedVote} onHide={() => setProposedVote(undefined)}>
+			<Form onSubmit={submitVerification}>
+				<Modal.Header closeButton>
+					<Modal.Title>Weryfikacja</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{proposedVote && <p>Czy na pewno chcesz ustawić swój głos jako {voteToString[proposedVote]}?</p>}
+					<Form.Group>
+						<Form.Label>Możesz także dodać notatkę:</Form.Label>
+						<Form.Control as="textarea" name="note" autoComplete="none" rows={3} />
+					</Form.Group>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={() => setProposedVote(undefined)}>Anuluj</Button>
+					<Button variant="primary" type="submit">Zapisz</Button>
+				</Modal.Footer>
+			</Form>
+		</Modal>
 		<Container>
 			<Row>
 				<Col xs={12} md={6}>
@@ -159,7 +178,7 @@ const RunPage = () => {
 											<Button
 												key={def.vote}
 												variant={`${currentUserVote == def.vote ? '' : 'outline-'}${def.color}`} size="sm"
-												disabled={currentUserVote == def.vote} onClick={() => doVerify(def.vote)}
+												disabled={currentUserVote == def.vote} onClick={() => setProposedVote(def.vote)}
 											>{def.text}</Button>
 										)}
 									</div>
