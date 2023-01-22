@@ -15,7 +15,7 @@ const MyFooter = () => {
 					<FooterLink as={NavLink} to="/">Strona główna</FooterLink>
 					<FooterLink as={NavLink} to="/games/">Katalog gier</FooterLink>
 					<FooterLink as={NavLink} to="/users/">Gracze</FooterLink>
-					<FooterLink as={NavLink} to="/about/">O speedranowaniu</FooterLink>
+					<FooterLink as={NavLink} to="/about/">Kultura speedranów</FooterLink>
 				</Col>
 				<Col xs={6} md={3}>
 					<h5>Odwiedź nas</h5>

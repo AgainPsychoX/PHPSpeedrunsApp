@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, Button, Col, Container, OverlayTrigger, Row, Table, Tooltip } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchUserRuns, PaginationMeta } from "../API";
+import { fetchRuns, PaginationMeta } from "../API";
 import { GenericLoadingPage, GenericLoadingSection } from "../components/GenericLoading";
 import { getRunPageLink, RunSummary } from "../models/Run";
 import UserContext from "../utils/contexts/UserContext";
@@ -135,7 +135,12 @@ const UserRunsSection = ({
 	const onPage = useCallback((page: number) => {
 		if (!user) return;
 		(async () => {
-			const { data, meta } = await fetchUserRuns(user.id, page);
+			const { data, meta } = await fetchRuns({
+				user,
+				orderBy: 'latest',
+				perPage: 20,
+				page,
+			});
 			setRuns(data);
 			setPaginationMeta(meta);
 		})();

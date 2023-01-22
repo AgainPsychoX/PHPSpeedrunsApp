@@ -29,19 +29,21 @@ class RunController extends Controller
 		if (array_key_exists('asc', $queryParams)) $direction = 'asc';
 		else if (array_key_exists('desc', $queryParams)) $direction = 'desc';
 
-		if ($player = $queryParams['player'] ?? null) {
-			$orderBy = $queryParams['order_by'] ?? 'latest';
+		$query = Run::query();
 
-			if (str_starts_with($orderBy, 'l')) {
-				$query = Run::forUser((int) $player)
-					->orderBy('created_at', $direction ?: 'desc');
-				// dd($query->toSql());
-				return RunResource::collection($query->paginate(40));
-			}
-
+		$orderBy = $queryParams['order_by'] ?? 'latest';
+		if (str_starts_with($orderBy, 'l')) {
+			$query->orderBy('created_at', $direction ?: 'desc');
+		}
+		else {
 			return response()->json([
 				"message" => "Invalid 'orderBy' parameter. Valid values are: (empty), 'latest'. Either 'desc' or 'asc' can be also specified as separate parameter.",
 			], 400);
+		}
+
+		$query->populateEntry();
+		if ($user = $queryParams['user'] ?? null) {
+			$query->user((int) $user);
 		}
 
 		if (array_key_exists('category', $queryParams)) {
@@ -56,9 +58,7 @@ class RunController extends Controller
 			], 501);
 		}
 
-		return response()->json([
-			"message" => "Grouping parameter is required. Possible grouping parameters: 'player'.",
-		], 400);
+		return RunResource::collection($query->paginate());
 	}
 
 	/**

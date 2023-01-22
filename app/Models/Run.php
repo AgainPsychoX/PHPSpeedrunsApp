@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Paginatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Run extends Model
 {
 	use HasFactory;
+	use Paginatable;
 
 	protected $fillable = [
 		'category_id',
@@ -58,11 +60,9 @@ class Run extends Model
 		return $query->where('category_id', $category instanceof Category ? $category->id : $category);
 	}
 
-
-
-	public static function scopeForUser(Builder $query, User|int $user)
+	public static function scopePopulateEntry(Builder $query)
 	{
-		return $query->user($user)
+		return $query
 			->joinSub(Category::select(['id', 'name', 'game_id']), 'categories', fn ($join) => $join->on('categories.id', '=', 'runs.category_id'))
 			->joinSub(Game::select(['id', 'name', 'publish_year']), 'games', fn ($join) => $join->on('games.id', '=', 'categories.game_id'))
 			->addSelect([

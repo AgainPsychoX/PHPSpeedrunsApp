@@ -1,6 +1,9 @@
-import React, { useContext } from "react";
-import { Button, Carousel, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Button, Carousel, Col, Container, Row, Table } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchRuns } from "../API";
+import { GenericLoadingSection } from "../components/GenericLoading";
+import { getRunPageLink, RunSummary } from "../models/Run";
 import AppContext from "../utils/contexts/AppContext";
 
 const images = [
@@ -13,6 +16,17 @@ export const HomePage = () => {
 	const { currentUser } = useContext(AppContext);
 	const isGlobalModerator = currentUser?.isAdmin;
 
+	const [latestRuns, setLatestRuns] = useState<RunSummary[]>();
+	useEffect(() => {
+		(async () => {
+			const { data, meta } = await fetchRuns({
+				orderBy: 'latest',
+				perPage: 20
+			});
+			setLatestRuns(data);
+		})();
+	}, []);
+
 	return <main>
 		<Carousel indicators={false} fade style={{height: '66vh'}} className="overflow-hidden mb-3" id="home">
 			{images.map(image =>
@@ -22,16 +36,64 @@ export const HomePage = () => {
 			)}
 		</Carousel>
 		<Container>
-			<h2>Strona główna</h2>
-			<p>
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
+			<Row>
+				<Col xs={12} lg={4}>
+					<h2>Czym jest speedrunning?</h2>
+					<p>Speedrunning, czyli ukończenie gry w jak najkrótszym czasie, stało się popularną rozrywką i hobby dla wielu graczy na całym świecie. Celem speedrunnerów jest ustanowienie rekordowych czasów i dzielenie się swoimi strategiami i wskazówkami z innymi graczami.</p>
+					<p>Aby ukończyć grę jak najszybciej, speedrunnerzy często wykorzystują różne techniki i błędy w grze (tzw. <i>glitches</i>). Te metody pozwalają na ominięcie trudniejszych części gry lub skrócenie czasu potrzebnego na ukończenie gry.</p>
+					<p>Speedrunning ma również swoją społeczność, z wieloma graczami rywalizującymi o najszybsze czasy i organizującymi wydarzenia, takie jak <a href="https://gamesdonequick.com/" target={'_blank'}>Games Done Quick</a>, które zbierają pieniądze na cele charytatywne.</p>
+					<p>Wiele gier jest popularnych wśród speedrunnerów, takich jak serie gier <i>"Super Mario"</i>, <i>"Portal"</i> i <i>"The Legend of Zelda"</i>, a także pojedyncze perełki, takie jak <i>"Minecraft"</i>, <i>"Doom"</i> czy <i>"Quake"</i>.</p>
+					<Button variant="outline-secondary" as={Link} to={'/games'} className="mb-4">Sprawdź nasz katalog gier</Button>
+					<p>Speedrunning staje się coraz bardziej popularny, a wiele gier oferuje również wbudowane rankingi speedrun, które umożliwiają graczom konkurowanie już w grze. Dobrym przykładem może być np. "Trackmania".</p>
+					<p>Ogólnie rzecz biorąc, speedrunning to zabawny i ekscytujący sposób na granie w gry, a dzięki społeczności graczy i różnym wydarzeniom, jest to również sposób na wsparcie dobrych celów.</p>
+					<Button variant="outline-secondary" as={Link} to={'/about'} className="mb-4">Czytaj więcej</Button>
+				</Col>
+				<Col xs={12} lg={8}>
+					<h2>Ostatnie podejścia</h2>
+					{latestRuns ?
+						latestRuns.length > 0
+							? <Table hover>
+								<thead>
+									<tr>
+										<th>Gracz</th>
+										<th>Data</th>
+										<th>Gra</th>
+										<th>Kategoria</th>
+									</tr>
+								</thead>
+								<tbody>
+									{latestRuns.map(run => <LatestRunRow key={run.id} run={run}/>)}
+								</tbody>
+							</Table>
+							// Empty runs array
+							: <Alert variant="secondary">Brak podejść w bazie danych.</Alert>
+						// Runs undefined (loading)
+						: <GenericLoadingSection description="Ładowanie podejść..." />
+					}
+				</Col>
+			</Row>
 		</Container>
-		<Container>
-			{isGlobalModerator && <>
-				<Button variant="outline-secondary" size="sm" as={Link} to={'/moderators'}>Zarządzanie moderatorami globalnymi</Button>
-			</>}
-		</Container>
+		{isGlobalModerator && <Container>
+			<div className="hstack gap-2 justify-content-center mb-2">
+				<Button variant="outline-secondary" as={Link} to={'/moderators'}>Zarządzanie moderatorami globalnymi</Button>
+			</div>
+		</Container>}
 	</main>
 };
 export default HomePage;
+
+const LatestRunRow = ({run}: {run: RunSummary}) => {
+	const navigate = useNavigate();
+	const onClick = () => navigate(getRunPageLink(run));
+	return <tr
+		key={run.id}
+		className="cursor-pointer"
+		onClick={onClick}
+		tabIndex={0} onKeyDown={event => event.key == 'Enter' && onClick()}
+	>
+		<td>{run.userName}</td>
+		<td>{run.createdAt.toRelative()}</td>
+		<td>{run.gameName}</td>
+		<td>{run.categoryName}</td>
+	</tr>
+}

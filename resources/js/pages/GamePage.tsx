@@ -183,7 +183,7 @@ const CategoryTabContent = () => {
 				: <small>(brak bezpośrednich moderatorów)</small>
 			}
 		</ul>
-		<div className="gap-2 hstack justify-content-center mb-3">
+		<div className="gap-2 hstack justify-content-center mb-2">
 			{isModerator && <>
 				<Button variant="outline-secondary" as={Link} to={getEditCategoryPageLink(category)}>Edytuj lub usuń kategorię</Button>
 			</>}
@@ -191,7 +191,7 @@ const CategoryTabContent = () => {
 		</div>
 		{(runsOnPage && runsOnPage.length > 0)
 			? <>
-				<div className="hstack gap-2 flex-wrap mb-2">
+				<div className="hstack gap-2 flex-wrap">
 					<h5 className="mb-0">Podejścia</h5>
 					<div className="ms-auto">
 						<Form.Check type="checkbox" label="Tylko zweryfikowane" id="only-verified-switch" onChange={event => setOnlyVerified(event.target.checked)} checked={onlyVerified} />

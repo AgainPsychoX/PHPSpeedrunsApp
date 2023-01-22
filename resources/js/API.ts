@@ -146,19 +146,6 @@ export const fetchUserDetails = async (entryOrId: UserEntry | number) => {
 	return convertDates(data, ['joinedAt']) as UserDetails;
 }
 
-export type UserRunsOrderBy = 'latest'
-export const fetchUserRuns = async (
-	entryOrId: UserEntry | number,
-	page: number,
-	orderBy: UserRunsOrderBy = 'latest',
-	direction?: 'asc' | 'desc'
-) => {
-	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
-	const json = await simplyFetchJSON(`${settings.apiRoot}/runs?player=${id}&orderBy=${orderBy}${direction ? '&' + direction : ''}&page=${page}`);
-	for (const run of json.data) convertDates(run);
-	return json as { data: RunSummary[]; meta: PaginationMeta };
-}
-
 ////////////////////////////////////////
 // Moderators
 
@@ -300,6 +287,22 @@ const receiveRunDetails = async (json: any) => {
 	return convertDates(json.data) as RunDetails;
 }
 
+export type RunsOrderBy = 'latest';
+export interface FetchRunsOptions {
+	page?: number;
+	perPage?: number;
+	orderBy?: RunsOrderBy;
+	direction?: 'asc' | 'desc' | undefined;
+	user?: UserEntry | number;
+}
+export const fetchRuns = async (options: FetchRunsOptions) => {
+	options.user = typeof options.user == 'number' ? options.user : options.user?.id;
+	const params = prepareURLSearchParams(options as Record<string, string>);
+	const json = await simplyFetchJSON(`${settings.apiRoot}/runs?${params.toString()}`);
+	for (const run of json.data) convertDates(run);
+	return json as { data: RunSummary[]; meta: PaginationMeta };
+}
+
 export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	return receiveRunDetails(await simplyFetchJSON(`${settings.apiRoot}/runs/${id}`));
@@ -367,7 +370,6 @@ export default {
 
 	fetchUsers,
 	fetchUserDetails,
-	fetchUserRuns,
 
 	fetchModerators,
 	addModerator,
@@ -384,6 +386,7 @@ export default {
 	updateCategory,
 	deleteCategory,
 
+	fetchRuns,
 	fetchRunDetails,
 	createRun,
 	updateRun,
