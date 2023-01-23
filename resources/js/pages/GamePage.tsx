@@ -73,7 +73,7 @@ export const GamePage = () => {
 				{game.moderators.length > 0
 					? game.moderators.map(user =>
 						<li className="col-12 col-sm-6 col-md-3" key={user.id}>
-							<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
+							<Link to={getUserPageLink(user)} className="link-muted">{user.name}</Link>
 						</li>
 					)
 					: <small>(brak bezpośrednich moderatorów)</small>
@@ -177,7 +177,7 @@ const CategoryTabContent = () => {
 			{category.moderators.length > 0
 				? category.moderators.map(user =>
 					<li className="col-12 col-sm-6 col-md-3" key={user.id}>
-						<Link to={getUserPageLink(user)} className="text-decoration-none">{user.name}</Link>
+						<Link to={getUserPageLink(user)} className="link-muted">{user.name}</Link>
 					</li>
 				)
 				: <small>(brak bezpośrednich moderatorów)</small>

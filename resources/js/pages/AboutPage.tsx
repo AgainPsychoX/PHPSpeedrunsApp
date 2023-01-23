@@ -26,7 +26,7 @@ const AboutPage = () => {
 		<VideoSection url={'https://www.youtube.com/watch?v=ZqrmerjGZ14'} />
 		<TextSection>
 			<h4>Ciekawe artykuły</h4>
-			<ul className="ms-4">
+			<ul className="ms-4 mb-4">
 				<li><a href="https://antyweb.pl/speedruny-o-co-w-nich-chodzi" target={'_blank'}>"Speedruny - O co w nich chodzi?" na AntyWeb.pl</a></li>
 				<li><a href="https://www.gry-online.pl/slownik-gracza-pojecie.asp?ID=399" target={'_blank'}>Pojęcie "speedrun" na GryOnline.pl</a></li>
 				<li><a href="https://www.testergier.pl/2017/08/speedrun-rodzaje-czyli-powody-powtarzania-gry.html" target={'_blank'}>"Rodzaje speedranów - powody powtarzania gier" na TesterGier.pl</a></li>
@@ -48,16 +48,16 @@ const TextSection = (props: { children?: ReactNode }) => (
 );
 const ImageSection = ({url}: {url: string}) => (
 	<Container fluid={'md'}>
-		<Row className="justify-content-center mb-4">
+		<Row className="justify-content-center">
 			<Col xs={12} lg={8} className="px-0">
-				<img src={url} className="img-fluid" />
+				<img src={url} className="img-fluid mb-4" />
 			</Col>
 		</Row>
 	</Container>
 );
 const VideoSection = ({url}: {url: string}) => (
 	<Container fluid={'md'}>
-		<Row className="justify-content-center mb-4">
+		<Row className="justify-content-center">
 			<Col xs={12} lg={8} className="px-0">
 				<div className="ratio ratio-16x9 mb-4">
 					<ReactPlayer url={url} width="100%" height="100%" />

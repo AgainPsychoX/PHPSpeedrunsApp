@@ -29,10 +29,31 @@ import CategoryModerationPage from "./pages/CategoryModerationPage";
 import GlobalModerationPage from "./pages/GlobalModerationPage";
 import RemindPasswordPage from "./pages/RemindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { getPreferredTheme, setPreferredTheme, Theme } from "./utils/BootstrapThemes";
 
 const App = () => {
 	const [ready, setReady] = useState<boolean>(false);
 	const [user, setUser] = useState<UserDetails>();
+	const [theme, setThemeVariable] = useState<Theme>(getPreferredTheme());
+
+	useEffect(() => {
+		// Theme is manged by outside code by manipulating theme attribute on document root,
+		// so we observe the change and update React context.
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.type !== 'attributes') continue;
+				if (mutation.attributeName === 'data-bs-theme') {
+					setThemeVariable(getPreferredTheme());
+				}
+			}
+		});
+		observer.observe(document.documentElement, {attributeFilter: ['data-bs-theme']});
+		return () => observer.disconnect();
+	}, []);
+	const setTheme = (theme: Theme) => {
+		// Will change the document root attribute, and the handler above will catch it and update state.
+		setPreferredTheme(theme);
+	}
 
 	useEffect(() => {
 		API.initialize().then(async ({expectingLoggedIn}) => {
@@ -48,10 +69,11 @@ const App = () => {
 
 	return (
 		<AppContext.Provider value={{
-			currentUser: user
+			currentUser: user,
+			theme: theme,
 		}}>
 			<BrowserRouter>
-				<MyNavbar/>
+				<MyNavbar setTheme={setTheme} />
 				<Routes>
 					<Route path="/">
 						<Route index element={<HomePage/>} />

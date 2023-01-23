@@ -35,6 +35,11 @@ export const HomePage = () => {
 				</Carousel.Item>
 			)}
 		</Carousel>
+		{isGlobalModerator && <Container>
+			<div className="hstack gap-2 justify-content-center mb-2">
+				<Button variant="outline-secondary" as={Link} to={'/moderators'}>Zarządzanie moderatorami globalnymi</Button>
+			</div>
+		</Container>}
 		<Container>
 			<Row>
 				<Col xs={12} lg={4}>
@@ -43,10 +48,10 @@ export const HomePage = () => {
 					<p>Aby ukończyć grę jak najszybciej, speedrunnerzy często wykorzystują różne techniki i błędy w grze (tzw. <i>glitches</i>). Te metody pozwalają na ominięcie trudniejszych części gry lub skrócenie czasu potrzebnego na ukończenie gry.</p>
 					<p>Speedrunning ma również swoją społeczność, z wieloma graczami rywalizującymi o najszybsze czasy i organizującymi wydarzenia, takie jak <a href="https://gamesdonequick.com/" target={'_blank'}>Games Done Quick</a>, które zbierają pieniądze na cele charytatywne.</p>
 					<p>Wiele gier jest popularnych wśród speedrunnerów, takich jak serie gier <i>"Super Mario"</i>, <i>"Portal"</i> i <i>"The Legend of Zelda"</i>, a także pojedyncze perełki, takie jak <i>"Minecraft"</i>, <i>"Doom"</i> czy <i>"Quake"</i>.</p>
-					<Button variant="outline-secondary" as={Link} to={'/games'} className="mb-4">Sprawdź nasz katalog gier</Button>
+					<Button variant="secondary" as={Link} to={'/games'} className="mb-4">Sprawdź nasz katalog gier</Button>
 					<p>Speedrunning staje się coraz bardziej popularny, a wiele gier oferuje również wbudowane rankingi speedrun, które umożliwiają graczom konkurowanie już w grze. Dobrym przykładem może być np. "Trackmania".</p>
 					<p>Ogólnie rzecz biorąc, speedrunning to zabawny i ekscytujący sposób na granie w gry, a dzięki społeczności graczy i różnym wydarzeniom, jest to również sposób na wsparcie dobrych celów.</p>
-					<Button variant="outline-secondary" as={Link} to={'/about'} className="mb-4">Czytaj więcej</Button>
+					<Button variant="secondary" as={Link} to={'/about'} className="mb-4">Czytaj więcej</Button>
 				</Col>
 				<Col xs={12} lg={8}>
 					<h2>Ostatnie podejścia</h2>
@@ -73,11 +78,6 @@ export const HomePage = () => {
 				</Col>
 			</Row>
 		</Container>
-		{isGlobalModerator && <Container>
-			<div className="hstack gap-2 justify-content-center mb-2">
-				<Button variant="outline-secondary" as={Link} to={'/moderators'}>Zarządzanie moderatorami globalnymi</Button>
-			</div>
-		</Container>}
 	</main>
 };
 export default HomePage;
