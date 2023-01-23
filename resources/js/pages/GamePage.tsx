@@ -72,7 +72,7 @@ export const GamePage = () => {
 			<ul className="row" style={{listStylePosition: 'inside'}}>
 				{game.moderators.length > 0
 					? game.moderators.map(user =>
-						<li className="col-12 col-sm-6 col-md-3" key={user.id}>
+						<li className="col-10 col-sm-6 col-md-3" key={user.id}>
 							<Link to={getUserPageLink(user)} className="link-muted">{user.name}</Link>
 						</li>
 					)
@@ -173,10 +173,10 @@ const CategoryTabContent = () => {
 			<div className="ms-auto"/>
 			{isModerator && <Button variant="outline-secondary" size="sm" as={Link} to={getCategoryModerationPageLink(category)}>Zarządzaj moderatorami</Button>}
 		</div>
-		<ul className="row" style={{listStylePosition: 'inside'}}>
+		<ul className="row" style={{listStylePosition: 'inside', maxWidth: '100%'}}>
 			{category.moderators.length > 0
 				? category.moderators.map(user =>
-					<li className="col-12 col-sm-6 col-md-3" key={user.id}>
+					<li className="col-10 col-sm-6 col-md-3" key={user.id}>
 						<Link to={getUserPageLink(user)} className="link-muted">{user.name}</Link>
 					</li>
 				)
