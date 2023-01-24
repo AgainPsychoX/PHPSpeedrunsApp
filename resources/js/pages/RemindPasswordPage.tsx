@@ -58,14 +58,17 @@ const RemindPasswordPage = () => {
 							<Form.Label>E-mail</Form.Label>
 							<Form.Control.Feedback type="invalid">Proszę podać prawidłowy e-mail.</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group className="mb-3 hstack justify-content-between" controlId="actions">
+						<Form.Group className="mb-3 hstack justify-content-center justify-content-lg-between flex-wrap gap-2" controlId="actions">
 							<div>
 							{/* <Stack direction={'horizontal'} > */}
 								<span>Nie masz konta?</span>&nbsp;
 								<Link className="" to={'/register'}>Zarejestruj się</Link>
 							{/* </Stack> */}
 							</div>
-							<Button variant="primary" type="submit" className="px-4">Wyślij</Button>
+							<div className="hstack flex-wrap gap-2">
+								<Button variant="secondary" className="px-4" onClick={() => navigate('/login')}>Wróć</Button>
+								<Button variant="primary" type="submit" className="px-4">Wyślij</Button>
+							</div>
 						</Form.Group>
 					</Form>
 				</Col>

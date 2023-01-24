@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/{any}', fn () => view('react'))->where('any', '^(?!api).*$')->name('react');
+Route::get('/reset-password/?token={token}&email={email}', fn () => view('react'))->name('password.reset');

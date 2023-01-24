@@ -88,8 +88,9 @@ const ResetPasswordPage = () => {
 							<Form.Label>Powtórz hasło</Form.Label>
 							<Form.Control.Feedback type="invalid">Hasła nie zgadzają się.</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group className="form-floating mb-3 hstack justify-content-center justify-content-lg-end flex-wrap gap-2" controlId="agreement">
-							<Button variant="primary" type="submit" className="px-4 ms-auto">Zmień hasło</Button>
+						<Form.Group className="mb-3 hstack justify-content-center justify-content-lg-end flex-wrap gap-2" controlId="agreement">
+							<Button variant="secondary" className="px-4" onClick={() => navigate('/login')}>Wróć</Button>
+							<Button variant="primary" type="submit" className="px-4">Zmień hasło</Button>
 						</Form.Group>
 					</Form>
 				</Col>

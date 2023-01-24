@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Model;
@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
 		});
 
 		ResetPassword::createUrlUsing(function ($notifiable, $token) {
-			return route('react', ['token' => $token, 'email' => $notifiable->getEmailForPasswordReset()]);
+			return route('password.reset', ['token' => $token, 'email' => $notifiable->getEmailForPasswordReset()]);
 		});
 	}
 }
