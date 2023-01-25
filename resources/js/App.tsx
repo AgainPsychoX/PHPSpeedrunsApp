@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import API from "./API";
 import AppContext from "./utils/contexts/AppContext";
 import { GameContextRouterOutlet } from "./utils/contexts/GameContext";
@@ -72,7 +72,7 @@ const App = () => {
 			currentUser: user,
 			theme: theme,
 		}}>
-			<BrowserRouter>
+			<HashRouter>
 				<MyNavbar setTheme={setTheme} />
 				<Routes>
 					<Route path="/">
@@ -120,7 +120,7 @@ const App = () => {
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 				<MyFooter/>
-			</BrowserRouter>
+			</HashRouter>
 		</AppContext.Provider>
 	)
 };

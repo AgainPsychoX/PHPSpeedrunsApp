@@ -10,7 +10,7 @@ const images = [
 	'1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.png', '8.jpg', '9.jpg',
 	'10.png', '11.jpg', '12.jpg', '13.jpg', '14.png', '15.webp', '16.jpeg', '17.jpg', '18.jpeg', '19.png',
 	'20.jpg', '21.jpg', '22.jpg',
-].map(filename => ({ url: `/storage/images/home/carousel/${filename}` }));
+].map(filename => ({ url: `storage/images/home/carousel/${filename}` }));
 
 export const HomePage = () => {
 	const { currentUser } = useContext(AppContext);

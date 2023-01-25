@@ -28,7 +28,50 @@ const baseHeadersAnd = (other: Record<string, string> = {}): Record<string, stri
 	...other
 });
 
-const simplyFetchJSON = (url: string) => fetch(url, { headers: baseHeadersAnd() }).then(jsonOrThrowIfNotOk);
+const fetchAsJSONP = (url: string) => {
+	return new Promise<any>((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = url;
+		script.addEventListener('error', () => {
+			reject();
+			script.remove();
+		});
+		(globalThis as any).jsonp = (data: any) => {
+			resolve(data);
+			script.remove();
+		};
+		document.body.append(script);
+	});
+}
+
+const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
+const delayed = (what: any, ms: number = 1) => delay(ms).then(() => what);
+
+const createDownload = (filename: string, data: string) => {
+	const blob = new Blob([data], { type: "application/json" });
+	const url = window.URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.style.display = 'none';
+	a.href = url;
+	a.download = filename;
+	document.body.appendChild(a);
+	a.click();
+	window.URL.revokeObjectURL(url);
+	a.remove();
+}
+
+const simplyFetchJSON = async (url: string) => {
+	const [root, what] = url.split('/api/');
+	const fake = what.replace(/[\/?]/g, '_') + '.js';
+	if (location.href.startsWith('file:')) {
+		return fetchAsJSONP(`${root}/fake-api/${fake}`);
+	}
+	const data = await fetch(url, { headers: baseHeadersAnd() }).then(jsonOrThrowIfNotOk);
+	// Remove duplicate downloads using PowerShell: ls | where { $_.Name -Like '*(*' } | rm
+	const content = 'jsonp(' + JSON.stringify(data, undefined, '\t') + ');';
+	createDownload(fake, content);
+	return data;
+}
 
 const prepareURLSearchParams = (data: Record<string, string>) => {
 	for (const [key, value] of Object.entries(data))
@@ -68,13 +111,27 @@ const convertDates = (o: any, fields: string[] = ['createdAt', 'updateAt']) => {
 export const isExpectingLoggedIn = () => parseBoolean(localStorage.getItem('expectLoggedIn'));
 
 export const initialize = async () => {
-	await fetch(`${settings.authRoot}/sanctum/csrf-cookie`);
+	if (!location.href.startsWith('file:')) {
+		await fetch(`${settings.authRoot}/sanctum/csrf-cookie`);
+	}
 	return {
 		expectingLoggedIn: isExpectingLoggedIn(),
 	};
 }
 
 export const login = async (formData: FormData) => {
+	if (location.href.startsWith('file:')) {
+		if (formData.get('name') == 'admin') {
+			localStorage.setItem('expectLoggedIn', '1');
+			return delayed({});
+		}
+		else {
+			return delayed({
+				message: "Nieprawidłowe dane logowania.",
+				errors: {"name":["Nieprawidłowe dane logowania."]}
+			});
+		}
+	}
 	return fetch(`${settings.authRoot}/login`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -87,6 +144,8 @@ export const login = async (formData: FormData) => {
 
 export const logout = async () => {
 	localStorage.setItem('expectLoggedIn', '0');
+	if (location.href.startsWith('file:'))
+		return delayed({});
 	return fetch(`${settings.authRoot}/logout`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -94,6 +153,13 @@ export const logout = async () => {
 }
 
 export const fetchCurrentUser = async () => {
+	if (location.href.startsWith('file:')) {
+		if (isExpectingLoggedIn()) {
+			const { data } = await simplyFetchJSON(`${settings.apiRoot}/user`);
+			return convertDates(data, ['joinedAt']) as UserDetails;
+		}
+		return;
+	}
 	try {
 		const { data } = await simplyFetchJSON(`${settings.apiRoot}/user`);
 		localStorage.setItem('expectLoggedIn', '1');
@@ -105,6 +171,10 @@ export const fetchCurrentUser = async () => {
 }
 
 export const registerUser = async (formData: FormData) => {
+	if (location.href.startsWith('file:')) {
+		window.alert(`Nie ma możliwości rejestracji w wersji statycznej ;)`);
+		return delayed({});
+	}
 	return fetch(`${settings.authRoot}/register`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -113,6 +183,12 @@ export const registerUser = async (formData: FormData) => {
 }
 
 export const remindPassword = async (formData: FormData) => {
+	if (location.href.startsWith('file:')) {
+		return delayed({
+			message: "Nie ma możliwości przypominania hasła w wersji statycznej, ale można wejść na adres '/reset-password'.",
+			errors: {"email":["Nie ma możliwości przypominania hasła w wersji statycznej, ale można wejść na adres '/reset-password'."]}
+		});
+	}
 	return fetch(`${settings.authRoot}/forgot-password`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -121,6 +197,10 @@ export const remindPassword = async (formData: FormData) => {
 }
 
 export const resetPassword = async (formData: FormData) => {
+	if (location.href.startsWith('file:')) {
+		window.alert(`Nie ma możliwości resetowania hasła w wersji statycznej, ale załóżmy, że się udało...`);
+		return delayed({});
+	}
 	return fetch(`${settings.authRoot}/reset-password`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -182,6 +262,8 @@ export const fetchModerators = async (where: ModerationTarget) => {
 }
 
 export const addModerator = async (who: UserEntry, where: ModerationTarget) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const { data } = await fetch(`${settings.apiRoot}/${moderationTargetToPath(where)}moderators/${who.id}`, {
 		method: 'PUT',
 		headers: baseHeadersAnd()
@@ -191,6 +273,8 @@ export const addModerator = async (who: UserEntry, where: ModerationTarget) => {
 }
 
 export const removeModerator = async (who: ModeratorSummary) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const path = who.scope == 'global' ? '' :
 		who.scope == 'game' ? `games/${who.targetId}/` :
 		who.scope == 'category' ? `categories/${who.targetId}/` : 'wtf?';
@@ -228,6 +312,8 @@ export const fetchGameDetails = async (entryOrId: GameEntry | number) => {
 }
 
 export const createGame = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	return receiveGameDetails(await fetch(`${settings.apiRoot}/games`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -236,6 +322,8 @@ export const createGame = async (formData: FormData) => {
 }
 
 export const updateGame = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	formData.append('_method', 'PATCH');
 	return receiveGameDetails(await fetch(`${settings.apiRoot}/games/${formData.get('id')}`, {
 		method: 'POST',
@@ -245,6 +333,8 @@ export const updateGame = async (formData: FormData) => {
 }
 
 export const deleteGame = async (entryOrId: GameEntry | number) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	await fetch(`${settings.apiRoot}/games/${id}`, {
 		method: 'DELETE',
@@ -271,6 +361,8 @@ export const fetchCategoryDetails = async (entryOrId: CategoryEntry | number) =>
 }
 
 export const createCategory = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/games/${formData.get('gameId')}/categories`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -279,6 +371,8 @@ export const createCategory = async (formData: FormData) => {
 }
 
 export const updateCategory = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	formData.append('_method', 'PATCH');
 	return receiveCategoryDetails(await fetch(`${settings.apiRoot}/categories/${formData.get('id')}`, {
 		method: 'POST',
@@ -288,6 +382,8 @@ export const updateCategory = async (formData: FormData) => {
 }
 
 export const deleteCategory = async (entryOrId: CategoryEntry | number) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	await fetch(`${settings.apiRoot}/categories/${id}`, {
 		method: 'DELETE',
@@ -325,6 +421,8 @@ export const fetchRunDetails = async (entryOrId: RunEntry | number) => {
 }
 
 export const createRun = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	return receiveRunDetails(await fetch(`${settings.apiRoot}/games/${formData.get('gameId')}/categories/${formData.get('categoryId')}/runs`, {
 		method: 'POST',
 		headers: baseHeadersAnd(),
@@ -333,6 +431,8 @@ export const createRun = async (formData: FormData) => {
 }
 
 export const updateRun = async (formData: FormData) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	formData.append('_method', 'PATCH');
 	return receiveRunDetails(await fetch(`${settings.apiRoot}/runs/${formData.get('id')}`, {
 		method: 'POST',
@@ -342,6 +442,8 @@ export const updateRun = async (formData: FormData) => {
 }
 
 export const deleteRun = async (entryOrId: RunEntry | number) => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	await fetch(`${settings.apiRoot}/runs/${id}`, {
 		method: 'DELETE',
@@ -360,6 +462,8 @@ export const fetchRunVerifications = async (entryOrId: RunEntry | number) => {
 }
 
 export const voteVerifyRun = async (entryOrId: RunEntry | number, vote: RunVerificationVote, note = '') => {
+	if (location.href.startsWith('file:'))
+		throw new Error(`Operacja nieobsługiwana w wersji statycznej.`);
 	const id = typeof entryOrId == 'number' ? entryOrId : entryOrId.id;
 	const json = await fetch(`${settings.apiRoot}/runs/${id}')}/voteVerify`, {
 		method: 'POST',
