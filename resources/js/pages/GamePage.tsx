@@ -80,7 +80,7 @@ export const GamePage = () => {
 				}
 			</ul>
 		</Container>
-		<Container className="mb-4 clearfix">
+		<Container className="mb-4" style={{clear: 'both'}}>
 			<Row>
 				<Col xs={12}>
 					<div className="hstack gap-2 flex-wrap align-items-end mb-2">
