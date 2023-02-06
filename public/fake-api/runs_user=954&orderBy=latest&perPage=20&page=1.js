@@ -18,8 +18,8 @@ jsonp({
 		}
 	],
 	"links": {
-		"first": "http://127.0.0.1:8000/api/runs?page=1",
-		"last": "http://127.0.0.1:8000/api/runs?page=1",
+		"first": "api/runs?page=1",
+		"last": "api/runs?page=1",
 		"prev": null,
 		"next": null
 	},
@@ -34,7 +34,7 @@ jsonp({
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=1",
+				"url": "api/runs?page=1",
 				"label": "1",
 				"active": true
 			},
@@ -44,7 +44,7 @@ jsonp({
 				"active": false
 			}
 		],
-		"path": "http://127.0.0.1:8000/api/runs",
+		"path": "api/runs",
 		"per_page": 20,
 		"to": 1,
 		"total": 1

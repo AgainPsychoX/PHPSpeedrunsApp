@@ -682,10 +682,10 @@ jsonp({
 		}
 	],
 	"links": {
-		"first": "http://127.0.0.1:8000/api/users?page=1",
-		"last": "http://127.0.0.1:8000/api/users?page=3",
+		"first": "api/users?page=1",
+		"last": "api/users?page=3",
 		"prev": null,
-		"next": "http://127.0.0.1:8000/api/users?page=2"
+		"next": "api/users?page=2"
 	},
 	"meta": {
 		"current_page": 1,
@@ -698,27 +698,27 @@ jsonp({
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/users?page=1",
+				"url": "api/users?page=1",
 				"label": "1",
 				"active": true
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/users?page=2",
+				"url": "api/users?page=2",
 				"label": "2",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/users?page=3",
+				"url": "api/users?page=3",
 				"label": "3",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/users?page=2",
+				"url": "api/users?page=2",
 				"label": "Next &raquo;",
 				"active": false
 			}
 		],
-		"path": "http://127.0.0.1:8000/api/users",
+		"path": "api/users",
 		"per_page": 40,
 		"to": 40,
 		"total": 88

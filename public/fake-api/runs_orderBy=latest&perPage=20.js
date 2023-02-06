@@ -93,7 +93,7 @@ jsonp({
 			"score": 15150,
 			"videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			"state": "verified",
-			"notes": "Aliquam nobis ea tenetur. Suscipit et vel neque aut distinctio cumque. Facere reiciendis atque ut laboriosam facilis dignissimos et maiores. Ut consequatur et rem temporibus molestiae.",
+			"notes": "Aliquam nobis ea tenetur. Suscipit et vel neque aut distinctio Calque. Facere reiciendis atque ut laboriosam facilis dignissimos et maiores. Ut consequatur et rem temporibus molestiae.",
 			"updatedAt": "2022-12-10T20:50:35.000000Z"
 		},
 		{
@@ -149,7 +149,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 11,
 			"userName": "Fugitexplicabo695",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -165,7 +165,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 22,
 			"userName": "Quod642",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -181,7 +181,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 32,
 			"userName": "Omnisrerum",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -197,7 +197,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 2,
 			"userName": "sintQuia1000",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -213,7 +213,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 2,
 			"userName": "sintQuia1000",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -229,7 +229,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 2,
 			"userName": "sintQuia1000",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -245,7 +245,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 6,
 			"userName": "EtEt409",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -261,7 +261,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 2,
 			"userName": "sintQuia1000",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -277,7 +277,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 11,
 			"userName": "Fugitexplicabo695",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -285,7 +285,7 @@ jsonp({
 			"score": 5,
 			"videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			"state": "pending",
-			"notes": "Quia libero nobis cumque laboriosam.",
+			"notes": "Quia libero nobis Calque laboriosam.",
 			"updatedAt": "2022-12-10T20:50:34.000000Z"
 		},
 		{
@@ -293,7 +293,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 6,
 			"userName": "EtEt409",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -301,7 +301,7 @@ jsonp({
 			"score": 4,
 			"videoUrl": "https://www.youtube.com/watch?v=dUW_huYo4cM",
 			"state": "verified",
-			"notes": "Et commodi nemo cum voluptatem occaecati. Hic est deleniti eos similique veritatis. Dolore voluptas numquam qui illo voluptates enim. Impedit delectus eligendi quasi et. Modi reiciendis voluptates quaerat ad ut ut. In atque aut autem est exercitationem tenetur voluptatem.",
+			"notes": "Et commodi nemo Cal voluptatem occaecati. Hic est deleniti eos similique veritatis. Dolore voluptas numquam qui illo voluptates enim. Impedit delectus eligendi quasi et. Modi reiciendis voluptates quaerat ad ut ut. In atque aut autem est exercitationem tenetur voluptatem.",
 			"updatedAt": "2022-12-10T20:50:34.000000Z"
 		},
 		{
@@ -309,7 +309,7 @@ jsonp({
 			"categoryId": 3,
 			"categoryName": "Architecto ducimus eveniet quo est",
 			"gameId": 1,
-			"gameName": "Cum",
+			"gameName": "Cal",
 			"userId": 3,
 			"userName": "RerumDoloremque",
 			"createdAt": "2022-12-10T20:50:34.000000Z",
@@ -322,10 +322,10 @@ jsonp({
 		}
 	],
 	"links": {
-		"first": "http://127.0.0.1:8000/api/runs?page=1",
-		"last": "http://127.0.0.1:8000/api/runs?page=26",
+		"first": "api/runs?page=1",
+		"last": "api/runs?page=26",
 		"prev": null,
-		"next": "http://127.0.0.1:8000/api/runs?page=2"
+		"next": "api/runs?page=2"
 	},
 	"meta": {
 		"current_page": 1,
@@ -338,52 +338,52 @@ jsonp({
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=1",
+				"url": "api/runs?page=1",
 				"label": "1",
 				"active": true
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=2",
+				"url": "api/runs?page=2",
 				"label": "2",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=3",
+				"url": "api/runs?page=3",
 				"label": "3",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=4",
+				"url": "api/runs?page=4",
 				"label": "4",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=5",
+				"url": "api/runs?page=5",
 				"label": "5",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=6",
+				"url": "api/runs?page=6",
 				"label": "6",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=7",
+				"url": "api/runs?page=7",
 				"label": "7",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=8",
+				"url": "api/runs?page=8",
 				"label": "8",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=9",
+				"url": "api/runs?page=9",
 				"label": "9",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=10",
+				"url": "api/runs?page=10",
 				"label": "10",
 				"active": false
 			},
@@ -393,22 +393,22 @@ jsonp({
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=25",
+				"url": "api/runs?page=25",
 				"label": "25",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=26",
+				"url": "api/runs?page=26",
 				"label": "26",
 				"active": false
 			},
 			{
-				"url": "http://127.0.0.1:8000/api/runs?page=2",
+				"url": "api/runs?page=2",
 				"label": "Next &raquo;",
 				"active": false
 			}
 		],
-		"path": "http://127.0.0.1:8000/api/runs",
+		"path": "api/runs",
 		"per_page": 20,
 		"to": 20,
 		"total": 509
